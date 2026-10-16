@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta name="google-site-verification" content="fNl9QEdvjZOO-HoHmPcxZNIFtOfWZEE2euZz_bybCu0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Watch Movies Online</title>
+    <title>KinoUltra — Смотреть фильмы, русское кино и аниме онлайн бесплатно</title>
     <!-- Красная иконка с буквой K для вкладки браузера -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
@@ -35,12 +35,35 @@
             padding: 15px 30px;
             background: #15161d;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
             color: var(--accent);
+            cursor: pointer;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        nav button:hover, nav button.active {
+            background: var(--accent);
+            border-color: var(--accent);
         }
 
         .search-box input {
@@ -234,20 +257,28 @@
 <body>
 
     <header>
-        <div class="logo">KinoUltra</div>
+        <div class="logo" onclick="loadCategory('popular')">KinoUltra</div>
+        
+        <!-- КНОПКИ РАЗДЕЛОВ НА РУССКОМ -->
+        <nav>
+            <button class="active" onclick="loadCategory('popular')">🔥 Популярное</button>
+            <button onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
+            <button onclick="loadCategory('anime')">⛩️ Аниме</button>
+        </nav>
+
         <div class="search-box">
-            <input type="text" placeholder="Search movies..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
+            <input type="text" placeholder="Поиск фильмов и аниме..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
         </div>
     </header>
 
     <div class="container">
         <!-- БЛОК РЕКЛАМЫ #1: Верхний баннер -->
         <div class="ad-banner" id="topAdSlot">
-            <span>📢 Advertisement Space (728x90) — Place your ad script here</span>
+            <span>📢 Место под рекламу (728x90) — Разместите ваш рекламный скрипт здесь</span>
         </div>
 
-        <h2>Popular Movies</h2>
-        <div class="grid" id="movieGrid">Loading catalog...</div>
+        <h2 id="sectionTitle">Популярное кино</h2>
+        <div class="grid" id="movieGrid">Загрузка каталога...</div>
     </div>
 
     <div class="modal" id="modal">
@@ -262,36 +293,59 @@
         let moviesList = [];
         let currentSelectedRating = 5;
 
-        async function loadMovies() {
+        // Загрузка фильмов на русском языке
+        async function loadMovies(url, title = "Популярное кино") {
+            document.getElementById('sectionTitle').innerText = title;
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`);
+                const res = await fetch(url);
                 const data = await res.json();
                 moviesList = data.results || [];
                 render(moviesList);
             } catch (e) {
-                document.getElementById('movieGrid').innerText = "Failed to load movie catalog.";
+                document.getElementById('movieGrid').innerText = "Ошибка загрузки каталога.";
+            }
+        }
+
+        // Переключение категорий (Популярное, Русское кино, Аниме)
+        function loadCategory(type) {
+            if (type === 'popular') {
+                loadMovies(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`, "🔥 Популярные фильмы");
+            } else if (type === 'russian') {
+                loadMovies(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=ru-RU&with_original_language=ru&sort_by=popularity.desc`, "🇷🇺 Русское кино и сериалы");
+            } else if (type === 'anime') {
+                loadMovies(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=ru-RU&with_genres=16&with_original_language=ja&sort_by=popularity.desc`, "⛩️ Популярное Аниме");
             }
         }
 
         async function searchMovie(q) {
-            if(!q) return loadMovies();
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(q)}`);
+            if(!q) return loadCategory('popular');
+            const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
             const data = await res.json();
             moviesList = data.results || [];
+            document.getElementById('sectionTitle').innerText = `Результаты поиска: "${q}"`;
             render(moviesList);
         }
 
         function render(list) {
             const grid = document.getElementById('movieGrid');
-            grid.innerHTML = list.map(m => `
-                <div class="card" onclick="openInfo(${m.id})">
-                    <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450'}" alt="${m.title}">
-                    <div class="card-info">
-                        <div class="card-title">${m.title}</div>
-                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average.toFixed(1)}</div>
+            if (list.length === 0) {
+                grid.innerHTML = '<div>Ничего не найдено.</div>';
+                return;
+            }
+            grid.innerHTML = list.map(m => {
+                const title = m.title || m.name || 'Без названия';
+                const date = (m.release_date || m.first_air_date || '').split('-')[0];
+                const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
+                return `
+                    <div class="card" onclick="openInfo(${m.id})">
+                        <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450'}" alt="${title}">
+                        <div class="card-info">
+                            <div class="card-title">${title}</div>
+                            <div class="card-meta">${date} • ★ ${rating}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function openInfo(id) {
@@ -299,8 +353,9 @@
             if (!m) return;
 
             const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : '';
-            const title = m.title;
-            const desc = m.overview || "No description available.";
+            const title = m.title || m.name;
+            const desc = m.overview || "Описание отсутствует.";
+            const isTv = m.first_air_date ? 'tv' : 'movie';
 
             document.getElementById('modalBody').innerHTML = `
                 <h2 style="margin-top:0;">${title}</h2>
@@ -308,21 +363,23 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть фильм</button>
+                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}', '${isTv}')">Смотреть онлайн</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        function startMovie(id, title) {
+        function startMovie(id, title, type = 'movie') {
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://vidlink.pro/movie/${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                
+                <!-- ПЛЕЕР С РУССКОЙ ОЗВУЧКОЙ И ОПЦИЯМИ -->
+                <iframe src="https://vidlink.pro/${type}/${id}?primaryColor=e50914&multiStream=true" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
-                    <span>📺 Sponsor Ad / Promo Code Banner (Under Player)</span>
+                    <span>📺 Спонсорский баннер / Реклама под плеером</span>
                 </div>
 
                 <!-- БЛОК ОТЗЫВОВ И ЗВЁЗД -->
@@ -335,7 +392,7 @@
                         <span class="star active" onclick="setRating(4)">★</span>
                         <span class="star active" onclick="setRating(5)">★</span>
                     </div>
-                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваше мнение о фильме..."></textarea>
+                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваше мнение о фильме или аниме..."></textarea>
                     <button class="review-btn" onclick="submitReview(${id})">Отправить отзыв</button>
                     
                     <div class="reviews-list" id="reviewsListContainer">
@@ -404,7 +461,8 @@
             document.getElementById('modalBody').innerHTML = '';
         }
 
-        loadMovies();
+        // Запуск по умолчанию
+        loadCategory('popular');
     </script>
     <script data-cfasync="false" src="https://bancadeltempoidea.org/14/eba8d4d2487e475023c1c30825def61d"></script>
 </body>
