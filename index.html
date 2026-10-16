@@ -259,7 +259,6 @@
     <header>
         <div class="logo" onclick="loadCategory('popular')">KinoUltra</div>
         
-        <!-- КНОПКИ РАЗДЕЛОВ НА РУССКОМ -->
         <nav>
             <button class="active" onclick="loadCategory('popular')">🔥 Популярное</button>
             <button onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
@@ -293,7 +292,6 @@
         let moviesList = [];
         let currentSelectedRating = 5;
 
-        // Загрузка фильмов на русском языке
         async function loadMovies(url, title = "Популярное кино") {
             document.getElementById('sectionTitle').innerText = title;
             try {
@@ -306,7 +304,6 @@
             }
         }
 
-        // Переключение категорий (Популярное, Русское кино, Аниме)
         function loadCategory(type) {
             if (type === 'popular') {
                 loadMovies(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`, "🔥 Популярные фильмы");
@@ -370,9 +367,8 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // Запуск плеера без ошибки 404
+        // ЕДИНСТВЕННЫЙ ОДИН ПЛЕЕР
         function startMovie(id, title, type = 'movie') {
-            // Исправление: для ТВ-шоу и аниме указываем 1 сезон и 1 серию (/1/1), чтобы не было 404
             let playerUrl = type === 'tv' 
                 ? `https://vidlink.pro/tv/${id}/1/1?primaryColor=e50914&multiStream=true`
                 : `https://vidlink.pro/movie/${id}?primaryColor=e50914&multiStream=true`;
@@ -380,15 +376,15 @@
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
-                <!-- ПЛЕЕР -->
+                <!-- ОДИН ПЛЕЕР ДЛЯ ВСЕГО КОНТЕНТА -->
                 <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
-                <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
+                <!-- БЛОК РЕКЛАМЫ #2 -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Спонсорский баннер / Реклама под плеером</span>
                 </div>
 
-                <!-- БЛОК ОТЗЫВОВ И ЗВЁЗД -->
+                <!-- БЛОК ОТЗЫВОВ -->
                 <div class="reviews-section">
                     <h4>Оставить отзыв и оценку</h4>
                     <div class="star-rating" id="starContainer">
@@ -401,9 +397,7 @@
                     <textarea class="review-input" id="reviewText" placeholder="Напишите ваше мнение о фильме или аниме..."></textarea>
                     <button class="review-btn" onclick="submitReview(${id})">Отправить отзыв</button>
                     
-                    <div class="reviews-list" id="reviewsListContainer">
-                        <!-- Сюда подгружаются отзывы -->
-                    </div>
+                    <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
             loadReviews(id);
@@ -467,7 +461,6 @@
             document.getElementById('modalBody').innerHTML = '';
         }
 
-        // Запуск по умолчанию
         loadCategory('popular');
     </script>
     <script data-cfasync="false" src="https://bancadeltempoidea.org/14/eba8d4d2487e475023c1c30825def61d"></script>
