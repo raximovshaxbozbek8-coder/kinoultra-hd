@@ -274,7 +274,7 @@
     <div class="container">
         <!-- БЛОК РЕКЛАМЫ #1: Верхний баннер -->
         <div class="ad-banner" id="topAdSlot">
-            <span>📢 Место под рекламу (728x90) — Разместите ваш рекламный скрипт здесь</span>
+            <span>📢 Рекламный блок (728x90)</span>
         </div>
 
         <h2 id="sectionTitle">Популярное кино</h2>
@@ -370,12 +370,18 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
+        // Запуск плеера без ошибки 404
         function startMovie(id, title, type = 'movie') {
+            // Исправление: для ТВ-шоу и аниме указываем 1 сезон и 1 серию (/1/1), чтобы не было 404
+            let playerUrl = type === 'tv' 
+                ? `https://vidlink.pro/tv/${id}/1/1?primaryColor=e50914&multiStream=true`
+                : `https://vidlink.pro/movie/${id}?primaryColor=e50914&multiStream=true`;
+
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
-                <!-- ПЛЕЕР С РУССКОЙ ОЗВУЧКОЙ И ОПЦИЯМИ -->
-                <iframe src="https://vidlink.pro/${type}/${id}?primaryColor=e50914&multiStream=true" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                <!-- ПЛЕЕР -->
+                <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
