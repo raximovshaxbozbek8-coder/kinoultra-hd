@@ -187,6 +187,29 @@
 
         .play-btn:hover { background: var(--accent-hover); }
 
+        .servers-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .server-btn {
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+
+        .server-btn.active, .server-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
         iframe {
             width: 100%;
             height: 480px;
@@ -358,22 +381,34 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть онлайн на русском</button>
+                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть онлайн</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // ИСПРАВЛЕННЫЙ ПЛЕЕР С ПОДДЕРЖКОЙ TMDB ID
+        // МУЛЬТИ-ПЛЕЕР С КНОПКАМИ ПЕРЕКЛЮЧЕНИЯ СЕРВЕРОВ
         function startMovie(id, title) {
-            let playerUrl = `https://vidsrc.cc/v2/embed/movie/${id}`;
+            // Ссылки на 3 разных источника (балансера)
+            const servers = [
+                { name: "Сервер 1 (VidSrc)", url: `https://vidsrc.cc/v2/embed/movie/${id}` },
+                { name: "Сервер 2 (VidLink)", url: `https://vidlink.pro/movie/${id}` },
+                { name: "Сервер 3 (Embed)", url: `https://vidsrc.xyz/embed/movie?tmdb=${id}` }
+            ];
 
             document.getElementById('modalBody').innerHTML = `
-                <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
+                <h3 style="margin-top:0; margin-bottom:10px;">${title}</h3>
+                
+                <!-- Кнопки переключения серверов -->
+                <div class="servers-bar" id="serversBar">
+                    ${servers.map((s, index) => `
+                        <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchServer('${s.url}', this)">${s.name}</button>
+                    `).join('')}
+                </div>
                 
                 <!-- ПЛЕЕР -->
-                <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="playerFrame" src="${servers[0].url}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- БЛОК РЕКЛАМЫ #2 -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
@@ -397,6 +432,15 @@
                 </div>
             `;
             loadReviews(id);
+        }
+
+        function switchServer(url, btnElement) {
+            // Меняем адрес в iframe
+            document.getElementById('playerFrame').src = url;
+            
+            // Переключаем активную кнопку
+            document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
         }
 
         function setRating(rating) {
