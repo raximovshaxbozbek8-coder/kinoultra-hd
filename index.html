@@ -365,14 +365,14 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // ПЛЕЕР KODIK ЧЕРЕЗ АКТИВНОЕ ЗЕРКАЛО kodik.biz
+        // ИСПРАВЛЕННЫЙ ПЛЕЕР С ПОДДЕРЖКОЙ TMDB ID
         function startMovie(id, title) {
-            let playerUrl = `https://kodik.biz/find-player?tmdb_id=${id}&title=${encodeURIComponent(title)}`;
+            let playerUrl = `https://vidsrc.cc/v2/embed/movie/${id}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
-                <!-- ПЛЕЕР С РУССКОЙ ОЗВУЧКОЙ -->
+                <!-- ПЛЕЕР -->
                 <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- БЛОК РЕКЛАМЫ #2 -->
