@@ -365,10 +365,9 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // РУССКИЙ ПЛЕЕР С ОЗВУЧКОЙ КИНА И АНИМЕ (KODIK)
+        // ИСПРАВЛЕННЫЙ ПЛЕЕР (используется kodik.info вместо kodik.cc)
         function startMovie(id, title) {
-            // Использование русскоязычной базы плееров Kodik по TMDB ID
-            let playerUrl = `https://kodik.cc/find-player?tmdb_id=${id}&title=${encodeURIComponent(title)}`;
+            let playerUrl = `https://kodik.info/find-player?tmdb_id=${id}&title=${encodeURIComponent(title)}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
