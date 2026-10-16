@@ -365,9 +365,9 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // ИСПРАВЛЕННЫЙ ПЛЕЕР (используется kodik.info вместо kodik.cc)
+        // ПЛЕЕР KODIK ЧЕРЕЗ АКТИВНОЕ ЗЕРКАЛО kodik.biz
         function startMovie(id, title) {
-            let playerUrl = `https://kodik.info/find-player?tmdb_id=${id}&title=${encodeURIComponent(title)}`;
+            let playerUrl = `https://kodik.biz/find-player?tmdb_id=${id}&title=${encodeURIComponent(title)}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
