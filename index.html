@@ -195,7 +195,6 @@
             background: #000;
         }
 
-        /* Стили для системы отзывов и звёзд */
         .reviews-section {
             margin-top: 25px;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -271,7 +270,7 @@
     </header>
 
     <div class="container">
-        <!-- БЛОК РЕКЛАМЫ #1: Верхний баннер -->
+        <!-- БЛОК РЕКЛАМЫ #1 -->
         <div class="ad-banner" id="topAdSlot">
             <span>📢 Рекламный блок (728x90)</span>
         </div>
@@ -352,7 +351,6 @@
             const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : '';
             const title = m.title || m.name;
             const desc = m.overview || "Описание отсутствует.";
-            const isTv = m.first_air_date ? 'tv' : 'movie';
 
             document.getElementById('modalBody').innerHTML = `
                 <h2 style="margin-top:0;">${title}</h2>
@@ -360,23 +358,22 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}', '${isTv}')">Смотреть онлайн</button>
+                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть онлайн на русском</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // ЕДИНСТВЕННЫЙ ОДИН ПЛЕЕР
-        function startMovie(id, title, type = 'movie') {
-            let playerUrl = type === 'tv' 
-                ? `https://vidlink.pro/tv/${id}/1/1?primaryColor=e50914&multiStream=true`
-                : `https://vidlink.pro/movie/${id}?primaryColor=e50914&multiStream=true`;
+        // РУССКИЙ ПЛЕЕР С ОЗВУЧКОЙ КИНА И АНИМЕ (KODIK)
+        function startMovie(id, title) {
+            // Использование русскоязычной базы плееров Kodik по TMDB ID
+            let playerUrl = `https://kodik.cc/find-player?tmdb_id=${id}&title=${encodeURIComponent(title)}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
-                <!-- ОДИН ПЛЕЕР ДЛЯ ВСЕГО КОНТЕНТА -->
+                <!-- ПЛЕЕР С РУССКОЙ ОЗВУЧКОЙ -->
                 <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- БЛОК РЕКЛАМЫ #2 -->
