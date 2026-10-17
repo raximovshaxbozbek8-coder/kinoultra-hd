@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KinoUltra — Смотреть фильмы, русское кино и аниме онлайн бесплатно</title>
-    <!-- Красная иконка с буквой K для вкладки браузера -->
+    <!-- Иконка сайта K -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
     <style>
@@ -198,11 +198,12 @@
             background: #222;
             border: 1px solid #444;
             color: white;
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
             transition: 0.2s;
+            font-weight: bold;
         }
 
         .server-btn.active, .server-btn:hover {
@@ -274,6 +275,7 @@
         }
     </style>
 
+    <!-- Рекламный скрипт #1 -->
     <script data-cfasync="false" src="https://aarems.org/1/fc63adad21599d5019e3641c3dda462d"></script>
 </head>
 <body>
@@ -381,27 +383,26 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть онлайн</button>
+                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть онлайн на русском</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        // МУЛЬТИ-ПЛЕЕР С КНОПКАМИ ПЕРЕКЛЮЧЕНИЯ СЕРВЕРОВ
+        // РАБОЧИЙ МУЛЬТИ-ПЛЕЕР С РУССКИМИ БАЛАНСИРОВЩИКАМИ
         function startMovie(id, title) {
-            // Ссылки на 3 разных источника (балансера)
             const servers = [
-                { name: "Сервер 1 (VidSrc)", url: `https://vidsrc.cc/v2/embed/movie/${id}` },
-                { name: "Сервер 2 (VidLink)", url: `https://vidlink.pro/movie/${id}` },
-                { name: "Сервер 3 (Embed)", url: `https://vidsrc.xyz/embed/movie?tmdb=${id}` }
+                { name: "Сервер 1 (Kodik Ru)", url: `https://kodik.info/find-by-tmdb/${id}` },
+                { name: "Сервер 2 (Collaps Ru)", url: `https://collaps.org/embed/movie/${id}` },
+                { name: "Сервер 3 (VoidBoost)", url: `https://voidboost.net/embed/${id}` }
             ];
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:10px;">${title}</h3>
                 
                 <!-- Кнопки переключения серверов -->
-                <div class="servers-bar" id="serversBar">
+                <div class="servers-bar">
                     ${servers.map((s, index) => `
                         <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchServer('${s.url}', this)">${s.name}</button>
                     `).join('')}
@@ -435,10 +436,7 @@
         }
 
         function switchServer(url, btnElement) {
-            // Меняем адрес в iframe
             document.getElementById('playerFrame').src = url;
-            
-            // Переключаем активную кнопку
             document.querySelectorAll('.server-btn').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
         }
@@ -503,6 +501,7 @@
 
         loadCategory('popular');
     </script>
+    <!-- Рекламный скрипт #2 -->
     <script data-cfasync="false" src="https://bancadeltempoidea.org/14/eba8d4d2487e475023c1c30825def61d"></script>
 </body>
 </html>
