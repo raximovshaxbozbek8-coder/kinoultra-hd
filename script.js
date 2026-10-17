@@ -2,6 +2,18 @@ const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
+// Динамическая подгрузка рекламы Adsterra без ошибок валидации в HTML
+function injectAdScript() {
+    if (!document.getElementById('adsterra-script')) {
+        const script = document.createElement('script');
+        script.id = 'adsterra-script';
+        script.src = 'https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918.js';
+        script.async = true;
+        document.head.appendChild(script);
+    }
+}
+injectAdScript();
+
 async function fetchTMDB(endpoint) {
     try {
         const separator = endpoint.includes('?') ? '&' : '?';
@@ -79,7 +91,6 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Высокоскоростные стабильные источники с выбором 1080p/720p, русской озвучкой и настройками
     const p1 = `https://vidsrc.me/embed/${isTv ? 'tv' : 'movie'}?tmdb=${id}`;
     const p2 = `https://vidsrc.cc/v2/embed/${isTv ? 'tv' : 'movie'}/${id}`;
 
@@ -87,7 +98,6 @@ function openPlayer(id, title, isTv = false) {
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
             
-            <!-- Красивые премиум-кнопки серверов с качеством -->
             <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
                 <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
                     <span>⚡ Full HD 1080p (Сервер 1)</span>
@@ -121,18 +131,14 @@ function openPlayer(id, title, isTv = false) {
             }
         </style>
 
-        <!-- Рамка плеера с подсветкой -->
         <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
             <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" style="margin-bottom:0;"></iframe>
         </div>
 
-        <!-- Нативная реклама Adsterra внутри модального окна для заработка -->
         <div class="ad-box">
-            <script async data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918.js"></script>
-            <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
+            <div id="container-modal-ad"></div>
         </div>
 
-        <!-- Секция комментариев и отзывов -->
         <div class="reviews-section">
             <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
             <div class="star-rating" id="starContainer">
