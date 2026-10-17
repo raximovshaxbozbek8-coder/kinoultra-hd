@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KinoUltra — Онлайн кинотеатр</title>
-    <!-- Favicon (иконка во вкладке браузера) -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e50914'><path d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/></svg>">
     
-    <!-- Встроенные стили CSS -->
     <style>
         :root {
             --bg-color: #0b0c10;
@@ -17,277 +15,56 @@
             --text-gray: #9ca3af;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Шапка */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 5%;
-            background: rgba(11, 12, 16, 0.95);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background: rgba(11, 12, 16, 0.95); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 24px;
-            font-weight: 900;
-            cursor: pointer;
-            letter-spacing: 1px;
-        }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 900; cursor: pointer; letter-spacing: 1px; }
+        .logo-icon { filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6)); transition: transform 0.3s ease; }
+        .logo:hover .logo-icon { transform: scale(1.1) rotate(-5deg); }
+        .logo .highlight { color: var(--accent); }
 
-        .logo-icon {
-            filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6));
-            transition: transform 0.3s ease;
-        }
+        .search-box { display: flex; gap: 8px; width: 100%; max-width: 400px; }
+        .search-box input { width: 100%; padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; outline: none; }
+        .search-box button { padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; }
 
-        .logo:hover .logo-icon {
-            transform: scale(1.1) rotate(-5deg);
-        }
+        nav { display: flex; gap: 12px; padding: 15px 5%; background: #12141d; overflow-x: auto; }
+        nav button { background: transparent; color: var(--text-gray); border: none; padding: 8px 16px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; white-space: nowrap; }
+        nav button.active, nav button:hover { color: #fff; background: rgba(255,255,255,0.1); }
 
-        .logo .highlight {
-            color: var(--accent);
-        }
+        main { padding: 25px 5%; flex: 1; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-6px); }
+        .card img { width: 100%; height: 270px; object-fit: cover; }
+        .card-info { padding: 12px; }
+        .card-title { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-gray); margin-top: 6px; }
 
-        .search-box {
-            display: flex;
-            gap: 8px;
-            width: 100%;
-            max-width: 400px;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
 
-        .search-box input {
-            width: 100%;
-            padding: 10px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            outline: none;
-        }
+        .custom-server-btn { background: transparent; color: #9ca3af; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
+        .custom-server-btn.active { background: linear-gradient(135deg, #e50914 0%, #b20710 100%); color: #ffffff; }
 
-        .search-box button {
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            background: var(--accent);
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .search-box button:hover {
-            opacity: 0.9;
-        }
-
-        /* Навигация */
-        nav {
-            display: flex;
-            gap: 12px;
-            padding: 15px 5%;
-            background: #12141d;
-            overflow-x: auto;
-        }
-
-        nav button {
-            background: transparent;
-            color: var(--text-gray);
-            border: none;
-            padding: 8px 16px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            white-space: nowrap;
-            transition: 0.2s;
-        }
-
-        nav button.active, nav button:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.1);
-        }
-
-        /* Основной контент */
-        main {
-            padding: 25px 5%;
-            flex: 1;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            font-size: 22px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-
-        .card img {
-            width: 100%;
-            height: 270px;
-            object-fit: cover;
-        }
-
-        .card-info {
-            padding: 12px;
-        }
-
-        .card-title {
-            font-size: 14px;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-gray);
-            margin-top: 6px;
-        }
-
-        /* Модальное окно */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: #161922;
-            width: 100%;
-            max-width: 900px;
-            border-radius: 16px;
-            padding: 24px;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 28px;
-            cursor: pointer;
-            color: var(--text-gray);
-        }
-
-        .close-btn:hover { color: #fff; }
-
-        /* Отзывы */
-        .reviews-section {
-            margin-top: 25px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 20px;
-        }
-
-        .star-rating {
-            display: flex;
-            gap: 5px;
-            font-size: 20px;
-            cursor: pointer;
-            color: #444;
-            margin-bottom: 12px;
-        }
-
+        .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
         .star-rating .star.active { color: #ffc107; }
-
-        .review-input {
-            width: 100%;
-            height: 80px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 8px;
-            padding: 10px;
-            color: #fff;
-            resize: none;
-            outline: none;
-            margin-bottom: 10px;
-        }
-
-        .review-btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .reviews-list {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .review-item {
-            background: rgba(255,255,255,0.03);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .review-item-header {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-gray);
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
+        .review-input { width: 100%; height: 80px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; resize: none; margin-bottom: 10px; }
+        .review-btn { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .reviews-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .review-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; font-size: 14px; }
+        .review-item-header { display: flex; justify-content: space-between; color: var(--text-gray); font-size: 12px; margin-bottom: 6px; }
     </style>
 </head>
 <body>
 
-    <!-- Шапка сайта -->
     <header>
         <div class="logo" onclick="loadCategory('popular')">
             <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#e50914" width="32" height="32">
@@ -302,20 +79,17 @@
         </div>
     </header>
 
-    <!-- Навигация -->
     <nav>
         <button id="btn-popular" class="active" onclick="loadCategory('popular')">🔥 Популярные</button>
         <button id="btn-russian" onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
         <button id="btn-anime" onclick="loadCategory('anime')">⛩️ Аниме</button>
     </nav>
 
-    <!-- Главный контент -->
     <main>
         <h2 id="sectionTitle">🔥 Популярные фильмы</h2>
         <div id="movieGrid" class="grid"></div>
     </main>
 
-    <!-- Модальное окно с плеером -->
     <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -323,13 +97,11 @@
         </div>
     </div>
 
-    <!-- Встроенная логика JavaScript -->
     <script>
         const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
         let moviesList = [];
         let currentSelectedRating = 5;
 
-        // Динамическая подгрузка рекламы Adsterra
         function injectAdScript() {
             if (!document.getElementById('adsterra-script')) {
                 const script = document.createElement('script');
@@ -341,7 +113,6 @@
         }
         injectAdScript();
 
-        // Загрузка официального JS-движка Kinobox
         function loadKinoboxScript(callback) {
             if (window.Kinobox) {
                 callback();
@@ -430,14 +201,21 @@
             }).join('');
         }
 
-        function openPlayer(id, title, isTv = false) {
+        async function openPlayer(id, title, isTv = false) {
+            const mediaType = isTv ? 'tv' : 'movie';
+            const directUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+
             document.getElementById('modalBody').innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800;">🎬 ${title}</h3>
+                    <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px;">
+                        <button class="custom-server-btn active" onclick="loadServer1(${id}, this)"><span>⚡ Сервер 1 (Auto)</span></button>
+                        <button class="custom-server-btn" onclick="loadServer2('${directUrl}', this)"><span>🛡️ Сервер 2 (Прямой)</span></button>
+                    </div>
                 </div>
 
-                <div id="kinoboxPlayer" class="kinobox_player" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 500px; background:#000;">
-                    <div style="color: #888; text-align: center; padding-top: 220px;">Загрузка русских серверов...</div>
+                <div id="playerBox" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; min-height: 500px; background:#000;">
+                    <div id="kinoboxPlayer" class="kinobox_player" style="width: 100%; height: 500px;"></div>
                 </div>
 
                 <div class="reviews-section">
@@ -451,13 +229,23 @@
                     </div>
                     <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв о фильме..."></textarea>
                     <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
-                    
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
             
             document.getElementById('modal').style.display = 'flex';
-            
+            loadServer1(id);
+            loadReviews(id);
+        }
+
+        function loadServer1(id, btn) {
+            if (btn) {
+                document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            const box = document.getElementById('playerBox');
+            box.innerHTML = '<div id="kinoboxPlayer" class="kinobox_player" style="width: 100%; height: 500px;"></div>';
+
             loadKinoboxScript(() => {
                 if (window.Kinobox) {
                     new Kinobox('#kinoboxPlayer', {
@@ -465,8 +253,15 @@
                     }).init();
                 }
             });
+        }
 
-            loadReviews(id);
+        function loadServer2(url, btn) {
+            if (btn) {
+                document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            const box = document.getElementById('playerBox');
+            box.innerHTML = `<iframe src="${url}" allowfullscreen="true" style="width:100%; height:500px; border:none; background:#000;"></iframe>`;
         }
 
         function setRating(rating) {
