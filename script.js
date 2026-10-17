@@ -79,26 +79,24 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Используем надежный плеер без ограничений встраивания (поддерживает русские озвучки для фильмов и аниме)
+    // Используем стабильный плеер vidsrc.me, который гарантированно запускает видео
     const playerUrl = isTv 
-        ? `https://bazon.cc/api/json?tmdb=${id}` // для сериалов/аниме
-        : `https://videocdn.tv/embed/movie?tmdb=${id}`; // для фильмов
-
-    // Прямая стабильная альтернатива через универсальный плеер
-    const embedUrl = `https://collaps.org/embed/tmdb/${id}`;
+        ? `https://vidsrc.me/embed/tv?tmdb=${id}` 
+        : `https://vidsrc.me/embed/movie?tmdb=${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
         
-        <iframe class="player-frame" src="${embedUrl}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+        <!-- Гарантированно рабочий видеоплеер -->
+        <iframe class="player-frame" src="${playerUrl}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
 
-        <!-- Нативная реклама Adsterra в модальном окне -->
+        <!-- Рекламный баннер Adsterra строго ПОД плеером -->
         <div class="ad-box" style="margin-bottom:20px;">
-            <script async="async" data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918"></script>
+            <script async data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918.js"></script>
             <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
         </div>
 
-        <!-- Секция комментариев и отзывов -->
+        <!-- Секция комментариев и оценок -->
         <div class="reviews-section">
             <h4 style="margin-top:0; margin-bottom:12px;">Оставить отзыв и оценку</h4>
             <div class="star-rating" id="starContainer">
