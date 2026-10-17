@@ -2,7 +2,7 @@ const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
-// Динамическая подгрузка рекламы Adsterra без ошибок валидации в HTML
+// Динамическая подгрузка рекламы Adsterra для заработка
 function injectAdScript() {
     if (!document.getElementById('adsterra-script')) {
         const script = document.createElement('script');
@@ -83,7 +83,7 @@ function render(list) {
                 <img src="${poster}" alt="${title}" loading="lazy">
                 <div class="card-info">
                     <div class="card-title">${title}</div>
-                    <div class="card-meta"><span>${date}</span><span>★ ${rating}</span></div>
+                    <div class="card-meta"><span>${date}</span><span>★${rating}</span></div>
                 </div>
             </div>
         `;
@@ -91,8 +91,10 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    const p1 = `https://vidsrc.me/embed/${isTv ? 'tv' : 'movie'}?tmdb=${id}`;
-    const p2 = `https://vidsrc.cc/v2/embed/${isTv ? 'tv' : 'movie'}/${id}`;
+    // Добавили настройки принудительного русского языка и автовоспроизведения в ссылки серверов
+    const mediaType = isTv ? 'tv' : 'movie';
+    const p1 = `https://vidsrc.me/embed/${mediaType}?tmdb=${id}&language=ru`;
+    const p2 = `https://vidsrc.cc/v2/embed/${mediaType}/${id}?auto_play=1&language=ru`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -100,10 +102,10 @@ function openPlayer(id, title, isTv = false) {
             
             <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
                 <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
-                    <span>⚡ Full HD 1080p (Сервер 1)</span>
+                    <span>⚡ Сервер 1 (RU)</span>
                 </button>
                 <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🛡️ HD 720p (Сервер 2)</span>
+                    <span>🛡️ Сервер 2 (RU)</span>
                 </button>
             </div>
         </div>
@@ -135,6 +137,7 @@ function openPlayer(id, title, isTv = false) {
             <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" style="margin-bottom:0;"></iframe>
         </div>
 
+        <!-- Рекламный блок для твоего заработка -->
         <div class="ad-box">
             <div id="container-modal-ad"></div>
         </div>
@@ -180,7 +183,7 @@ function submitReview(movieId) {
     const reviewsKey = 'reviews_' + movieId;
     const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
-    existingReviews.unshift({
+    existing`kexistingReviews.unshift({
         rating: currentSelectedRating,
         text: text,
         date: new Date().toLocaleDateString()
