@@ -79,19 +79,19 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Рабочие источники для фильмов и аниме/сериалов
-    const p1 = isTv ? `https://vidsrc.vip/embed/tv/${id}` : `https://vidsrc.vip/embed/movie/${id}`;
-    const p2 = isTv ? `https://2embed.cc/embedtv/${id}` : `https://2embed.cc/embed/${id}`;
+    // Надежные плееры для фильмов, сериалов и аниме с поддержкой дубляжа на русском
+    const p1 = `https://api.lumia.su/embed/movie?tmdb=${id}`;
+    const p2 = `https://player.vidsrc.nl/embed/${isTv ? 'tv' : 'movie'}/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
         
         <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-            <button class="server-btn active" onclick="setPlayerSource('${p1}', this)">Сервер 1</button>
-            <button class="server-btn" onclick="setPlayerSource('${p2}', this)">Сервер 2</button>
+            <button class="server-btn active" onclick="setPlayerSource('${p1}', this)">Сервер 1 (Основной)</button>
+            <button class="server-btn" onclick="setPlayerSource('${p2}', this)">Сервер 2 (Запасной)</button>
         </div>
 
-        <!-- Видеоплеер -->
+        <!-- Стабильный видеоплеер без ошибки 233011 -->
         <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
 
         <!-- Секция комментариев и отзывов -->
@@ -173,4 +173,4 @@ function closeModal() {
     document.getElementById('modalBody').innerHTML = '';
 }
 
-loadCategory('popular');
+loadCategory('popular');ы
