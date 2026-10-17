@@ -14,19 +14,6 @@ function injectAdScript() {
 }
 injectAdScript();
 
-// Подгрузка официального скрипта Kinobox
-function loadKinoboxScript(callback) {
-    if (window.Kinobox) {
-        callback();
-        return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://kinobox.in/kinobox.min.js';
-    script.async = true;
-    script.onload = callback;
-    document.head.appendChild(script);
-}
-
 async function fetchTMDB(endpoint) {
     try {
         const separator = endpoint.includes('?') ? '&' : '?';
@@ -104,12 +91,51 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
+    const mediaType = isTv ? 'tv' : 'movie';
+    const p1 = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+    const p2 = isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/1/1` : `https://vidsrc.cc/v2/embed/movie/${id}`;
+
     document.getElementById('modalBody').innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
+            
+            <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this, true)">
+                    <span>⚡ Сервер 1 (Kinobox)</span>
+                </button>
+                <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this, false)">
+                    <span>🛡️ Сервер 2 (VidSrc)</span>
+                </button>
+            </div>
         </div>
 
-        <div class="kinobox_player" style="width: 100%; min-height: 500px; border-radius: 14px; overflow: hidden; background: #000; margin-bottom: 25px;"></div>
+        <style>
+            .custom-server-btn {
+                background: transparent;
+                color: #9ca3af;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 700;
+                font-size: 13px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .custom-server-btn:hover {
+                color: #fff;
+                background: rgba(255,255,255,0.08);
+            }
+            .custom-server-btn.active {
+                background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+                color: #ffffff;
+                box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            }
+        </style>
+
+        <!-- Контейнер с обрезкой лишнего верхнего меню -->
+        <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; height: 500px; background:#000;">
+            <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="width:100%; height:570px; border:none; background:#000; margin-top:-70px;"></iframe>
+        </div>
 
         <div class="ad-box">
             <div id="container-modal-ad"></div>
@@ -131,18 +157,21 @@ function openPlayer(id, title, isTv = false) {
         </div>
     `;
     document.getElementById('modal').style.display = 'flex';
-
-    // Запускаем Kinobox плеер напрямую без линеек и внешних витрин
-    loadKinoboxScript(() => {
-        if (window.Kinobox) {
-            new Kinobox('.kinobox_player', {
-                search: { tmdb: id },
-                menu: { enable: false } // Отключаем внешнее меню!
-            }).init();
-        }
-    });
-
     loadReviews(id);
+}
+
+function setPlayerSource(url, btn, isKinobox) {
+    const frame = document.getElementById('activePlayerFrame');
+    frame.src = url;
+    if (isKinobox) {
+        frame.style.height = '570px';
+        frame.style.marginTop = '-70px';
+    } else {
+        frame.style.height = '500px';
+        frame.style.marginTop = '0px';
+    }
+    document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 }
 
 function setRating(rating) {
