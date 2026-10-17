@@ -13,17 +13,6 @@ function injectAdScript() {
 }
 injectAdScript();
 
-function loadKinoboxScript(callback) {
-    if (window.kbox) {
-        callback();
-        return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://kinobox.in/kinobox.min.js';
-    script.onload = callback;
-    document.head.appendChild(script);
-}
-
 async function fetchTMDB(endpoint) {
     try {
         const separator = endpoint.includes('?') ? '&' : '?';
@@ -101,12 +90,17 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
+    const mediaType = isTv ? 'tv' : 'movie';
+    const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
         </div>
 
-        <div id="player-container" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 480px; background: #000;"></div>
+        <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
+            <iframe class="player-frame" src="${playerUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="width:100%; height:500px; border:none; background:#000;"></iframe>
+        </div>
 
         <div class="ad-box">
             <div id="container-modal-ad"></div>
@@ -129,14 +123,6 @@ function openPlayer(id, title, isTv = false) {
     `;
     document.getElementById('modal').style.display = 'flex';
     loadReviews(id);
-
-    loadKinoBoxScript(() => {
-        if (window.kbox) {
-            kbox('#player-container', {
-                search: { tmdb: id }
-            });
-        }
-    });
 }
 
 function setRating(rating) {
