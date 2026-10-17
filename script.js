@@ -91,7 +91,8 @@ function render(list) {
 
 function openPlayer(id, title, isTv = false) {
     const mediaType = isTv ? 'tv' : 'movie';
-    const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+    // Добавляем параметр hideMenu=true, чтобы убрать лишние вкладки сверху
+    const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}?hideMenu=true`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
