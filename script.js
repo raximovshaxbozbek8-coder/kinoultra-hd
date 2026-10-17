@@ -92,10 +92,10 @@ function render(list) {
 
 function openPlayer(id, title, isTv = false) {
     const mediaType = isTv ? 'tv' : 'movie';
-    // Сервер 1: Прямой плеер Kinobox с автопоиском по TMDB ID
-    const p1 = `https://kinobox.tv/embed/#${id}`;
-    // Сервер 2: Стабильный резервный плеер VidSrc
-    const p2 = isTv ? `https://vidsrc.me/embed/tv?tmdb=${id}&season=1&episode=1` : `https://vidsrc.me/embed/movie?tmdb=${id}`;
+    // Сервер 1: Kinobox (агрегатор с выбором русских озвучек)
+    const p1 = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+    // Сервер 2: VidSrc v2 (запасной)
+    const p2 = isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/1/1` : `https://vidsrc.cc/v2/embed/movie/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
