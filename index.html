@@ -172,9 +172,10 @@
                 const date = (m.release_date || m.first_air_date || '').split('-')[0];
                 const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
                 const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
+                const isTv = m.media_type === 'tv' || !m.title;
                 const safeTitle = title.replace(/'/g, "");
                 return `
-                    <div class="card" onclick="openPlayer('${safeTitle}')">
+                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}', ${isTv})">
                         <img src="${poster}" alt="${title}" loading="lazy">
                         <div class="card-info">
                             <div class="card-title">${title}</div>
@@ -185,10 +186,10 @@
             }).join('');
         }
 
-        function openPlayer(title) {
-            // Прямой автопоиск без меню и ошибок
-            const cleanTitle = encodeURIComponent(title);
-            const playerUrl = `https://vidsrc.me/embed/movie?title=${cleanTitle}`;
+        function openPlayer(id, title, isTv) {
+            const mediaType = isTv ? 'tv' : 'movie';
+            // Прямая ссылка на Kinobox по TMDB ID с русской озвучкой
+            const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <div style="margin-bottom: 15px;">
@@ -209,13 +210,13 @@
                         <span class="star active" onclick="setRating(5)">★</span>
                     </div>
                     <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв..."></textarea>
-                    <button class="review-btn" onclick="submitReview('${title}')">Опубликовать отзыв</button>
+                    <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
             
             document.getElementById('modal').style.display = 'flex';
-            loadReviews(title);
+            loadReviews(id);
         }
 
         function setRating(rating) {
@@ -227,11 +228,11 @@
             });
         }
 
-        function submitReview(title) {
+        function submitReview(movieId) {
             const text = document.getElementById('reviewText').value.trim();
             if (!text) return alert('Пожалуйста, напишите текст отзыва!');
 
-            const reviewsKey = 'reviews_' + title;
+            const reviewsKey = 'reviews_' + movieId;
             const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
             existingReviews.unshift({
@@ -242,11 +243,11 @@
 
             localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
             document.getElementById('reviewText').value = '';
-            loadReviews(title);
+            loadReviews(movieId);
         }
 
-        function loadReviews(title) {
-            const reviewsKey = 'reviews_' + title;
+        function loadReviews(movieId) {
+            const reviewsKey = 'reviews_' + movieId;
             const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
             const container = document.getElementById('reviewsListContainer');
 
