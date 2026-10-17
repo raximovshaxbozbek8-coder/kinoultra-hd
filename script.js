@@ -83,7 +83,7 @@ function render(list) {
                 <img src="${poster}" alt="${title}" loading="lazy">
                 <div class="card-info">
                     <div class="card-title">${title}</div>
-                    <div class="card-meta"><span>${date}</span><span>★${rating}</span></div>
+                    <div class="card-meta"><span>${date}</span><span>★ ${rating}</span></div>
                 </div>
             </div>
         `;
@@ -91,7 +91,6 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Добавили настройки принудительного русского языка и автовоспроизведения в ссылки серверов
     const mediaType = isTv ? 'tv' : 'movie';
     const p1 = `https://vidsrc.me/embed/${mediaType}?tmdb=${id}&language=ru`;
     const p2 = `https://vidsrc.cc/v2/embed/${mediaType}/${id}?auto_play=1&language=ru`;
@@ -137,7 +136,6 @@ function openPlayer(id, title, isTv = false) {
             <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" style="margin-bottom:0;"></iframe>
         </div>
 
-        <!-- Рекламный блок для твоего заработка -->
         <div class="ad-box">
             <div id="container-modal-ad"></div>
         </div>
@@ -183,7 +181,7 @@ function submitReview(movieId) {
     const reviewsKey = 'reviews_' + movieId;
     const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
-    existing`kexistingReviews.unshift({
+    existingReviews.unshift({
         rating: currentSelectedRating,
         text: text,
         date: new Date().toLocaleDateString()
