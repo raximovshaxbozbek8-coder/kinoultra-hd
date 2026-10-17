@@ -1,12 +1,25 @@
 const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 
+// Автоматическая загрузка скрипта плеера Kinobox для поддержки русской озвучки (Kodik, Collaps)
+function loadKinoboxScript() {
+    if (!document.getElementById('kinobox-script')) {
+        const script = document.createElement('script');
+        script.id = 'kinobox-script';
+        script.src = 'https://kinobox.net/php/kinobox.js';
+        script.async = true;
+        document.head.appendChild(script);
+    }
+}
+loadKinoboxScript();
+
 async function fetchTMDB(endpoint) {
     try {
-        const res = await fetch(`https://api.themoviedb.org/3${endpoint}?api_key=${API_KEY}&language=ru-RU`);
+        const separator = endpoint.includes('?') ? '&' : '?';
+        const res = await fetch(`https://api.themoviedb.org/3${endpoint}${separator}api_key=${API_KEY}&language=ru-RU`);
         if (res.ok) return await res.json();
     } catch (e) {
-        console.error("Ошибка:", e);
+        console.error("Ошибка сети:", e);
     }
     return null;
 }
@@ -16,11 +29,11 @@ async function loadMovies(endpoint, title = "Фильмы") {
     document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Загрузка каталога...</div>';
     
     const data = await fetchTMDB(endpoint);
-    if (data && data.results) {
+    if (data && data.results && data.results.length > 0) {
         moviesList = data.results;
         render(moviesList);
     } else {
-        document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Ошибка загрузки. Проверьте соединение.</div>';
+        document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Ничего не найдено или ошибка соединения.</div>';
     }
 }
 
@@ -31,20 +44,26 @@ function loadCategory(type) {
         loadMovies('/movie/popular', "Популярные фильмы");
     } else if (type === 'russian') {
         document.getElementById('btn-russian').classList.add('active');
-        loadMovies('/discover/movie?with_original_language=ru&sort_by=popularity.desc', "Русское кино");
+        // Исправленный запрос для надежной загрузки русского кино
+        loadMovies('/discover/movie?region=RU&sort_by=popularity.desc', "Русское кино");
     } else if (type === 'anime') {
         document.getElementById('btn-anime').classList.add('active');
-        loadMovies('/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "Популярное Аниме");
+        // Исправленный запрос для аниме через жанр 16 (мультфильмы) и японский язык
+        loadMovies('/discover/movie?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "Популярное Аниме");
     }
 }
 
 async function searchMovie(q) {
     if (!q) return loadCategory('popular');
     document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
-    const data = await fetchTMDB(`/search/multi?query=${encodeURIComponent(q)}`);
-    if (data && data.results) {
+    document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Поиск...</div>';
+    
+    const data = await fetchTMDB(`/search/movie?query=${encodeURIComponent(q)}`);
+    if (data && data.results && data.results.length > 0) {
         moviesList = data.results;
         render(moviesList);
+    } else {
+        document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding: 40px;">По вашему запросу ничего не найдено.</div>';
     }
 }
 
@@ -58,7 +77,7 @@ function render(list) {
         const title = m.title || m.name || 'Без названия';
         const date = (m.release_date || m.first_air_date || '').split('-')[0];
         const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
-        const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет';
+        const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
         return `
             <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}')">
                 <img src="${poster}" alt="${title}" loading="lazy">
@@ -72,24 +91,31 @@ function render(list) {
 }
 
 function openPlayer(id, title) {
-    const s1 = `https://vidsrc.xyz/embed/movie?tmdb=${id}`;
-    const s2 = `https://vidsrc.me/embed/movie?tmdb=${id}`;
-
+    // Используем встроенный плеер Kinobox, который автоматически находит русскую озвучку (Kodik, Collaps, Alloha)
     document.getElementById('modalBody').innerHTML = `
-        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
-        <div class="servers">
-            <button class="server-btn active" onclick="setServer('${s1}', this)">Сервер 1</button>
-            <button class="server-btn" onclick="setServer('${s2}', this)">Сервер 2</button>
+        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title} (Русская озвучка)</h3>
+        
+        <div style="background: #000; border-radius: 12px; overflow: hidden; min-height: 480px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
+            <div class="kinobox_player" style="width:100%; min-height:480px;"></div>
         </div>
-        <iframe id="iframePlayer" class="player-frame" src="${s1}" allowfullscreen></iframe>
     `;
     document.getElementById('modal').style.display = 'flex';
-}
 
-function setServer(url, btn) {
-    document.getElementById('iframePlayer').src = url;
-    document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    const initPlayer = () => {
+        if (window.kbox) {
+            kbox('.kinobox_player', {
+                search: { tmdb: id },
+                menu: { enable: true },
+                players: ['kodik', 'collaps', 'alloha', 'voidboost']
+            });
+        }
+    };
+
+    if (window.kbox) {
+        initPlayer();
+    } else {
+        setTimeout(initPlayer, 600);
+    }
 }
 
 function closeModal() {
