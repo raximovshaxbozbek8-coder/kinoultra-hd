@@ -2,7 +2,7 @@ const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
-// Динамическая подгрузка рекламы Adsterra
+// Подгрузка рекламы Adsterra
 function injectAdScript() {
     if (!document.getElementById('adsterra-script')) {
         const script = document.createElement('script');
@@ -14,19 +14,6 @@ function injectAdScript() {
 }
 injectAdScript();
 
-// Загрузка официального движка Kinobox
-function loadKinoboxSDK(callback) {
-    if (window.Kinobox) {
-        callback();
-        return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://kinobox.in/kinobox.min.js';
-    script.async = true;
-    script.onload = callback;
-    document.head.appendChild(script);
-}
-
 async function fetchTMDB(endpoint) {
     try {
         const separator = endpoint.includes('?') ? '&' : '?';
@@ -36,6 +23,13 @@ async function fetchTMDB(endpoint) {
         console.error("Ошибка TMDB:", e);
     }
     return null;
+}
+
+// Получаем внешние ID (включая Kinopoisk / IMDB ID) по TMDB ID
+async function getExternalIds(id, isTv = false) {
+    const type = isTv ? 'tv' : 'movie';
+    const data = await fetchTMDB(`/${type}/${id}/external_ids`);
+    return data || {};
 }
 
 async function loadMovies(endpoint, title = "Фильмы") {
@@ -103,14 +97,14 @@ function render(list) {
     }).join('');
 }
 
-function openPlayer(id, title, isTv = false) {
+async function openPlayer(id, title, isTv = false) {
     document.getElementById('modalBody').innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
         </div>
 
-        <div id="kinoboxPlayer" class="kinobox_player" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 500px; background:#000;">
-            <div style="color: #888; text-align: center; padding-top: 220px;">Загрузка русских серверов...</div>
+        <div id="playerBox" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; height: 500px; background:#000; display: flex; align-items: center; justify-content: center;">
+            <div style="color: #888; font-size: 16px;">Поиск рабочего плеера...</div>
         </div>
 
         <div class="ad-box">
@@ -134,16 +128,25 @@ function openPlayer(id, title, isTv = false) {
     `;
     
     document.getElementById('modal').style.display = 'flex';
-    
-    loadKinoboxSDK(() => {
-        if (window.Kinobox) {
-            new Kinobox('#kinoboxPlayer', {
-                search: { tmdb: id }
-            }).init();
-        }
-    });
-
     loadReviews(id);
+
+    // Получаем Kinopoisk ID и IMDB ID
+    const ext = await getExternalIds(id, isTv);
+    const imdbId = ext.imdb_id || '';
+    const mediaType = isTv ? 'tv' : 'movie';
+
+    // Формируем прямую рабочую ссылку для плеера
+    let playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+    if (imdbId) {
+        playerUrl = `https://vidsrc.me/embed/${mediaType}?imdb=${imdbId}`;
+    }
+
+    const playerBox = document.getElementById('playerBox');
+    if (playerBox) {
+        playerBox.innerHTML = `
+            <iframe id="activePlayerFrame" src="${playerUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
+        `;
+    }
 }
 
 function setRating(rating) {
