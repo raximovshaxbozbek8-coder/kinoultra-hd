@@ -186,8 +186,9 @@
         }
 
         function openPlayer(title) {
-            // Единый прямой плеер без кнопок серверов. Ищет ВСЕ фильмы, сериалы и Аниме по названию
-            const playerUrl = `https://kinobox.in/embed/query/${encodeURIComponent(title)}`;
+            // Прямой автопоиск без меню и ошибок
+            const cleanTitle = encodeURIComponent(title);
+            const playerUrl = `https://vidsrc.me/embed/movie?title=${cleanTitle}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <div style="margin-bottom: 15px;">
@@ -207,7 +208,7 @@
                         <span class="star active" onclick="setRating(4)">★</span>
                         <span class="star active" onclick="setRating(5)">★</span>
                     </div>
-                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв о фильме..."></textarea>
+                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв..."></textarea>
                     <button class="review-btn" onclick="submitReview('${title}')">Опубликовать отзыв</button>
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
