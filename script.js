@@ -1,4 +1,4 @@
-const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
+\const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
@@ -91,9 +91,9 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // 100% рабочие плееры без блокировок Vercel
-    const p1 = `https://lorient.ru/embed/tmdb/${id}`;
-    const p2 = `https://vidsrc.me/embed/${isTv ? 'tv' : 'movie'}?tmdb=${id}`;
+    // Используем прямой iframe-доступ к Kinobox (выдает стабильный плеер с русскими озвучками)
+    const p1 = `https://kinobox.in/embed/tmdb/${id}`;
+    const p2 = `https://voidboost.net/embed/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -101,10 +101,10 @@ function openPlayer(id, title, isTv = false) {
             
             <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
                 <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
-                    <span>⚡ Сервер 1 (Русский)</span>
+                    <span>⚡ Сервер 1 (Multi RU)</span>
                 </button>
                 <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🛡️ Сервер 2 (Запасной)</span>
+                    <span>🛡️ Сервер 2 (VoidBoost RU)</span>
                 </button>
             </div>
         </div>
