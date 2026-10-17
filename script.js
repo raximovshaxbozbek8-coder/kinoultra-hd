@@ -1,6 +1,18 @@
 const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 
+// Автоматическая загрузка официального скрипта Kinobox
+function loadKinoboxScript() {
+    if (!document.getElementById('kinobox-script')) {
+        const script = document.createElement('script');
+        script.id = 'kinobox-script';
+        script.src = 'https://kinobox.net/php/kinobox.js';
+        script.async = true;
+        document.head.appendChild(script);
+    }
+}
+loadKinoboxScript();
+
 async function fetchTMDB(endpoint) {
     try {
         const separator = endpoint.includes('?') ? '&' : '?';
@@ -39,7 +51,6 @@ function loadCategory(type) {
     }
 }
 
-// Универсальный поиск: ищет фильмы, сериалы и аниме
 async function searchMovie(q) {
     if (!q) return loadCategory('popular');
     document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
@@ -78,31 +89,33 @@ function render(list) {
     }).join('');
 }
 
-// Открытие плеера с гарантированной русской озвучкой и настройками
 function openPlayer(id, title, isTv = false) {
-    // Надежные плееры с русской озвучкой (Kodik / Videocdn / Alloha)
-    const typePath = isTv ? 'tv' : 'movie';
-    
-    // Плеер 1: Видеобалансировщик с русской озвучкой и сериалами/аниме
-    const p1 = `https://kinobox.in/embed/${typePath}/${id}`;
-    // Плеер 2: Стабильный русский балансировщик Kodik/Alloha
-    const p2 = `https://2382028.allvideoblocks.bet/player?tmdb=${id}`;
-
+    // Выводим чистый контейнер под плеер без лишних кнопок-серверов с ошибками
     document.getElementById('modalBody').innerHTML = `
         <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title} (Русская озвучка)</h3>
-        <div class="servers">
-            <button class="server-btn active" onclick="setServer('${p1}', this)">Сервер 1 (Русская дубляж)</button>
-            <button class="server-btn" onclick="setServer('${p2}', this)">Сервер 2 (Запасной)</button>
+        
+        <div style="background: #000; border-radius: 12px; overflow: hidden; min-height: 480px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
+            <div class="kinobox_player" style="width:100%; min-height:480px;"></div>
         </div>
-        <iframe id="iframePlayer" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
     `;
     document.getElementById('modal').style.display = 'flex';
-}
 
-function setServer(url, btn) {
-    document.getElementById('iframePlayer').src = url;
-    document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    // Инициализируем плеер Kinobox с автопоиском по TMDB ID
+    const initPlayer = () => {
+        if (window.kbox) {
+            kbox('.kinobox_player', {
+                search: isTv ? { tmdb: id, type: 'tv' } : { tmdb: id },
+                menu: { enable: true },
+                players: ['kodik', 'collaps', 'alloha', 'voidboost']
+            });
+        }
+    };
+
+    if (window.kbox) {
+        initPlayer();
+    } else {
+        setTimeout(initPlayer, 800);
+    }
 }
 
 function closeModal() {
