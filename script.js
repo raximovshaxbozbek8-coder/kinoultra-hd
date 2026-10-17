@@ -2,7 +2,6 @@ const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
-// Динамическая подгрузка рекламы Adsterra для заработка
 function injectAdScript() {
     if (!document.getElementById('adsterra-script')) {
         const script = document.createElement('script');
@@ -91,7 +90,6 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Используем проверенные стабильные плееры с русской озвучкой через iframe
     const p1 = `https://movies.alloha.tv/?tmdb=${id}`;
     const p2 = `https://api.lumia.su/embed/movie?tmdb=${id}`;
 
