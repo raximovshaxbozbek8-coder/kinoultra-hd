@@ -65,8 +65,9 @@ function render(list) {
         const date = (m.release_date || m.first_air_date || '').split('-')[0];
         const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
         const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
+        const isTv = m.media_type === 'tv' || !m.title;
         return `
-            <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}')">
+            <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}', ${isTv})">
                 <img src="${poster}" alt="${title}" loading="lazy">
                 <div class="card-info">
                     <div class="card-title">${title}</div>
@@ -77,16 +78,21 @@ function render(list) {
     }).join('');
 }
 
-function openPlayer(id, title) {
-    // Надежный iframe-источник с русской озвучкой без черных экранов
-    const embedUrl = `https://vidsrc.cc/v2/embed/movie/${id}`;
+function openPlayer(id, title, isTv = false) {
+    // Используем надежный плеер без ограничений встраивания (поддерживает русские озвучки для фильмов и аниме)
+    const playerUrl = isTv 
+        ? `https://bazon.cc/api/json?tmdb=${id}` // для сериалов/аниме
+        : `https://videocdn.tv/embed/movie?tmdb=${id}`; // для фильмов
+
+    // Прямая стабильная альтернатива через универсальный плеер
+    const embedUrl = `https://collaps.org/embed/tmdb/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
         
-        <iframe class="player-frame" src="${embedUrl}" allowfullscreen allow="autoplay; fullscreen"></iframe>
+        <iframe class="player-frame" src="${embedUrl}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
 
-        <!-- Нативная реклама в модальном окне -->
+        <!-- Нативная реклама Adsterra в модальном окне -->
         <div class="ad-box" style="margin-bottom:20px;">
             <script async="async" data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918"></script>
             <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
