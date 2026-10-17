@@ -3,543 +3,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra - Онлайн Кинотеатр</title>
+    <title>KinoUltra — Онлайн кинотеатр</title>
+    <!-- Favicon (иконка во вкладке браузера) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e50914'><path d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/></svg>">
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            red: '#E50914',
-                            darkRed: '#B20710',
-                            gold: '#FFC107',
-                            bg: '#0F0F12',
-                            card: '#18181C',
-                            modal: '#121216'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Custom Glassmorphic & Smooth Scroll Styles -->
+    <!-- Встроенные стили CSS -->
     <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --accent: #e50914;
+            --text-main: #ffffff;
+            --text-gray: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            background-color: #0F0F12;
-            color: #E5E7EB;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Glassmorphism card & header styles */
-        .glass-panel {
-            background: rgba(24, 24, 28, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Шапка */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(11, 12, 16, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .glass-modal {
-            background: rgba(18, 18, 22, 0.95);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 900;
+            cursor: pointer;
+            letter-spacing: 1px;
         }
 
-        /* Card hover effects */
-        .movie-card {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        .logo-icon {
+            filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6));
+            transition: transform 0.3s ease;
         }
 
-        .movie-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5), 0 10px 10px rgba(0, 0, 0, 0.3);
+        .logo:hover .logo-icon {
+            transform: scale(1.1) rotate(-5deg);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0F0F12;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #27272A;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #E50914;
+        .logo .highlight {
+            color: var(--accent);
         }
 
-        /* Active star styling */
-        .star-gold {
-            color: #FFC107;
-            text-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+        .search-box {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 400px;
         }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        .search-box input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            outline: none;
         }
 
-        .animate-fade-in {
-            animation: fadeIn 0.35s ease-out forwards;
+        .search-box button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-box button:hover {
+            opacity: 0.9;
+        }
+
+        /* Навигация */
+        nav {
+            display: flex;
+            gap: 12px;
+            padding: 15px 5%;
+            background: #12141d;
+            overflow-x: auto;
+        }
+
+        nav button {
+            background: transparent;
+            color: var(--text-gray);
+            border: none;
+            padding: 8px 16px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        nav button.active, nav button:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Основной контент */
+        main {
+            padding: 25px 5%;
+            flex: 1;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .card img {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+        }
+
+        .card-info {
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-gray);
+            margin-top: 6px;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #161922;
+            width: 100%;
+            max-width: 900px;
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-gray);
+        }
+
+        .close-btn:hover { color: #fff; }
+
+        /* Отзывы */
+        .reviews-section {
+            margin-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #444;
+            margin-bottom: 12px;
+        }
+
+        .star-rating .star.active { color: #ffc107; }
+
+        .review-input {
+            width: 100%;
+            height: 80px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            resize: none;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        .review-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .reviews-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .review-item {
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .review-item-header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 12px;
+            margin-bottom: 6px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-brand-red selection:text-white">
+<body>
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="sticky top-0 z-40 w-full glass-panel border-b border-white/10 px-4 lg:px-8 py-3.5 transition-all">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            
-            <!-- Logo & Main Nav -->
-            <div class="flex items-center justify-between w-full md:w-auto">
-                <a href="#" onclick="loadCategory('popular'); return false;" class="flex items-center gap-2 group">
-                    <span class="bg-gradient-to-r from-brand-red to-brand-darkRed text-white p-2 rounded-xl shadow-lg shadow-brand-red/30 group-hover:scale-105 transition-transform">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6.47L5.76 10H20v8H4V6.47M3.64 4.1L2 5.74 3.2 7H2v13h20V8h-2.12l3.32-3.32-1.41-1.42L18.42 6H5.58L3.64 4.1z"/></svg>
-                    </span>
-                    <span class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">KINO<span class="text-brand-red">ULTRA</span></span>
-                </a>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="logo" onclick="loadCategory('popular')">
+            <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#e50914" width="32" height="32">
+                <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
+            </svg>
+            <span>KINO<span class="highlight">ULTRA</span></span>
+        </div>
 
-                <!-- Mobile Menu Button toggles category bar -->
-                <button onclick="toggleMobileNav()" class="md:hidden text-gray-400 hover:text-white focus:outline-none p-1">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                </button>
-            </div>
-
-            <!-- Category Navigation -->
-            <nav id="navCategories" class="hidden md:flex items-center gap-1 bg-black/40 p-1.5 rounded-xl border border-white/5 w-full md:w-auto overflow-x-auto">
-                <button id="btn-popular" onclick="loadCategory('popular')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-white bg-brand-red shadow-lg shadow-brand-red/30">
-                    🔥 Популярное
-                </button>
-                <button id="btn-russian" onclick="loadCategory('russian')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-gray-400 hover:text-white hover:bg-white/10">
-                    🇷🇺 Русское
-                </button>
-                <button id="btn-anime" onclick="loadCategory('anime')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-gray-400 hover:text-white hover:bg-white/10">
-                    ⛩️ Аниме
-                </button>
-                <button id="btn-tv" onclick="loadCategory('tv')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-gray-400 hover:text-white hover:bg-white/10">
-                    📺 Сериалы
-                </button>
-            </nav>
-
-            <!-- Search Bar -->
-            <div class="relative w-full md:w-72">
-                <input type="text" id="searchInput" onkeyup="handleSearchKey(event)" placeholder="Поиск фильмов, аниме..." 
-                       class="w-full bg-black/50 text-sm text-white placeholder-gray-400 rounded-xl pl-10 pr-10 py-2.5 border border-white/10 focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red transition-all">
-                <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <button onclick="triggerSearch()" class="absolute right-2.5 top-2 text-xs font-semibold bg-brand-red/80 hover:bg-brand-red text-white px-2.5 py-1 rounded-lg transition-colors">
-                    Найти
-                </button>
-            </div>
-
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Поиск фильмов, сериалов, аниме..." onkeyup="if(event.key === 'Enter') searchMovie(this.value)">
+            <button onclick="searchMovie(document.getElementById('searchInput').value)">Поиск</button>
         </div>
     </header>
 
-    <!-- HERO / BANNER SECTION -->
-    <div id="heroBanner" class="relative w-full h-[360px] sm:h-[420px] lg:h-[480px] bg-cover bg-center transition-all duration-700">
-        <div class="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/60 to-transparent"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/40 to-transparent"></div>
-        <div class="relative max-w-7xl mx-auto h-full flex flex-col justify-end px-4 lg:px-8 pb-10">
-            <span id="heroBadge" class="inline-block bg-brand-red text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full w-max mb-3 shadow-md shadow-brand-red/40">
-                Премьера
-            </span>
-            <h1 id="heroTitle" class="text-3xl sm:text-5xl font-black text-white max-w-2xl leading-tight mb-3 drop-shadow-lg">
-                Загрузка новинок...
-            </h1>
-            <p id="heroOverview" class="text-gray-300 text-xs sm:text-sm max-w-xl line-clamp-3 mb-6 leading-relaxed">
-                Откройте для себя лучшие фильмы и сериалы в высоком качестве с удобным онлайн-плеером.
-            </p>
-            <div>
-                <button id="heroPlayBtn" class="flex items-center gap-2 bg-brand-red hover:bg-brand-darkRed text-white px-6 py-3 rounded-xl font-bold text-sm shadow-xl shadow-brand-red/30 transition-all hover:scale-105 active:scale-95">
-                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    Смотреть онлайн
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- Навигация -->
+    <nav>
+        <button id="btn-popular" class="active" onclick="loadCategory('popular')">🔥 Популярные</button>
+        <button id="btn-russian" onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
+        <button id="btn-anime" onclick="loadCategory('anime')">⛩️ Аниме</button>
+    </nav>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-8 flex-1 w-full">
-        <!-- Section Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 id="sectionTitle" class="text-2xl font-bold text-white tracking-wide border-l-4 border-brand-red pl-3">
-                🔥 Популярные фильмы
-            </h2>
-            <span id="movieCount" class="text-xs text-gray-400 font-medium bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
-                Загрузка...
-            </span>
-        </div>
-
-        <!-- Movie Grid -->
-        <div id="movieGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-            <!-- Dynamic items rendered via JS -->
-        </div>
+    <!-- Главный контент -->
+    <main>
+        <h2 id="sectionTitle">🔥 Популярные фильмы</h2>
+        <div id="movieGrid" class="grid"></div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="glass-panel border-t border-white/10 mt-12 py-8 text-center text-xs text-gray-500">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p>© 2026 KinoUltra. Все права защищены. Данный сайт использует материалы TMDB.</p>
-            <div class="flex gap-6 text-gray-400">
-                <a href="#" class="hover:text-white transition-colors">Правообладателям</a>
-                <a href="#" class="hover:text-white transition-colors">Конфиденциальность</a>
-                <a href="#" class="hover:text-white transition-colors">Контакты</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- STREAMING MODAL PLAYER -->
-    <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
-        <div class="relative w-full max-w-5xl glass-modal rounded-2xl shadow-2xl overflow-hidden my-auto animate-fade-in border border-white/10">
-            
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/5">
-                <div class="flex items-center gap-3">
-                    <span class="text-brand-red text-xl">🎬</span>
-                    <h3 id="modalMovieTitle" class="text-lg sm:text-xl font-bold text-white truncate max-w-md sm:max-w-xl">
-                        Название фильма
-                    </h3>
-                </div>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 p-2 rounded-xl transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
-
-            <!-- Modal Content Body -->
-            <div class="p-4 sm:p-6 space-y-6 max-h-[85vh] overflow-y-auto">
-                
-                <!-- Server Switcher Toolbar -->
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <svg class="w-4 h-4 text-brand-red" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/></svg>
-                        Выберите источник трансляции:
-                    </span>
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <button id="srv-1" onclick="switchServer(1)" class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition-all bg-brand-red text-white shadow-lg shadow-brand-red/30">
-                            ⚡ Сервер 1 (Kodik / Alloha)
-                        </button>
-                        <button id="srv-2" onclick="switchServer(2)" class="flex-1 sm:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white/5 text-gray-400 hover:text-white hover:bg-white/10">
-                            🛡️ Сервер 2 (Collaps / VidSrc)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Iframe Container -->
-                <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-white/10">
-                    <iframe id="playerFrame" class="w-full h-full border-0" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-                </div>
-
-                <!-- Reviews & Ratings Section -->
-                <div class="bg-black/30 p-5 rounded-xl border border-white/5 space-y-4">
-                    <h4 class="text-base font-bold text-white flex items-center gap-2">
-                        <span>💬</span> Отзывы и оценки сообщества
-                    </h4>
-
-                    <!-- Star Picker -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400">Ваша оценка:</span>
-                        <div class="flex gap-1" id="starPicker">
-                            <button onclick="setRating(1)" class="star-btn text-xl text-gray-600 hover:text-brand-gold transition-colors">★</button>
-                            <button onclick="setRating(2)" class="star-btn text-xl text-gray-600 hover:text-brand-gold transition-colors">★</button>
-                            <button onclick="setRating(3)" class="star-btn text-xl text-gray-600 hover:text-brand-gold transition-colors">★</button>
-                            <button onclick="setRating(4)" class="star-btn text-xl text-gray-600 hover:text-brand-gold transition-colors">★</button>
-                            <button onclick="setRating(5)" class="star-btn text-xl text-brand-gold">★</button>
-                        </div>
-                    </div>
-
-                    <!-- Input Box -->
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="text" id="reviewInput" placeholder="Поделитесь своими впечатлениями о фильме..." 
-                               class="flex-1 bg-black/60 border border-white/10 text-sm text-white rounded-xl px-4 py-2.5 focus:outline-none focus:border-brand-red">
-                        <button onclick="saveReview()" class="bg-brand-red hover:bg-brand-darkRed text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-md shadow-brand-red/20">
-                            Опубликовать
-                        </button>
-                    </div>
-
-                    <!-- Reviews List -->
-                    <div id="reviewsContainer" class="space-y-3 pt-2 border-t border-white/5">
-                        <!-- Rendered reviews -->
-                    </div>
-                </div>
-
-            </div>
+    <!-- Модальное окно с плеером -->
+    <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- Встроенная логика JavaScript -->
     <script>
         const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
-        let currentMovies = [];
-        let currentMovieId = null;
-        let currentMediaType = 'movie';
-        let selectedRating = 5;
+        let moviesList = [];
+        let currentSelectedRating = 5;
 
-        // On Load Initializer
-        window.onload = function() {
-            loadCategory('popular');
-        };
+        // Динамическая подгрузка рекламы Adsterra
+        function injectAdScript() {
+            if (!document.getElementById('adsterra-script')) {
+                const script = document.createElement('script');
+                script.id = 'adsterra-script';
+                script.src = 'https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918.js';
+                script.async = true;
+                document.head.appendChild(script);
+            }
+        }
+        injectAdScript();
 
-        // Fetch Helper for TMDB
+        // Загрузка официального JS-движка Kinobox
+        function loadKinoboxScript(callback) {
+            if (window.Kinobox) {
+                callback();
+                return;
+            }
+            const script = document.createElement('script');
+            script.src = 'https://kinobox.in/kinobox.min.js';
+            script.async = true;
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+
         async function fetchTMDB(endpoint) {
             try {
                 const separator = endpoint.includes('?') ? '&' : '?';
                 const res = await fetch(`https://api.themoviedb.org/3${endpoint}${separator}api_key=${API_KEY}&language=ru-RU`);
                 if (res.ok) return await res.json();
-            } catch (err) {
-                console.error("TMDB Fetch Error:", err);
+            } catch (e) {
+                console.error("Ошибка TMDB:", e);
             }
             return null;
         }
 
-        // Load Categories
-        async function loadCategory(type) {
-            updateActiveNav(type);
-            let endpoint = '/movie/popular';
-            let title = '🔥 Популярные фильмы';
-
-            if (type === 'russian') {
-                endpoint = '/discover/movie?with_original_language=ru&sort_by=popularity.desc';
-                title = '🇷🇺 Русское кино';
-            } else if (type === 'anime') {
-                endpoint = '/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc';
-                title = '⛩️ Популярное Аниме';
-            } else if (type === 'tv') {
-                endpoint = '/tv/popular';
-                title = '📺 Популярные Сериалы';
-            }
-
+        async function loadMovies(endpoint, title = "Фильмы") {
             document.getElementById('sectionTitle').innerText = title;
-            showLoadingGrid();
-
+            document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Загрузка каталога...</div>';
+            
             const data = await fetchTMDB(endpoint);
             if (data && data.results && data.results.length > 0) {
-                currentMovies = data.results;
-                renderGrid(currentMovies);
-                setupHero(currentMovies[0], type === 'anime' || type === 'tv');
+                moviesList = data.results;
+                render(moviesList);
             } else {
-                showErrorGrid();
+                document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Не удалось загрузить данные.</div>';
             }
         }
 
-        // Hero Banner Display
-        function setupHero(movie, isTv = false) {
-            if (!movie) return;
-            const hero = document.getElementById('heroBanner');
-            const backdrop = movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : 'https://via.placeholder.com/1280x720';
-            
-            hero.style.backgroundImage = `url('${backdrop}')`;
-            document.getElementById('heroTitle').innerText = movie.title || movie.name || 'Название недоступно';
-            document.getElementById('heroOverview').innerText = movie.overview || 'Описание фильма пока отсутствует.';
-            
-            const heroBtn = document.getElementById('heroPlayBtn');
-            heroBtn.onclick = function() {
-                openModal(movie.id, movie.title || movie.name, isTv);
-            };
+        function loadCategory(type) {
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            if (type === 'popular') {
+                document.getElementById('btn-popular')?.classList.add('active');
+                loadMovies('/movie/popular', "🔥 Популярные фильмы");
+            } else if (type === 'russian') {
+                document.getElementById('btn-russian')?.classList.add('active');
+                loadMovies('/discover/movie?with_original_language=ru&sort_by=popularity.desc', "🇷🇺 Русское кино");
+            } else if (type === 'anime') {
+                document.getElementById('btn-anime')?.classList.add('active');
+                loadMovies('/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "⛩️ Популярное Аниме");
+            }
         }
 
-        // Search Input Handles
-        function handleSearchKey(e) {
-            if (e.key === 'Enter') triggerSearch();
-        }
-
-        async function triggerSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return loadCategory('popular');
-
-            document.getElementById('sectionTitle').innerText = `🔍 Результаты поиска: "${query}"`;
-            showLoadingGrid();
-
-            const data = await fetchTMDB(`/search/multi?query=${encodeURIComponent(query)}`);
+        async function searchMovie(q) {
+            if (!q) return loadCategory('popular');
+            document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
+            document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Поиск...</div>';
+            
+            const data = await fetchTMDB(`/search/multi?query=${encodeURIComponent(q)}`);
             if (data && data.results && data.results.length > 0) {
-                currentMovies = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
-                renderGrid(currentMovies);
+                moviesList = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
+                render(moviesList);
             } else {
-                document.getElementById('movieGrid').innerHTML = `
-                    <div class="col-span-full text-center py-16 text-gray-400">
-                        Ничего не найдено по вашему запросу.
-                    </div>
-                `;
-                document.getElementById('movieCount').innerText = '0 результатов';
+                document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding: 40px;">По вашему запросу ничего не найдено.</div>';
             }
         }
 
-        // Render Cards Grid
-        function renderGrid(movies) {
+        function render(list) {
             const grid = document.getElementById('movieGrid');
-            document.getElementById('movieCount').innerText = `${movies.length} элементов`;
-
-            grid.innerHTML = movies.map(m => {
+            if (!list || list.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Ничего не найдено</div>';
+                return;
+            }
+            grid.innerHTML = list.map(m => {
                 const title = m.title || m.name || 'Без названия';
-                const year = (m.release_date || m.first_air_date || '').split('-')[0] || '2026';
-                const rating = m.vote_average ? m.vote_average.toFixed(1) : '7.0';
-                const poster = m.poster_path ? `https://image.tmdb.org/t/p/w500${m.poster_path}` : 'https://via.placeholder.com/300x450/18181C/FFFFFF?text=Нет+обложки';
+                const date = (m.release_date || m.first_air_date || '').split('-')[0];
+                const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
+                const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
                 const isTv = m.media_type === 'tv' || !m.title;
-
                 return `
-                    <div onclick="openModal(${m.id}, '${title.replace(/'/g, "\\'")}', ${isTv})" 
-                         class="movie-card glass-panel rounded-2xl overflow-hidden cursor-pointer group flex flex-col justify-between">
-                        <div class="relative aspect-[2/3] w-full overflow-hidden bg-black/50">
-                            <img src="${poster}" alt="${title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            <div class="absolute top-2.5 right-2.5 bg-black/70 backdrop-blur-md text-brand-gold text-xs font-bold px-2.5 py-1 rounded-lg border border-white/10 flex items-center gap-1">
-                                <span>★</span> ${rating}
-                            </div>
-                        </div>
-                        <div class="p-3.5 flex flex-col justify-between flex-1">
-                            <h3 class="text-sm font-bold text-white group-hover:text-brand-red transition-colors line-clamp-1">${title}</h3>
-                            <div class="flex items-center justify-between text-xs text-gray-400 mt-2">
-                                <span>${year}</span>
-                                <span class="bg-white/5 px-2 py-0.5 rounded border border-white/5 text-[10px] uppercase font-semibold">${isTv ? 'Сериал' : 'Фильм'}</span>
-                            </div>
+                    <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}', ${isTv})">
+                        <img src="${poster}" alt="${title}" loading="lazy">
+                        <div class="card-info">
+                            <div class="card-title">${title}</div>
+                            <div class="card-meta"><span>${date}</span><span>★ ${rating}</span></div>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        // UI Grid Loading States
-        function showLoadingGrid() {
-            document.getElementById('movieGrid').innerHTML = `
-                <div class="col-span-full text-center py-20 text-gray-500 animate-pulse">
-                    Загрузка каталога материалов...
+        function openPlayer(id, title, isTv = false) {
+            document.getElementById('modalBody').innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
+                </div>
+
+                <div id="kinoboxPlayer" class="kinobox_player" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 500px; background:#000;">
+                    <div style="color: #888; text-align: center; padding-top: 220px;">Загрузка русских серверов...</div>
+                </div>
+
+                <div class="reviews-section">
+                    <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
+                    <div class="star-rating" id="starContainer">
+                        <span class="star active" onclick="setRating(1)">★</span>
+                        <span class="star active" onclick="setRating(2)">★</span>
+                        <span class="star active" onclick="setRating(3)">★</span>
+                        <span class="star active" onclick="setRating(4)">★</span>
+                        <span class="star active" onclick="setRating(5)">★</span>
+                    </div>
+                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв о фильме..."></textarea>
+                    <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
+                    
+                    <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
-        }
-
-        function showErrorGrid() {
-            document.getElementById('movieGrid').innerHTML = `
-                <div class="col-span-full text-center py-20 text-red-400">
-                    Ошибка при загрузке данных. Пожалуйста, проверьте подключение.
-                </div>
-            `;
-        }
-
-        // Navigation Active Button Switcher
-        function updateActiveNav(type) {
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.className = "nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-gray-400 hover:text-white hover:bg-white/10";
-            });
-            const activeBtn = document.getElementById(`btn-${type}`);
-            if (activeBtn) {
-                activeBtn.className = "nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all text-white bg-brand-red shadow-lg shadow-brand-red/30";
-            }
-        }
-
-        function toggleMobileNav() {
-            const nav = document.getElementById('navCategories');
-            nav.classList.toggle('hidden');
-            nav.classList.toggle('flex');
-        }
-
-        // MODAL & PLAYER FUNCTIONS
-        function openModal(id, title, isTv) {
-            currentMovieId = id;
-            currentMediaType = isTv ? 'tv' : 'movie';
             
-            document.getElementById('modalMovieTitle').innerText = title;
-            document.getElementById('modal').classList.remove('hidden');
-            document.getElementById('modal').classList.add('flex');
+            document.getElementById('modal').style.display = 'flex';
             
-            // Default to Server 1
-            switchServer(1);
-            loadLocalReviews();
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.getElementById('playerFrame').src = '';
-        }
-
-        function switchServer(serverNum) {
-            const frame = document.getElementById('playerFrame');
-            const btn1 = document.getElementById('srv-1');
-            const btn2 = document.getElementById('srv-2');
-
-            if (serverNum === 1) {
-                // Server 1: Alloha / Kodik Fallback Embed
-                frame.src = `https://movies.alloha.tv/?tmdb=${currentMovieId}`;
-                btn1.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition-all bg-brand-red text-white shadow-lg shadow-brand-red/30";
-                btn2.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white/5 text-gray-400 hover:text-white hover:bg-white/10";
-            } else {
-                // Server 2: VidSrc VIP Embed
-                frame.src = currentMediaType === 'tv' 
-                    ? `https://vidsrc.vip/embed/tv/${currentMovieId}/1/1` 
-                    : `https://vidsrc.vip/embed/movie/${currentMovieId}`;
-                
-                btn2.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition-all bg-brand-red text-white shadow-lg shadow-brand-red/30";
-                btn1.className = "flex-1 sm:flex-initial px-4 py-2 rounded-lg text-xs font-bold transition-all bg-white/5 text-gray-400 hover:text-white hover:bg-white/10";
-            }
-        }
-
-        // RATING & LOCALSTORAGE REVIEWS
-        function setRating(val) {
-            selectedRating = val;
-            const buttons = document.querySelectorAll('#starPicker button');
-            buttons.forEach((btn, idx) => {
-                if (idx < val) {
-                    btn.className = "star-btn text-xl text-brand-gold transition-colors";
-                } else {
-                    btn.className = "star-btn text-xl text-gray-600 hover:text-brand-gold transition-colors";
+            loadKinoboxScript(() => {
+                if (window.Kinobox) {
+                    new Kinobox('#kinoboxPlayer', {
+                        search: { tmdb: id }
+                    }).init();
                 }
             });
+
+            loadReviews(id);
         }
 
-        function saveReview() {
-            const input = document.getElementById('reviewInput');
-            const text = input.value.trim();
-            if (!text || !currentMovieId) return;
+        function setRating(rating) {
+            currentSelectedRating = rating;
+            const stars = document.querySelectorAll('#starContainer .star');
+            stars.forEach((star, index) => {
+                if (index < rating) star.classList.add('active');
+                else star.classList.remove('active');
+            });
+        }
 
-            const storageKey = `kinoultra_reviews_${currentMovieId}`;
-            const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        function submitReview(movieId) {
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text) return alert('Пожалуйста, напишите текст отзыва!');
 
-            existing.unshift({
-                rating: selectedRating,
+            const reviewsKey = 'reviews_' + movieId;
+            const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
+
+            existingReviews.unshift({
+                rating: currentSelectedRating,
                 text: text,
-                date: new Date().toLocaleDateString('ru-RU')
+                date: new Date().toLocaleDateString()
             });
 
-            localStorage.setItem(storageKey, JSON.stringify(existing));
-            input.value = '';
-            loadLocalReviews();
+            localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
+            document.getElementById('reviewText').value = '';
+            loadReviews(movieId);
         }
 
-        function loadLocalReviews() {
-            const container = document.getElementById('reviewsContainer');
-            const storageKey = `kinoultra_reviews_${currentMovieId}`;
-            const reviews = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        function loadReviews(movieId) {
+            const reviewsKey = 'reviews_' + movieId;
+            const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
+            const container = document.getElementById('reviewsListContainer');
 
             if (reviews.length === 0) {
-                container.innerHTML = `<div class="text-xs text-gray-500 italic py-2">Отзывов пока нет. Будьте первым!</div>`;
+                container.innerHTML = '<div style="color:var(--text-gray); font-size:13px;">Пока нет отзывов. Напишите первый комментарий!</div>';
                 return;
             }
 
             container.innerHTML = reviews.map(r => `
-                <div class="bg-black/40 p-3 rounded-xl border border-white/5 text-xs">
-                    <div class="flex items-center justify-between text-gray-400 mb-1">
-                        <span class="text-brand-gold font-bold">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                <div class="review-item">
+                    <div class="review-item-header">
+                        <span>Оценка: ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
                         <span>${r.date}</span>
                     </div>
-                    <div class="text-gray-200">${r.text}</div>
+                    <div>${r.text}</div>
                 </div>
             `).join('');
         }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('modalBody').innerHTML = '';
+        }
+
+        loadCategory('popular');
     </script>
 </body>
 </html>
