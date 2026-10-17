@@ -92,9 +92,10 @@ function render(list) {
 
 function openPlayer(id, title, isTv = false) {
     const mediaType = isTv ? 'tv' : 'movie';
-    // Оба сервера строго на русском языке
-    const p1 = `https://movies.alloha.tv/?tmdb=${id}`;
-    const p2 = `https://voidboost.net/embed/${mediaType}/${id}`;
+    // Сервер 1: Прямой плеер Kinobox с автопоиском по TMDB ID
+    const p1 = `https://kinobox.tv/embed/#${id}`;
+    // Сервер 2: Стабильный резервный плеер VidSrc
+    const p2 = isTv ? `https://vidsrc.me/embed/tv?tmdb=${id}&season=1&episode=1` : `https://vidsrc.me/embed/movie?tmdb=${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -102,10 +103,10 @@ function openPlayer(id, title, isTv = false) {
             
             <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
                 <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
-                    <span>🇷🇺 Сервер 1 (Alloha)</span>
+                    <span>⚡ Сервер 1 (Kinobox RU)</span>
                 </button>
                 <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🇷🇺 Сервер 2 (VoidBoost)</span>
+                    <span>🛡️ Сервер 2 (VidSrc)</span>
                 </button>
             </div>
         </div>
