@@ -14,14 +14,15 @@ function injectAdScript() {
 }
 injectAdScript();
 
-// Подключаем скрипт KinoBox
-function loadKinoBoxScript(callback) {
-    if (window.kbox) {
+// Динамическая подгрузка универсального скрипта Kinobox
+function loadKinoboxScript(callback) {
+    if (window.Kinobox) {
         callback();
         return;
     }
     const script = document.createElement('script');
     script.src = 'https://kinobox.in/kinobox.min.js';
+    script.async = true;
     script.onload = callback;
     document.head.appendChild(script);
 }
@@ -104,12 +105,12 @@ function render(list) {
 
 function openPlayer(id, title, isTv = false) {
     document.getElementById('modalBody').innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
         </div>
 
-        <!-- Чистый блок под плеер -->
-        <div id="kinobox-player" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 500px; background: #000;"></div>
+        <!-- Контейнер универсального плеера -->
+        <div class="kinobox_player" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 500px; background: #000;"></div>
 
         <div class="ad-box">
             <div id="container-modal-ad"></div>
@@ -133,13 +134,13 @@ function openPlayer(id, title, isTv = false) {
     document.getElementById('modal').style.display = 'flex';
     loadReviews(id);
 
-    // Запускаем плеер без ошибок
-    loadKinoBoxScript(() => {
-        if (window.kbox) {
-            kbox('#kinobox-player', {
+    // Запуск Kinobox для автоматического поиска рабочего русского видеопотока
+    loadKinoboxScript(() => {
+        if (window.Kinobox) {
+            new Kinobox('.kinobox_player', {
                 search: { tmdb: id },
-                menu: { enable: false }
-            });
+                players: ['kodik', 'collaps', 'alloha', 'vbid']
+            }).init();
         }
     });
 }
