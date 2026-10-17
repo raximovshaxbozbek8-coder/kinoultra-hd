@@ -1,17 +1,6 @@
 const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
-
-// Автоматическая загрузка официального скрипта Kinobox
-function loadKinoboxScript() {
-    if (!document.getElementById('kinobox-script')) {
-        const script = document.createElement('script');
-        script.id = 'kinobox-script';
-        script.src = 'https://kinobox.net/php/kinobox.js';
-        script.async = true;
-        document.head.appendChild(script);
-    }
-}
-loadKinoboxScript();
+let currentSelectedRating = 5;
 
 async function fetchTMDB(endpoint) {
     try {
@@ -33,7 +22,7 @@ async function loadMovies(endpoint, title = "Фильмы") {
         moviesList = data.results;
         render(moviesList);
     } else {
-        document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Ошибка загрузки или сеть недоступна.</div>';
+        document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Не удалось загрузить данные.</div>';
     }
 }
 
@@ -76,9 +65,8 @@ function render(list) {
         const date = (m.release_date || m.first_air_date || '').split('-')[0];
         const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
         const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
-        const isTv = m.media_type === 'tv' || !m.title;
         return `
-            <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}', ${isTv})">
+            <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}')">
                 <img src="${poster}" alt="${title}" loading="lazy">
                 <div class="card-info">
                     <div class="card-title">${title}</div>
@@ -89,33 +77,87 @@ function render(list) {
     }).join('');
 }
 
-function openPlayer(id, title, isTv = false) {
-    // Выводим чистый контейнер под плеер без лишних кнопок-серверов с ошибками
+function openPlayer(id, title) {
+    // Надежный iframe-источник с русской озвучкой без черных экранов
+    const embedUrl = `https://vidsrc.cc/v2/embed/movie/${id}`;
+
     document.getElementById('modalBody').innerHTML = `
-        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title} (Русская озвучка)</h3>
+        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
         
-        <div style="background: #000; border-radius: 12px; overflow: hidden; min-height: 480px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
-            <div class="kinobox_player" style="width:100%; min-height:480px;"></div>
+        <iframe class="player-frame" src="${embedUrl}" allowfullscreen allow="autoplay; fullscreen"></iframe>
+
+        <!-- Нативная реклама в модальном окне -->
+        <div class="ad-box" style="margin-bottom:20px;">
+            <script async="async" data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918"></script>
+            <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
+        </div>
+
+        <!-- Секция комментариев и отзывов -->
+        <div class="reviews-section">
+            <h4 style="margin-top:0; margin-bottom:12px;">Оставить отзыв и оценку</h4>
+            <div class="star-rating" id="starContainer">
+                <span class="star active" onclick="setRating(1)">★</span>
+                <span class="star active" onclick="setRating(2)">★</span>
+                <span class="star active" onclick="setRating(3)">★</span>
+                <span class="star active" onclick="setRating(4)">★</span>
+                <span class="star active" onclick="setRating(5)">★</span>
+            </div>
+            <textarea class="review-input" id="reviewText" placeholder="Напишите ваш комментарий или мнение о фильме..."></textarea>
+            <button class="review-btn" onclick="submitReview(${id})">Отправить комментарий</button>
+            
+            <div class="reviews-list" id="reviewsListContainer"></div>
         </div>
     `;
     document.getElementById('modal').style.display = 'flex';
+    loadReviews(id);
+}
 
-    // Инициализируем плеер Kinobox с автопоиском по TMDB ID
-    const initPlayer = () => {
-        if (window.kbox) {
-            kbox('.kinobox_player', {
-                search: isTv ? { tmdb: id, type: 'tv' } : { tmdb: id },
-                menu: { enable: true },
-                players: ['kodik', 'collaps', 'alloha', 'voidboost']
-            });
-        }
-    };
+function setRating(rating) {
+    currentSelectedRating = rating;
+    const stars = document.querySelectorAll('#starContainer .star');
+    stars.forEach((star, index) => {
+        if (index < rating) star.classList.add('active');
+        else star.classList.remove('active');
+    });
+}
 
-    if (window.kbox) {
-        initPlayer();
-    } else {
-        setTimeout(initPlayer, 800);
+function submitReview(movieId) {
+    const text = document.getElementById('reviewText').value.trim();
+    if (!text) return alert('Пожалуйста, напишите текст отзыва!');
+
+    const reviewsKey = 'reviews_' + movieId;
+    const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
+
+    existingReviews.unshift({
+        rating: currentSelectedRating,
+        text: text,
+        date: new Date().toLocaleDateString()
+    });
+
+    localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
+    document.getElementById('reviewText').value = '';
+    loadReviews(movieId);
+}
+
+function loadReviews(movieId) {
+    const reviewsKey = 'reviews_' + movieId;
+    const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
+    const container = document.getElementById('reviewsListContainer');
+
+    if (reviews.length === 0) {
+        container.innerHTML = '<div style="color:var(--text-gray); font-size:13px;">Пока нет отзывов. Напишите первый комментарий!</div>';
+        return;
     }
+
+    container.innerHTML = reviews.map(r => `
+        <div class="review-item">
+            <div class="review-item-header">
+                <span>Оценка: ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                <span>${r.date}</span>
+            </div>
+            <div>${r.text}</div>
+        </div>
+    `).join('');
 }
 
 function closeModal() {
