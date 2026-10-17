@@ -25,8 +25,7 @@
         }
 
         .logo { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 900; cursor: pointer; letter-spacing: 1px; }
-        .logo-icon { filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6)); transition: transform 0.3s ease; }
-        .logo:hover .logo-icon { transform: scale(1.1) rotate(-5deg); }
+        .logo-icon { filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6)); }
         .logo .highlight { color: var(--accent); }
 
         .search-box { display: flex; gap: 8px; width: 100%; max-width: 400px; }
@@ -49,9 +48,6 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
-
-        .custom-server-btn { background: transparent; color: #9ca3af; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; }
-        .custom-server-btn.active { background: linear-gradient(135deg, #e50914 0%, #b20710 100%); color: #ffffff; }
 
         .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
@@ -112,18 +108,6 @@
             }
         }
         injectAdScript();
-
-        function loadKinoboxScript(callback) {
-            if (window.Kinobox) {
-                callback();
-                return;
-            }
-            const script = document.createElement('script');
-            script.src = 'https://kinobox.in/kinobox.min.js';
-            script.async = true;
-            script.onload = callback;
-            document.head.appendChild(script);
-        }
 
         async function fetchTMDB(endpoint) {
             try {
@@ -188,9 +172,9 @@
                 const date = (m.release_date || m.first_air_date || '').split('-')[0];
                 const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
                 const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
-                const isTv = m.media_type === 'tv' || !m.title;
+                const safeTitle = title.replace(/'/g, "");
                 return `
-                    <div class="card" onclick="openPlayer(${m.id}, '${title.replace(/'/g, "")}', ${isTv})">
+                    <div class="card" onclick="openPlayer('${safeTitle}')">
                         <img src="${poster}" alt="${title}" loading="lazy">
                         <div class="card-info">
                             <div class="card-title">${title}</div>
@@ -201,21 +185,17 @@
             }).join('');
         }
 
-        async function openPlayer(id, title, isTv = false) {
-            const mediaType = isTv ? 'tv' : 'movie';
-            const directUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+        function openPlayer(title) {
+            // Единый прямой плеер без кнопок серверов. Ищет ВСЕ фильмы, сериалы и Аниме по названию
+            const playerUrl = `https://kinobox.in/embed/query/${encodeURIComponent(title)}`;
 
             document.getElementById('modalBody').innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                <div style="margin-bottom: 15px;">
                     <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800;">🎬 ${title}</h3>
-                    <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px;">
-                        <button class="custom-server-btn active" onclick="loadServer1(${id}, this)"><span>⚡ Сервер 1 (Auto)</span></button>
-                        <button class="custom-server-btn" onclick="loadServer2('${directUrl}', this)"><span>🛡️ Сервер 2 (Прямой)</span></button>
-                    </div>
                 </div>
 
-                <div id="playerBox" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; min-height: 500px; background:#000;">
-                    <div id="kinoboxPlayer" class="kinobox_player" style="width: 100%; height: 500px;"></div>
+                <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; height: 500px; background:#000;">
+                    <iframe src="${playerUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
                 </div>
 
                 <div class="reviews-section">
@@ -228,40 +208,13 @@
                         <span class="star active" onclick="setRating(5)">★</span>
                     </div>
                     <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв о фильме..."></textarea>
-                    <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
+                    <button class="review-btn" onclick="submitReview('${title}')">Опубликовать отзыв</button>
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
             
             document.getElementById('modal').style.display = 'flex';
-            loadServer1(id);
-            loadReviews(id);
-        }
-
-        function loadServer1(id, btn) {
-            if (btn) {
-                document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            }
-            const box = document.getElementById('playerBox');
-            box.innerHTML = '<div id="kinoboxPlayer" class="kinobox_player" style="width: 100%; height: 500px;"></div>';
-
-            loadKinoboxScript(() => {
-                if (window.Kinobox) {
-                    new Kinobox('#kinoboxPlayer', {
-                        search: { tmdb: id }
-                    }).init();
-                }
-            });
-        }
-
-        function loadServer2(url, btn) {
-            if (btn) {
-                document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            }
-            const box = document.getElementById('playerBox');
-            box.innerHTML = `<iframe src="${url}" allowfullscreen="true" style="width:100%; height:500px; border:none; background:#000;"></iframe>`;
+            loadReviews(title);
         }
 
         function setRating(rating) {
@@ -273,11 +226,11 @@
             });
         }
 
-        function submitReview(movieId) {
+        function submitReview(title) {
             const text = document.getElementById('reviewText').value.trim();
             if (!text) return alert('Пожалуйста, напишите текст отзыва!');
 
-            const reviewsKey = 'reviews_' + movieId;
+            const reviewsKey = 'reviews_' + title;
             const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
             existingReviews.unshift({
@@ -288,11 +241,11 @@
 
             localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
             document.getElementById('reviewText').value = '';
-            loadReviews(movieId);
+            loadReviews(title);
         }
 
-        function loadReviews(movieId) {
-            const reviewsKey = 'reviews_' + movieId;
+        function loadReviews(title) {
+            const reviewsKey = 'reviews_' + title;
             const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
             const container = document.getElementById('reviewsListContainer');
 
