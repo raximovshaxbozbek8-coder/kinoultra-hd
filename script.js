@@ -91,8 +91,8 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Стабильные русскоязычные плееры без блокировок соединения
-    const p1 = `https://kinobox.in/embed/tmdb/${id}`;
+    // Используем чистые ссылки KinoBox с прямым вызовом плеера без постороннего меню
+    const p1 = `https://kinobox.in/embed/tmdb/${id}?menu=false`;
     const p2 = `https://vidsrc.rip/embed/${isTv ? 'tv' : 'movie'}/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
@@ -104,7 +104,7 @@ function openPlayer(id, title, isTv = false) {
                     <span>⚡ Сервер 1 (KinoBox RU)</span>
                 </button>
                 <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🛡️ Сервер 2 (Резерв)</span>
+                    <span>🛡️ Сервер 2 (Запасной)</span>
                 </button>
             </div>
         </div>
@@ -133,7 +133,7 @@ function openPlayer(id, title, isTv = false) {
         </style>
 
         <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
-            <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:500px; border:none; background:#000;"></iframe>
+            <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:520px; border:none; background:#000;"></iframe>
         </div>
 
         <div class="ad-box">
