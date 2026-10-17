@@ -1,7 +1,7 @@
 const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 
-// Автоматическая загрузка скрипта плеера Kinobox для поддержки русской озвучки (Kodik, Collaps)
+// Автоматическая загрузка скрипта плеера Kinobox
 function loadKinoboxScript() {
     if (!document.getElementById('kinobox-script')) {
         const script = document.createElement('script');
@@ -44,23 +44,23 @@ function loadCategory(type) {
         loadMovies('/movie/popular', "Популярные фильмы");
     } else if (type === 'russian') {
         document.getElementById('btn-russian').classList.add('active');
-        // Исправленный запрос для надежной загрузки русского кино
         loadMovies('/discover/movie?region=RU&sort_by=popularity.desc', "Русское кино");
     } else if (type === 'anime') {
         document.getElementById('btn-anime').classList.add('active');
-        // Исправленный запрос для аниме через жанр 16 (мультфильмы) и японский язык
-        loadMovies('/discover/movie?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "Популярное Аниме");
+        loadMovies('/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "Популярное Аниме");
     }
 }
 
+// Исправленный универсальный поиск (теперь ищет и фильмы, и аниме/сериалы)
 async function searchMovie(q) {
     if (!q) return loadCategory('popular');
     document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
     document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Поиск...</div>';
     
-    const data = await fetchTMDB(`/search/movie?query=${encodeURIComponent(q)}`);
+    const data = await fetchTMDB(`/search/multi?query=${encodeURIComponent(q)}`);
     if (data && data.results && data.results.length > 0) {
-        moviesList = data.results;
+        // Фильтруем только фильмы, сериалы и аниме, отбрасывая людей
+        moviesList = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
         render(moviesList);
     } else {
         document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding: 40px;">По вашему запросу ничего не найдено.</div>';
@@ -90,32 +90,26 @@ function render(list) {
     }).join('');
 }
 
+// Надежный плеер с переключением серверов (чтобы никогда не было черного экрана)
 function openPlayer(id, title) {
-    // Используем встроенный плеер Kinobox, который автоматически находит русскую озвучку (Kodik, Collaps, Alloha)
+    const s1 = `https://vidsrc.xyz/embed/movie?tmdb=${id}`;
+    const s2 = `https://vidsrc.me/embed/movie?tmdb=${id}`;
+
     document.getElementById('modalBody').innerHTML = `
-        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title} (Русская озвучка)</h3>
-        
-        <div style="background: #000; border-radius: 12px; overflow: hidden; min-height: 480px; box-shadow: 0 8px 25px rgba(0,0,0,0.5);">
-            <div class="kinobox_player" style="width:100%; min-height:480px;"></div>
+        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
+        <div class="servers">
+            <button class="server-btn active" onclick="setServer('${s1}', this)">Сервер 1 (Основной)</button>
+            <button class="server-btn" onclick="setServer('${s2}', this)">Сервер 2 (Запасной)</button>
         </div>
+        <iframe id="iframePlayer" class="player-frame" src="${s1}" allowfullscreen></iframe>
     `;
     document.getElementById('modal').style.display = 'flex';
+}
 
-    const initPlayer = () => {
-        if (window.kbox) {
-            kbox('.kinobox_player', {
-                search: { tmdb: id },
-                menu: { enable: true },
-                players: ['kodik', 'collaps', 'alloha', 'voidboost']
-            });
-        }
-    };
-
-    if (window.kbox) {
-        initPlayer();
-    } else {
-        setTimeout(initPlayer, 600);
-    }
+function setServer(url, btn) {
+    document.getElementById('iframePlayer').src = url;
+    document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 }
 
 function closeModal() {
