@@ -90,8 +90,9 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
+    const mediaType = isTv ? 'tv' : 'movie';
     const p1 = `https://movies.alloha.tv/?tmdb=${id}`;
-    const p2 = `https://api.lumia.su/embed/movie?tmdb=${id}`;
+    const p2 = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -102,7 +103,7 @@ function openPlayer(id, title, isTv = false) {
                     <span>⚡ Плеер Alloha (RU)</span>
                 </button>
                 <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🛡️ Плеер Lumia (RU)</span>
+                    <span>🛡️ Плеер Kinobox (RU)</span>
                 </button>
             </div>
         </div>
