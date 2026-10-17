@@ -2,6 +2,7 @@ const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
+// Динамическая подгрузка рекламы Adsterra для заработка
 function injectAdScript() {
     if (!document.getElementById('adsterra-script')) {
         const script = document.createElement('script');
@@ -90,17 +91,49 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    const mediaType = isTv ? 'tv' : 'movie';
-    // Добавляем параметр hideMenu=true, чтобы убрать лишние вкладки сверху
-    const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}?hideMenu=true`;
+    // Используем проверенные стабильные плееры с русской озвучкой через iframe
+    const p1 = `https://movies.alloha.tv/?tmdb=${id}`;
+    const p2 = `https://api.lumia.su/embed/movie?tmdb=${id}`;
 
     document.getElementById('modalBody').innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
+            
+            <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
+                    <span>⚡ Плеер Alloha (RU)</span>
+                </button>
+                <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
+                    <span>🛡️ Плеер Lumia (RU)</span>
+                </button>
+            </div>
         </div>
 
+        <style>
+            .custom-server-btn {
+                background: transparent;
+                color: #9ca3af;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 700;
+                font-size: 13px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .custom-server-btn:hover {
+                color: #fff;
+                background: rgba(255,255,255,0.08);
+            }
+            .custom-server-btn.active {
+                background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+                color: #ffffff;
+                box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            }
+        </style>
+
         <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
-            <iframe class="player-frame" src="${playerUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="width:100%; height:500px; border:none; background:#000;"></iframe>
+            <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:500px; border:none; background:#000;"></iframe>
         </div>
 
         <div class="ad-box">
@@ -124,6 +157,12 @@ function openPlayer(id, title, isTv = false) {
     `;
     document.getElementById('modal').style.display = 'flex';
     loadReviews(id);
+}
+
+function setPlayerSource(url, btn) {
+    document.getElementById('activePlayerFrame').src = url;
+    document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
 }
 
 function setRating(rating) {
