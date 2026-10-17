@@ -91,10 +91,9 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Надежные защищенные плееры с поддержкой полноценного отображения без черных экранов
-    const mediaType = isTv ? 'tv' : 'movie';
-    const p1 = `https://vidsrc.xyz/embed/${mediaType}?tmdb=${id}`;
-    const p2 = `https://player.autoembed.cc/embed/${mediaType}/${id}`;
+    // Стабильные русскоязычные плееры без блокировок соединения
+    const p1 = `https://kinobox.in/embed/tmdb/${id}`;
+    const p2 = `https://vidsrc.rip/embed/${isTv ? 'tv' : 'movie'}/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
@@ -102,10 +101,10 @@ function openPlayer(id, title, isTv = false) {
             
             <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
                 <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
-                    <span>⚡ Сервер 1 (Ultra HD)</span>
+                    <span>⚡ Сервер 1 (KinoBox RU)</span>
                 </button>
                 <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🛡️ Сервер 2 (Резервный)</span>
+                    <span>🛡️ Сервер 2 (Резерв)</span>
                 </button>
             </div>
         </div>
@@ -133,12 +132,10 @@ function openPlayer(id, title, isTv = false) {
             }
         </style>
 
-        <!-- Плеер с поддержкой полного экрана и правильными фреймами -->
         <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
             <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:500px; border:none; background:#000;"></iframe>
         </div>
 
-        <!-- Рекламный блок для заработка -->
         <div class="ad-box">
             <div id="container-modal-ad"></div>
         </div>
