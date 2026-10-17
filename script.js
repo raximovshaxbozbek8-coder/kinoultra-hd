@@ -79,30 +79,20 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Используем плеер с поддержкой русской озвучки и переключения переводов
-    const playerUrl = isTv 
-        ? `https://vidsrc.cc/v2/embed/tv/${id}?auto_play=1` 
-        : `https://vidsrc.cc/v2/embed/movie/${id}?auto_play=1`;
-
-    // Альтернативный надежный плеер с русской озвучкой (если первый не переключился)
-    const backupUrl = `https://collaps.org/embed/tmdb/${id}`;
+    // Рабочие источники для фильмов и аниме/сериалов
+    const p1 = isTv ? `https://vidsrc.vip/embed/tv/${id}` : `https://vidsrc.vip/embed/movie/${id}`;
+    const p2 = isTv ? `https://2embed.cc/embedtv/${id}` : `https://2embed.cc/embed/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
         
         <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-            <button class="server-btn active" onclick="setPlayerSource('${playerUrl}', this)">Озвучка RU (Основной)</button>
-            <button class="server-btn" onclick="setPlayerSource('${backupUrl}', this)">Озвучка RU (Запасной)</button>
+            <button class="server-btn active" onclick="setPlayerSource('${p1}', this)">Сервер 1</button>
+            <button class="server-btn" onclick="setPlayerSource('${p2}', this)">Сервер 2</button>
         </div>
 
         <!-- Видеоплеер -->
-        <iframe id="activePlayerFrame" class="player-frame" src="${playerUrl}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
-
-        <!-- Рекламный баннер Adsterra ПОД плеером -->
-        <div class="ad-box" style="margin-bottom:20px;">
-            <script async data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918.js"></script>
-            <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
-        </div>
+        <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
 
         <!-- Секция комментариев и отзывов -->
         <div class="reviews-section">
