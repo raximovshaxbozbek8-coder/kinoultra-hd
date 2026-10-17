@@ -2,6 +2,7 @@ const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
 let moviesList = [];
 let currentSelectedRating = 5;
 
+// Динамическая подгрузка рекламы Adsterra
 function injectAdScript() {
     if (!document.getElementById('adsterra-script')) {
         const script = document.createElement('script');
@@ -12,6 +13,19 @@ function injectAdScript() {
     }
 }
 injectAdScript();
+
+// Загрузка скрипта Kinobox для чистого воспроизведения
+function loadKinoboxScript(callback) {
+    if (window.Kinobox) {
+        callback();
+        return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://kinobox.in/kinobox.min.js';
+    script.async = true;
+    script.onload = callback;
+    document.head.appendChild(script);
+}
 
 async function fetchTMDB(endpoint) {
     try {
@@ -90,20 +104,18 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    const mediaType = isTv ? 'tv' : 'movie';
-    const p1 = `https://movies.alloha.tv/?tmdb=${id}`;
-    const p2 = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+    const allohaUrl = `https://movies.alloha.tv/?tmdb=${id}`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
             <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
             
             <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
-                <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
-                    <span>⚡ Плеер Alloha (RU)</span>
+                <button class="custom-server-btn active" onclick="switchPlayer('alloha', '${allohaUrl}', ${id})">
+                    <span>⚡ Сервер 1 (Alloha RU)</span>
                 </button>
-                <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
-                    <span>🛡️ Плеер Kinobox (RU)</span>
+                <button class="custom-server-btn" onclick="switchPlayer('kinobox', '${allohaUrl}', ${id})">
+                    <span>🛡️ Сервер 2 (KinoBox RU)</span>
                 </button>
             </div>
         </div>
@@ -131,8 +143,8 @@ function openPlayer(id, title, isTv = false) {
             }
         </style>
 
-        <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
-            <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:500px; border:none; background:#000;"></iframe>
+        <div id="playerContainer" style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; min-height: 500px; background:#000;">
+            <iframe id="activePlayerFrame" class="player-frame" src="${allohaUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:500px; border:none; background:#000;"></iframe>
         </div>
 
         <div class="ad-box">
@@ -158,10 +170,25 @@ function openPlayer(id, title, isTv = false) {
     loadReviews(id);
 }
 
-function setPlayerSource(url, btn) {
-    document.getElementById('activePlayerFrame').src = url;
+function switchPlayer(type, url, tmdbId) {
+    const container = document.getElementById('playerContainer');
     document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    
+    if (type === 'alloha') {
+        event.currentTarget.classList.add('active');
+        container.innerHTML = `<iframe id="activePlayerFrame" class="player-frame" src="${url}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *; picture-in-picture *" style="margin-bottom:0; width:100%; height:500px; border:none; background:#000;"></iframe>`;
+    } else if (type === 'kinobox') {
+        event.currentTarget.classList.add('active');
+        container.innerHTML = `<div class="kinobox_player" style="width:100%; height:500px;"></div>`;
+        loadKinoboxScript(() => {
+            if (window.Kinobox) {
+                new Kinobox('.kinobox_player', {
+                    search: { tmdb: tmdbId },
+                    menu: { enable: false }
+                }).init();
+            }
+        });
+    }
 }
 
 function setRating(rating) {
