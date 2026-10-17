@@ -81,18 +81,18 @@ function openInfo(id) {
     document.getElementById('modal').style.display = 'flex';
 }
 
-// Запуск плеера с русскими серверами
+// МУЛЬТИ-ПЛЕЕР С АЛЬТЕРНАТИВНЫМИ РУССКИМИ СЕРВЕРАМИ
 function startMovie(id, title) {
     const servers = [
-        { name: "Сервер 1 (Kodik Ru)", url: `https://kodik.info/find-by-tmdb/${id}` },
-        { name: "Сервер 2 (Collaps Ru)", url: `https://collaps.org/embed/movie/${id}` },
-        { name: "Сервер 3 (VoidBoost)", url: `https://voidboost.net/embed/${id}` }
+        { name: "Сервер 1 (Alloha)", url: `https://api.alloha.tv/?token=0494be95def32239ebd21368d88170&tmdb=${id}` },
+        { name: "Сервер 2 (HDrezka Mirror)", url: `https://db.megalodon.stream/movie/${id}` },
+        { name: "Сервер 3 (KinoDB)", url: `https://kinodb.net/embed/${id}` }
     ];
 
     document.getElementById('modalBody').innerHTML = `
         <h3 style="margin-top:0; margin-bottom:10px;">${title}</h3>
         
-        <!-- Переключение серверов -->
+        <!-- Кнопки переключения серверов -->
         <div class="servers-bar">
             ${servers.map((s, index) => `
                 <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchServer('${s.url}', this)">${s.name}</button>
@@ -146,7 +146,7 @@ function setRating(rating) {
     });
 }
 
-// Сохранение отзыва
+// Сохранение отзыва в памяти браузера
 function submitReview(movieId) {
     const text = document.getElementById('reviewText').value.trim();
     if (!text) return alert('Напишите текст отзыва!');
@@ -195,5 +195,5 @@ function closeModal() {
     document.getElementById('modalBody').innerHTML = '';
 }
 
-// Стартовая загрузка
+// Автоматическая первая загрузка популярного
 loadCategory('popular');
