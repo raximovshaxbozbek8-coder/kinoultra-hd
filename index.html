@@ -83,15 +83,15 @@
             padding: 0 15px;
         }
 
-        .ad-banner {
-            background: var(--ad-bg);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+        /* Контейнер для нативного баннера */
+        .native-ad-wrapper {
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
             padding: 15px;
             text-align: center;
-            color: var(--text-sub);
-            margin-bottom: 20px;
-            font-size: 13px;
+            min-height: 90px;
         }
 
         .grid {
@@ -155,6 +155,7 @@
         .movie-info-box {
             display: flex;
             gap: 20px;
+            margin-bottom: 20px;
         }
 
         .modal-poster {
@@ -187,36 +188,30 @@
 
         .play-btn:hover { background: var(--accent-hover); }
 
-        .servers-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
+        .player-box {
+            background: #14161f;
+            border: 1px solid #2a2d3d;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .server-btn {
-            background: #222;
-            border: 1px solid #444;
+        .server-link {
+            background: #e50914;
             color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: 0.2s;
+            padding: 14px 20px;
+            text-decoration: none;
             font-weight: bold;
-        }
-
-        .server-btn.active, .server-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        iframe {
-            width: 100%;
-            height: 480px;
-            border: none;
             border-radius: 8px;
-            background: #000;
+            font-size: 15px;
+            transition: 0.2s;
+            display: block;
+            box-shadow: 0 4px 12px rgba(229,9,20,0.3);
+        }
+
+        .server-link:hover {
+            background: var(--accent-hover);
         }
 
         .reviews-section {
@@ -274,9 +269,6 @@
             margin-bottom: 4px;
         }
     </style>
-
-    <!-- Рекламный скрипт #1 -->
-    <script data-cfasync="false" src="https://aarems.org/1/fc63adad21599d5019e3641c3dda462d"></script>
 </head>
 <body>
 
@@ -284,9 +276,9 @@
         <div class="logo" onclick="loadCategory('popular')">KinoUltra</div>
         
         <nav>
-            <button class="active" onclick="loadCategory('popular')">🔥 Популярное</button>
-            <button onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
-            <button onclick="loadCategory('anime')">⛩️ Аниме</button>
+            <button class="active" id="btn-popular" onclick="loadCategory('popular')">🔥 Популярное</button>
+            <button id="btn-russian" onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
+            <button id="btn-anime" onclick="loadCategory('anime')">⛩️ Аниме</button>
         </nav>
 
         <div class="search-box">
@@ -295,12 +287,13 @@
     </header>
 
     <div class="container">
-        <!-- БЛОК РЕКЛАМЫ #1 -->
-        <div class="ad-banner" id="topAdSlot">
-            <span>📢 Рекламный блок (728x90)</span>
+        <!-- ВСТАВКА НАТИВНОГО БАННЕРА ADSTERRA С ВАШЕГО ФОТО -->
+        <div class="native-ad-wrapper">
+            <script async="async" data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918"></script>
+            <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
         </div>
 
-        <h2 id="sectionTitle">Популярное кино</h2>
+        <h2 id="sectionTitle">🔥 Популярные фильмы</h2>
         <div class="grid" id="movieGrid">Загрузка каталога...</div>
     </div>
 
@@ -311,10 +304,7 @@
         </div>
     </div>
 
-    <!-- ПОДКЛЮЧЕНИЕ СКРИПТА С ЛОГИКОЙ И ПЛЕЕРАМИ -->
+    <!-- ПОДКЛЮЧАЕМ ФАЙЛ СКРИПТА -->
     <script src="script.js"></script>
-
-    <!-- Рекламный скрипт #2 -->
-    <script data-cfasync="false" src="https://bancadeltempoidea.org/14/eba8d4d2487e475023c1c30825def61d"></script>
 </body>
 </html>
