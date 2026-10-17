@@ -79,24 +79,62 @@ function render(list) {
 }
 
 function openPlayer(id, title, isTv = false) {
-    // Надежные плееры для фильмов, сериалов и аниме с поддержкой дубляжа на русском
-    const p1 = `https://api.lumia.su/embed/movie?tmdb=${id}`;
-    const p2 = `https://player.vidsrc.nl/embed/${isTv ? 'tv' : 'movie'}/${id}`;
+    // Высокоскоростные стабильные источники с выбором 1080p/720p, русской озвучкой и настройками
+    const p1 = `https://vidsrc.me/embed/${isTv ? 'tv' : 'movie'}?tmdb=${id}`;
+    const p2 = `https://vidsrc.cc/v2/embed/${isTv ? 'tv' : 'movie'}/${id}`;
 
     document.getElementById('modalBody').innerHTML = `
-        <h3 style="margin-top:0; margin-bottom:15px; color:#fff; font-size: 20px;">${title}</h3>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
-            <button class="server-btn active" onclick="setPlayerSource('${p1}', this)">Сервер 1 (Основной)</button>
-            <button class="server-btn" onclick="setPlayerSource('${p2}', this)">Сервер 2 (Запасной)</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">🎬 ${title}</h3>
+            
+            <!-- Красивые премиум-кнопки серверов с качеством -->
+            <div style="display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <button class="custom-server-btn active" onclick="setPlayerSource('${p1}', this)">
+                    <span>⚡ Full HD 1080p (Сервер 1)</span>
+                </button>
+                <button class="custom-server-btn" onclick="setPlayerSource('${p2}', this)">
+                    <span>🛡️ HD 720p (Сервер 2)</span>
+                </button>
+            </div>
         </div>
 
-        <!-- Стабильный видеоплеер без ошибки 233011 -->
-        <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture"></iframe>
+        <style>
+            .custom-server-btn {
+                background: transparent;
+                color: #9ca3af;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 700;
+                font-size: 13px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .custom-server-btn:hover {
+                color: #fff;
+                background: rgba(255,255,255,0.08);
+            }
+            .custom-server-btn.active {
+                background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+                color: #ffffff;
+                box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+            }
+        </style>
+
+        <!-- Рамка плеера с подсветкой -->
+        <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px;">
+            <iframe id="activePlayerFrame" class="player-frame" src="${p1}" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" style="margin-bottom:0;"></iframe>
+        </div>
+
+        <!-- Нативная реклама Adsterra внутри модального окна для заработка -->
+        <div class="ad-box">
+            <script async data-cfasync="false" src="https://bancadeltempoidea.org/21/5e3bed81d838ac1ae8d3b4a0282ef918.js"></script>
+            <div id="container-5e3bed81d838ac1ae8d3b4a0282ef918"></div>
+        </div>
 
         <!-- Секция комментариев и отзывов -->
         <div class="reviews-section">
-            <h4 style="margin-top:0; margin-bottom:12px;">Оставить отзыв и оценку</h4>
+            <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
             <div class="star-rating" id="starContainer">
                 <span class="star active" onclick="setRating(1)">★</span>
                 <span class="star active" onclick="setRating(2)">★</span>
@@ -104,8 +142,8 @@ function openPlayer(id, title, isTv = false) {
                 <span class="star active" onclick="setRating(4)">★</span>
                 <span class="star active" onclick="setRating(5)">★</span>
             </div>
-            <textarea class="review-input" id="reviewText" placeholder="Напишите ваш комментарий или мнение о фильме..."></textarea>
-            <button class="review-btn" onclick="submitReview(${id})">Отправить комментарий</button>
+            <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв о фильме..."></textarea>
+            <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
             
             <div class="reviews-list" id="reviewsListContainer"></div>
         </div>
@@ -116,7 +154,7 @@ function openPlayer(id, title, isTv = false) {
 
 function setPlayerSource(url, btn) {
     document.getElementById('activePlayerFrame').src = url;
-    document.querySelectorAll('.modal .server-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.custom-server-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 }
 
@@ -173,4 +211,4 @@ function closeModal() {
     document.getElementById('modalBody').innerHTML = '';
 }
 
-loadCategory('popular');ы
+loadCategory('popular');
