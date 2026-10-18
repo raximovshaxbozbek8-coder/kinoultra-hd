@@ -190,12 +190,13 @@
             const type = isTv ? 'tv' : 'movie';
             const encodedTitle = encodeURIComponent(title);
             
-            // Настроенные источники по языкам
+            // Встроенные плееры
             const sources = [
                 { name: '🇷🇺 Rutube (Дубляж)', url: `https://rutube.ru/play/embed/?search=${encodedTitle}` },
                 { name: '🇷🇺 VK Видео', url: `https://vk.com/video_ext.php?q=${encodedTitle}` },
-                { name: '🇺🇿 Uzmovi.net / Anibla', url: `https://uzmovi.net/index.php?do=search&subaction=search&story=${encodedTitle}` },
-                { name: '🇬🇧 2sub.movie (English)', url: `https://2sub.movie/` }
+                { name: '🇺🇿 AsilMedia.org', url: `https://asilmedia.org/index.php?do=search&subaction=search&story=${encodedTitle}` },
+                { name: '🇺🇿 Uzmovi.net', url: `https://uzmovi.net/index.php?do=search&subaction=search&story=${encodedTitle}` },
+                { name: '🇬🇧 2sub.movie', url: `https://2sub.movie/` }
             ];
 
             document.getElementById('modalBody').innerHTML = `
@@ -216,11 +217,18 @@
                     <iframe id="mainIframe" src="${sources[0].url}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
                 </div>
 
-                <!-- Быстрые ссылки на сайты для открытия в один клик -->
+                <!-- Быстрые прямые ссылки для перехода по языкам -->
                 <div class="external-links">
-                    <a class="ext-btn" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank">🔍 Найти на Rutube</a>
-                    <a class="ext-btn" href="https://uzmovi.net/index.php?do=search&subaction=search&story=${encodedTitle}" target="_blank">🇺🇿 Открыть Uzmovi</a>
-                    <a class="ext-btn" href="https://2sub.movie/" target="_blank">🇬🇧 Открыть 2sub.movie</a>
+                    <a class="ext-btn" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank">🇷🇺 Rutube</a>
+                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank">🇷🇺 YummyAnime</a>
+                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:animakima.ru+${encodedTitle}" target="_blank">🇷🇺 Animakima</a>
+                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:zonafilm.ru+${encodedTitle}" target="_blank">🇷🇺 Zonafilm</a>
+                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:anibla.uz+${encodedTitle}" target="_blank">🇺🇿 Anibla.uz</a>
+                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:asilmedia.org+${encodedTitle}" target="_blank">🇺🇿 AsilMedia</a>
+                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:uzmovi.net+${encodedTitle}" target="_blank">🇺🇿 Uzmovi</a>
+                    <a class="ext-btn" href="https://en.yummyani.me/" target="_blank">🇬🇧 YummyAnime (EN)</a>
+                    <a class="ext-btn" href="https://entalk.io/ru/films" target="_blank">🇬🇧 Entalk.io</a>
+                    <a class="ext-btn" href="https://2sub.movie/" target="_blank">🇬🇧 2sub.movie</a>
                 </div>
 
                 <div class="reviews-section">
