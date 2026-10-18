@@ -46,17 +46,19 @@
         .card-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-gray); margin-top: 6px; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #161922; width: 100%; max-width: 850px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
 
-        .sources-section { margin: 20px 0; }
-        .lang-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
-        
-        .buttons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .btn-link { color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; background: rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; }
-        .btn-link:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+        .player-container { width: 100%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .player-container video { width: 100%; height: 450px; display: block; outline: none; background: #000; }
 
-        .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .video-input-box { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08); }
+        .video-input-box label { display: block; font-size: 13px; color: var(--text-gray); margin-bottom: 8px; font-weight: 600; }
+        .video-input-row { display: flex; gap: 8px; }
+        .video-input-row input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 13px; }
+        .video-input-row button { padding: 10px 18px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+        .reviews-section { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
         .star-rating .star.active { color: #ffc107; }
         .review-input { width: 100%; height: 80px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; resize: none; margin-bottom: 10px; }
@@ -169,9 +171,8 @@
                 const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
                 const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
                 const safeTitle = title.replace(/'/g, "");
-                const isTv = m.media_type === 'tv' || !m.title;
                 return `
-                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}', ${isTv})">
+                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}')">
                         <img src="${poster}" alt="${title}" loading="lazy">
                         <div class="card-info">
                             <div class="card-title">${title}</div>
@@ -182,36 +183,27 @@
             }).join('');
         }
 
-        function openPlayer(id, title, isTv) {
-            const encodedTitle = encodeURIComponent(title);
-            
+        function openPlayer(id, title) {
+            const savedVideoKey = 'video_url_' + id;
+            const savedUrl = localStorage.getItem(savedVideoKey) || '';
+
             document.getElementById('modalBody').innerHTML = `
-                <div style="margin-bottom: 20px; text-align: center;">
-                    <h3 style="margin:0; color:#fff; font-size: 24px; font-weight: 800;">🎬 ${title}</h3>
-                    <p style="color: var(--text-gray); font-size: 13px; margin-top: 6px;">Выберите проверенный источник для быстрого просмотра:</p>
+                <div style="margin-bottom: 15px;">
+                    <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; margin-bottom: 4px;">🎬 ${title}</h3>
                 </div>
 
-                <div class="sources-section">
-                    <div class="lang-title">🇷🇺 На русском языке:</div>
-                    <div class="buttons-grid">
-                        <a class="btn-link" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank"><span>📺 Rutube</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank"><span>⛩️ YummyAnime (RU)</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://yandex.uz/search/?text=site:animakima.ru+${encodedTitle}" target="_blank"><span>🍿 Animakima</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://yandex.uz/search/?text=site:zonafilm.ru+${encodedTitle}" target="_blank"><span>🎥 Zonafilm</span> <span>➔</span></a>
-                    </div>
+                <div class="player-container">
+                    <video id="mainVideoPlayer" controls poster="">
+                        <source id="videoSource" src="${savedUrl}" type="video/mp4">
+                        Ваш браузер не поддерживает видео HTML5.
+                    </video>
+                </div>
 
-                    <div class="lang-title">🇺🇿 O'zbek tilida (Tarjima kinolar va anime):</div>
-                    <div class="buttons-grid">
-                        <a class="btn-link" href="https://yandex.uz/search/?text=site:anibla.uz+${encodedTitle}" target="_blank"><span>⛩️ Anibla.uz</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://yandex.uz/search/?text=site:asilmedia.org+${encodedTitle}" target="_blank"><span>🎬 AsilMedia</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://yandex.uz/search/?text=site:uzmovi.net+${encodedTitle}" target="_blank"><span>🎞️ Uzmovi.net</span> <span>➔</span></a>
-                    </div>
-
-                    <div class="lang-title">🇬🇧 In English:</div>
-                    <div class="buttons-grid">
-                        <a class="btn-link" href="https://en.yummyani.me/" target="_blank"><span>⛩️ YummyAnime (EN)</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://entalk.io/ru/films" target="_blank"><span>💬 Entalk.io</span> <span>➔</span></a>
-                        <a class="btn-link" href="https://2sub.movie/" target="_blank"><span>🔤 2sub.movie</span> <span>➔</span></a>
+                <div class="video-input-box">
+                    <label>🔗 Вставьте прямую ссылку на видеофайл (.mp4):</label>
+                    <div class="video-input-row">
+                        <input type="text" id="videoUrlInput" placeholder="https://пример.com/video.mp4" value="${savedUrl}">
+                        <button onclick="playCustomVideo(${id})">Запустить</button>
                     </div>
                 </div>
 
@@ -232,6 +224,19 @@
             
             document.getElementById('modal').style.display = 'flex';
             loadReviews(id);
+        }
+
+        function playCustomVideo(movieId) {
+            const url = document.getElementById('videoUrlInput').value.trim();
+            if (!url) return alert('Пожалуйста, введите ссылку на видео!');
+
+            localStorage.setItem('video_url_' + movieId, url);
+            
+            const video = document.getElementById('mainVideoPlayer');
+            const source = document.getElementById('videoSource');
+            source.src = url;
+            video.load();
+            video.play().catch(e => alert('Не удалось запустить видео. Убедитесь, что ссылка ведет напрямую на файл (.mp4).'));
         }
 
         function setRating(rating) {
