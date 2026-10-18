@@ -6,6 +6,9 @@
     <title>KinoUltra — Онлайн кинотеатр</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e50914'><path d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/></svg>">
     
+    <!-- Подключаем официальный скрипт Kinobox (он сам обходит блокировки плееров) -->
+    <script src="https://kinobox.in/kinobox.min.js"></script>
+
     <style>
         :root {
             --bg-color: #0b0c10;
@@ -48,6 +51,8 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
+
+        .kinobox-container { width: 100%; height: 500px; border-radius: 14px; overflow: hidden; background: #000; margin-bottom: 25px; }
 
         .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
@@ -174,7 +179,7 @@
                 const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
                 const safeTitle = title.replace(/'/g, "");
                 return `
-                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}')">
+                    <div class="card" onclick="openPlayer('${safeTitle}')">
                         <img src="${poster}" alt="${title}" loading="lazy">
                         <div class="card-info">
                             <div class="card-title">${title}</div>
@@ -185,18 +190,13 @@
             }).join('');
         }
 
-        function openPlayer(id, title) {
-            // Используем прямой плеер Kodik, который открывает видео сразу по TMDB ID с русской озвучкой
-            const playerUrl = `https://kodik.info/find-by-tmdb/${id}`;
-
+        function openPlayer(title) {
             document.getElementById('modalBody').innerHTML = `
                 <div style="margin-bottom: 15px;">
                     <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800;">🎬 ${title}</h3>
                 </div>
 
-                <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; height: 500px; background:#000;">
-                    <iframe src="${playerUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
-                </div>
+                <div class="kinobox-container"></div>
 
                 <div class="reviews-section">
                     <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
@@ -208,13 +208,22 @@
                         <span class="star active" onclick="setRating(5)">★</span>
                     </div>
                     <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв..."></textarea>
-                    <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
+                    <button class="review-btn" onclick="submitReview('${title}')">Опубликовать отзыв</button>
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
             
             document.getElementById('modal').style.display = 'flex';
-            loadReviews(id);
+            
+            // Инициализация скрипта Kinobox
+            if (window.kbox) {
+                kbox('.kinobox-container', {
+                    search: { title: title },
+                    menu: false // Отключает лишнее меню сверху
+                });
+            }
+
+            loadReviews(title);
         }
 
         function setRating(rating) {
@@ -226,11 +235,11 @@
             });
         }
 
-        function submitReview(movieId) {
+        function submitReview(title) {
             const text = document.getElementById('reviewText').value.trim();
             if (!text) return alert('Пожалуйста, напишите текст отзыва!');
 
-            const reviewsKey = 'reviews_' + movieId;
+            const reviewsKey = 'reviews_' + title;
             const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
             existingReviews.unshift({
@@ -241,11 +250,11 @@
 
             localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
             document.getElementById('reviewText').value = '';
-            loadReviews(movieId);
+            loadReviews(title);
         }
 
-        function loadReviews(movieId) {
-            const reviewsKey = 'reviews_' + movieId;
+        function loadReviews(title) {
+            const reviewsKey = 'reviews_' + title;
             const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
             const container = document.getElementById('reviewsListContainer');
 
