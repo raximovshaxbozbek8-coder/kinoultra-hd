@@ -54,7 +54,7 @@
 
         .lang-section { margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
         .lang-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .lang-label { font-size: 12px; color: var(--text-gray); width: 90px; font-weight: bold; }
+        .lang-label { font-size: 12px; color: var(--text-gray); font-weight: bold; }
 
         .external-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 15px 0; }
         .ext-btn { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.05); padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
@@ -190,13 +190,11 @@
             const type = isTv ? 'tv' : 'movie';
             const encodedTitle = encodeURIComponent(title);
             
-            // Встроенные плееры
+            // Встроенные рабочие плееры через специализированные встраиваемые базы (Embed API)
             const sources = [
-                { name: '🇷🇺 Rutube (Дубляж)', url: `https://rutube.ru/play/embed/?search=${encodedTitle}` },
-                { name: '🇷🇺 VK Видео', url: `https://vk.com/video_ext.php?q=${encodedTitle}` },
-                { name: '🇺🇿 AsilMedia.org', url: `https://asilmedia.org/index.php?do=search&subaction=search&story=${encodedTitle}` },
-                { name: '🇺🇿 Uzmovi.net', url: `https://uzmovi.net/index.php?do=search&subaction=search&story=${encodedTitle}` },
-                { name: '🇬🇧 2sub.movie', url: `https://2sub.movie/` }
+                { name: '🌐 Сервер 1 (VidSrc - EN/RU)', url: `https://vidsrc.xyz/embed/${type}?tmdb=${id}` },
+                { name: '🌐 Сервер 2 (2Embed)', url: `https://www.2embed.cc/embed${type === 'tv' ? 'tv' : ''}/${id}` },
+                { name: '🌐 Сервер 3 (AutoEmbed)', url: `https://player.autoembed.cc/embed/${type}/${id}` }
             ];
 
             document.getElementById('modalBody').innerHTML = `
@@ -205,7 +203,7 @@
                     
                     <div class="lang-section">
                         <div class="lang-group">
-                            <span class="lang-label">Плееры:</span>
+                            <span class="lang-label">Плеер на сайте:</span>
                             ${sources.map((s, index) => `
                                 <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchSource('${s.url}', this)">${s.name}</button>
                             `).join('')}
@@ -217,7 +215,9 @@
                     <iframe id="mainIframe" src="${sources[0].url}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
                 </div>
 
-                <!-- Быстрые прямые ссылки для перехода по языкам -->
+                <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 8px; text-align: center;">Если видео в плеере не загрузилось, выберите нужную озвучку/сайт напрямую:</div>
+
+                <!-- Быстрые прямые ссылки для перехода без блокировок -->
                 <div class="external-links">
                     <a class="ext-btn" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank">🇷🇺 Rutube</a>
                     <a class="ext-btn" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank">🇷🇺 YummyAnime</a>
