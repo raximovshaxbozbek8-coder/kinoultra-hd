@@ -1,9 +1,7 @@
-function openPlayer(title) {
-    // Используем прямой балансировщик Collaps/Alloha без меню и переключателей
-    const cleanTitle = encodeURIComponent(title);
-    const playerUrl = `https://api.str Krav.net/embed/movie?title=${cleanTitle}`; 
-    // Если Collaps блокируется, то использует прямую выдачу HDRezka/Kodik:
-    const fallbackUrl = `https://kinobox.in/embed/query/${cleanTitle}?menu=false`;
+function openPlayer(id, title, isTv) {
+    const mediaType = isTv ? 'tv' : 'movie';
+    // Добавляем параметры, которые отключают меню внутри Kinobox и запускают плеер напрямую
+    const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}?menu=false&controls=true`;
 
     document.getElementById('modalBody').innerHTML = `
         <div style="margin-bottom: 15px;">
@@ -11,7 +9,7 @@ function openPlayer(title) {
         </div>
 
         <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; height: 500px; background:#000;">
-            <iframe src="${fallbackUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
+            <iframe src="${playerUrl}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
         </div>
 
         <div class="reviews-section">
@@ -24,11 +22,11 @@ function openPlayer(title) {
                 <span class="star active" onclick="setRating(5)">★</span>
             </div>
             <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв..."></textarea>
-            <button class="review-btn" onclick="submitReview('${title}')">Опубликовать отзыв</button>
+            <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
             <div class="reviews-list" id="reviewsListContainer"></div>
         </div>
     `;
     
     document.getElementById('modal').style.display = 'flex';
-    loadReviews(title);
+    loadReviews(id);
 }
