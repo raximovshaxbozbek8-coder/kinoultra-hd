@@ -49,7 +49,7 @@
         .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
 
-        .server-btn { background: #1f2833; color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+        .server-btn { background: #1f2833; color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
         .server-btn.active { background: var(--accent); border-color: var(--accent); }
 
         .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
@@ -181,18 +181,18 @@
         function openPlayer(id, title, isTv) {
             const type = isTv ? 'tv' : 'movie';
             
-            // Используем прямые альтернативные источники с поиском по TMDB ID
+            // Источники для переключения озвучек и языков
             const sources = [
-                { name: 'Плеер 1 (VidSrc)', url: `https://vidsrc.xyz/embed/${type}?tmdb=${id}` },
-                { name: 'Плеер 2 (2Embed)', url: `https://www.2embed.cc/embed/${id}` },
-                { name: 'Плеер 3 (VidEmbed)', url: `https://vidembed.cc/embed/${id}` }
+                { name: '🇷🇺 Русский (Collaps)', url: `https://api.collaps.org/embed/movie/${id}` },
+                { name: '🇺🇿 O\'zbekcha (Ashdi)', url: `https://ashdi.vip/vod/${id}` },
+                { name: '🇬🇧 English (VidSrc)', url: `https://vidsrc.xyz/embed/${type}?tmdb=${id}` }
             ];
 
             document.getElementById('modalBody').innerHTML = `
                 <div style="margin-bottom: 15px;">
-                    <h3 style="margin:0; color:#fff; font-size: 20px; font-weight: 800; margin-bottom: 10px;">🎬 ${title}</h3>
+                    <h3 style="margin:0; color:#fff; font-size: 20px; font-weight: 800; margin-bottom: 12px;">🎬 ${title}</h3>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <span style="color: var(--text-gray); font-size: 13px; align-self: center;">Выбрать плеер:</span>
+                        <span style="color: var(--text-gray); font-size: 13px; align-self: center;">Выбрать язык / озвучку:</span>
                         ${sources.map((s, index) => `
                             <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchSource('${s.url}', this)">${s.name}</button>
                         `).join('')}
