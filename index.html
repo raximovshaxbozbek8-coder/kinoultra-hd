@@ -46,20 +46,15 @@
         .card-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-gray); margin-top: 6px; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #161922; width: 100%; max-width: 950px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-content { background: #161922; width: 100%; max-width: 850px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
 
-        .server-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
-        .server-btn { background: #1f2833; color: #fff; border: 1px solid rgba(255,255,255,0.15); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .server-btn.active, .server-btn:hover { background: var(--accent); border-color: var(--accent); }
-
-        .player-container { position: relative; border-radius: 12px; overflow: hidden; height: 480px; background: #000; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
-        .player-container iframe { width: 100%; height: 100%; border: none; }
-
-        .external-title { font-size: 13px; color: var(--text-gray); margin-bottom: 10px; font-weight: bold; }
-        .buttons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-bottom: 25px; }
-        .btn-link { color: #fff; text-decoration: none; font-size: 12px; font-weight: 600; background: rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; transition: 0.2s; }
-        .btn-link:hover { background: var(--accent); border-color: var(--accent); }
+        .sources-section { margin: 20px 0; }
+        .lang-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+        
+        .buttons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .btn-link { color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; background: rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; }
+        .btn-link:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
 
         .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
@@ -188,35 +183,36 @@
         }
 
         function openPlayer(id, title, isTv) {
-            const mediaType = isTv ? 'tv' : 'movie';
             const encodedTitle = encodeURIComponent(title);
             
             document.getElementById('modalBody').innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <h3 style="margin:0; color:#fff; font-size: 20px; font-weight: 800; margin-bottom: 12px;">🎬 ${title}</h3>
-                    
-                    <!-- Переключатели стабильных плееров прямо на сайте -->
-                    <div class="server-tabs">
-                        <button class="server-btn active" onclick="switchPlayer('https://vidsrc.xyz/embed/${mediaType}?tmdb=${id}', this)">🌐 Плеер 1 (Основной)</button>
-                        <button class="server-btn" onclick="switchPlayer('https://www.2embed.cc/embed${mediaType === 'tv' ? 'tv' : ''}/${id}', this)">⚡ Плеер 2 (Альтернативный)</button>
+                <div style="margin-bottom: 20px; text-align: center;">
+                    <h3 style="margin:0; color:#fff; font-size: 24px; font-weight: 800;">🎬 ${title}</h3>
+                    <p style="color: var(--text-gray); font-size: 13px; margin-top: 6px;">Выберите проверенный источник для быстрого просмотра:</p>
+                </div>
+
+                <div class="sources-section">
+                    <div class="lang-title">🇷🇺 На русском языке:</div>
+                    <div class="buttons-grid">
+                        <a class="btn-link" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank"><span>📺 Rutube</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank"><span>⛩️ YummyAnime (RU)</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:animakima.ru+${encodedTitle}" target="_blank"><span>🍿 Animakima</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:zonafilm.ru+${encodedTitle}" target="_blank"><span>🎥 Zonafilm</span> <span>➔</span></a>
                     </div>
-                </div>
 
-                <div class="player-container">
-                    <iframe id="mainPlayerFrame" src="https://vidsrc.xyz/embed/${mediaType}?tmdb=${id}" allowfullscreen></iframe>
-                </div>
+                    <div class="lang-title">🇺🇿 O'zbek tilida (Tarjima kinolar va anime):</div>
+                    <div class="buttons-grid">
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:anibla.uz+${encodedTitle}" target="_blank"><span>⛩️ Anibla.uz</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:asilmedia.org+${encodedTitle}" target="_blank"><span>🎬 AsilMedia</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:uzmovi.net+${encodedTitle}" target="_blank"><span>🎞️ Uzmovi.net</span> <span>➔</span></a>
+                    </div>
 
-                <!-- Быстрый доступ к локальным сайтам для поиска озвучки -->
-                <div class="external-title">🔍 Найти на любимых сайтах (если нужна другая озвучка):</div>
-                <div class="buttons-grid">
-                    <a class="btn-link" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank"><span>📺 Rutube</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank"><span>⛩️ YummyAnime</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://yandex.uz/search/?text=site:animakima.ru+${encodedTitle}" target="_blank"><span>🍿 Animakima</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://yandex.uz/search/?text=site:zonafilm.ru+${encodedTitle}" target="_blank"><span>🎥 Zonafilm</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://yandex.uz/search/?text=site:anibla.uz+${encodedTitle}" target="_blank"><span>⛩️ Anibla.uz</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://yandex.uz/search/?text=site:asilmedia.org+${encodedTitle}" target="_blank"><span>🎬 AsilMedia</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://yandex.uz/search/?text=site:uzmovi.net+${encodedTitle}" target="_blank"><span>🎞️ Uzmovi.net</span> <span>➔</span></a>
-                    <a class="btn-link" href="https://2sub.movie/" target="_blank"><span>🔤 2sub.movie</span> <span>➔</span></a>
+                    <div class="lang-title">🇬🇧 In English:</div>
+                    <div class="buttons-grid">
+                        <a class="btn-link" href="https://en.yummyani.me/" target="_blank"><span>⛩️ YummyAnime (EN)</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://entalk.io/ru/films" target="_blank"><span>💬 Entalk.io</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://2sub.movie/" target="_blank"><span>🔤 2sub.movie</span> <span>➔</span></a>
+                    </div>
                 </div>
 
                 <div class="reviews-section">
@@ -236,12 +232,6 @@
             
             document.getElementById('modal').style.display = 'flex';
             loadReviews(id);
-        }
-
-        function switchPlayer(url, btn) {
-            document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('mainPlayerFrame').src = url;
         }
 
         function setRating(rating) {
