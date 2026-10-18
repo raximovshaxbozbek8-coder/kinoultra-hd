@@ -46,19 +46,15 @@
         .card-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-gray); margin-top: 6px; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #161922; width: 100%; max-width: 950px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .modal-content { background: #161922; width: 100%; max-width: 800px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
 
-        .server-btn { background: #1f2833; color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
-        .server-btn.active { background: var(--accent); border-color: var(--accent); }
-
-        .lang-section { margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
-        .lang-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        .lang-label { font-size: 12px; color: var(--text-gray); font-weight: bold; }
-
-        .external-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 15px 0; }
-        .ext-btn { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; background: rgba(255,255,255,0.05); padding: 8px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
-        .ext-btn:hover { background: var(--accent); border-color: var(--accent); }
+        .sources-section { margin: 20px 0; }
+        .lang-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; }
+        
+        .buttons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .btn-link { color: #fff; text-decoration: none; font-size: 14px; font-weight: 600; background: rgba(255,255,255,0.06); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: space-between; transition: all 0.2s; }
+        .btn-link:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
 
         .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
@@ -187,48 +183,36 @@
         }
 
         function openPlayer(id, title, isTv) {
-            const type = isTv ? 'tv' : 'movie';
             const encodedTitle = encodeURIComponent(title);
             
-            // Встроенные рабочие плееры через специализированные встраиваемые базы (Embed API)
-            const sources = [
-                { name: '🌐 Сервер 1 (VidSrc - EN/RU)', url: `https://vidsrc.xyz/embed/${type}?tmdb=${id}` },
-                { name: '🌐 Сервер 2 (2Embed)', url: `https://www.2embed.cc/embed${type === 'tv' ? 'tv' : ''}/${id}` },
-                { name: '🌐 Сервер 3 (AutoEmbed)', url: `https://player.autoembed.cc/embed/${type}/${id}` }
-            ];
-
             document.getElementById('modalBody').innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <h3 style="margin:0; color:#fff; font-size: 20px; font-weight: 800; margin-bottom: 12px;">🎬 ${title}</h3>
-                    
-                    <div class="lang-section">
-                        <div class="lang-group">
-                            <span class="lang-label">Плеер на сайте:</span>
-                            ${sources.map((s, index) => `
-                                <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchSource('${s.url}', this)">${s.name}</button>
-                            `).join('')}
-                        </div>
+                <div style="margin-bottom: 20px; text-align: center;">
+                    <h3 style="margin:0; color:#fff; font-size: 24px; font-weight: 800;">🎬 ${title}</h3>
+                    <p style="color: var(--text-gray); font-size: 13px; margin-top: 6px;">Выберите удобный сайт для просмотра на вашем языке:</p>
+                </div>
+
+                <div class="sources-section">
+                    <div class="lang-title">🇷🇺 На русском языке (Смотреть онлайн):</div>
+                    <div class="buttons-grid">
+                        <a class="btn-link" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank"><span>📺 Rutube</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank"><span>⛩️ YummyAnime (RU)</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:animakima.ru+${encodedTitle}" target="_blank"><span>🍿 Animakima</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:zonafilm.ru+${encodedTitle}" target="_blank"><span>🎥 Zonafilm</span> <span>➔</span></a>
                     </div>
-                </div>
 
-                <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 15px; height: 500px; background:#000;">
-                    <iframe id="mainIframe" src="${sources[0].url}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
-                </div>
+                    <div class="lang-title">🇺🇿 O'zbek tilida (Tarjima kinolar va anime):</div>
+                    <div class="buttons-grid">
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:anibla.uz+${encodedTitle}" target="_blank"><span>⛩️ Anibla.uz</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:asilmedia.org+${encodedTitle}" target="_blank"><span>🎬 AsilMedia</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://yandex.uz/search/?text=site:uzmovi.net+${encodedTitle}" target="_blank"><span>🎞️ Uzmovi.net</span> <span>➔</span></a>
+                    </div>
 
-                <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 8px; text-align: center;">Если видео в плеере не загрузилось, выберите нужную озвучку/сайт напрямую:</div>
-
-                <!-- Быстрые прямые ссылки для перехода без блокировок -->
-                <div class="external-links">
-                    <a class="ext-btn" href="https://rutube.ru/search/?query=${encodedTitle}" target="_blank">🇷🇺 Rutube</a>
-                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:ru.yummyani.me+${encodedTitle}" target="_blank">🇷🇺 YummyAnime</a>
-                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:animakima.ru+${encodedTitle}" target="_blank">🇷🇺 Animakima</a>
-                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:zonafilm.ru+${encodedTitle}" target="_blank">🇷🇺 Zonafilm</a>
-                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:anibla.uz+${encodedTitle}" target="_blank">🇺🇿 Anibla.uz</a>
-                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:asilmedia.org+${encodedTitle}" target="_blank">🇺🇿 AsilMedia</a>
-                    <a class="ext-btn" href="https://yandex.uz/search/?text=site:uzmovi.net+${encodedTitle}" target="_blank">🇺🇿 Uzmovi</a>
-                    <a class="ext-btn" href="https://en.yummyani.me/" target="_blank">🇬🇧 YummyAnime (EN)</a>
-                    <a class="ext-btn" href="https://entalk.io/ru/films" target="_blank">🇬🇧 Entalk.io</a>
-                    <a class="ext-btn" href="https://2sub.movie/" target="_blank">🇬🇧 2sub.movie</a>
+                    <div class="lang-title">🇬🇧 In English (With Subtitles):</div>
+                    <div class="buttons-grid">
+                        <a class="btn-link" href="https://en.yummyani.me/" target="_blank"><span>⛩️ YummyAnime (EN)</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://entalk.io/ru/films" target="_blank"><span>💬 Entalk.io</span> <span>➔</span></a>
+                        <a class="btn-link" href="https://2sub.movie/" target="_blank"><span>🔤 2sub.movie</span> <span>➔</span></a>
+                    </div>
                 </div>
 
                 <div class="reviews-section">
@@ -248,12 +232,6 @@
             
             document.getElementById('modal').style.display = 'flex';
             loadReviews(id);
-        }
-
-        function switchSource(url, btn) {
-            document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('mainIframe').src = url;
         }
 
         function setRating(rating) {
