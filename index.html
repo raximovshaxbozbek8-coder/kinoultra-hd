@@ -6,9 +6,6 @@
     <title>KinoUltra — Онлайн кинотеатр</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e50914'><path d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/></svg>">
     
-    <!-- Подключение виджета Kinobox для автоматического поиска и обхода блокировок -->
-    <script src="https://kinobox.in/kinobox.min.js"></script>
-
     <style>
         :root {
             --bg-color: #0b0c10;
@@ -51,6 +48,9 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
+
+        .server-btn { background: #1f2833; color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; }
+        .server-btn.active { background: var(--accent); border-color: var(--accent); }
 
         .reviews-section { margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
         .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
@@ -179,15 +179,32 @@
         }
 
         function openPlayer(id, title, isTv) {
+            const type = isTv ? 'tv' : 'movie';
+            
+            // Используем прямые альтернативные источники с поиском по TMDB ID
+            const sources = [
+                { name: 'Плеер 1 (VidSrc)', url: `https://vidsrc.xyz/embed/${type}?tmdb=${id}` },
+                { name: 'Плеер 2 (2Embed)', url: `https://www.2embed.cc/embed/${id}` },
+                { name: 'Плеер 3 (VidEmbed)', url: `https://vidembed.cc/embed/${id}` }
+            ];
+
             document.getElementById('modalBody').innerHTML = `
                 <div style="margin-bottom: 15px;">
-                    <h3 style="margin:0; color:#fff; font-size: 20px; font-weight: 800;">🎬 ${title}</h3>
+                    <h3 style="margin:0; color:#fff; font-size: 20px; font-weight: 800; margin-bottom: 10px;">🎬 ${title}</h3>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span style="color: var(--text-gray); font-size: 13px; align-self: center;">Выбрать плеер:</span>
+                        ${sources.map((s, index) => `
+                            <button class="server-btn ${index === 0 ? 'active' : ''}" onclick="switchSource('${s.url}', this)">${s.name}</button>
+                        `).join('')}
+                    </div>
                 </div>
 
-                <div class="kinobox-container" style="width:100%; height:500px; background:#000; border-radius:12px; overflow:hidden;"></div>
+                <div style="position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); margin-bottom: 25px; height: 500px; background:#000;">
+                    <iframe id="mainIframe" src="${sources[0].url}" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" allow="autoplay; fullscreen *" style="width:100%; height:100%; border:none; background:#000;"></iframe>
+                </div>
 
                 <div class="reviews-section">
-                    <h4 style="margin-top:20px; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
+                    <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
                     <div class="star-rating" id="starContainer">
                         <span class="star active" onclick="setRating(1)">★</span>
                         <span class="star active" onclick="setRating(2)">★</span>
@@ -202,19 +219,13 @@
             `;
             
             document.getElementById('modal').style.display = 'flex';
-
-            // Инициализация плеера через официальный виджет Kinobox
-            if (window.kbox) {
-                kbox('.kinobox-container', {
-                    search: { tmdb: id },
-                    menu: {
-                        enable: true,
-                        default: 'Collaps'
-                    }
-                });
-            }
-
             loadReviews(id);
+        }
+
+        function switchSource(url, btn) {
+            document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('mainIframe').src = url;
         }
 
         function setRating(rating) {
