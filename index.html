@@ -172,10 +172,9 @@
                 const date = (m.release_date || m.first_air_date || '').split('-')[0];
                 const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
                 const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
-                const isTv = m.media_type === 'tv' || !m.title;
                 const safeTitle = title.replace(/'/g, "");
                 return `
-                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}', ${isTv})">
+                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}')">
                         <img src="${poster}" alt="${title}" loading="lazy">
                         <div class="card-info">
                             <div class="card-title">${title}</div>
@@ -186,10 +185,9 @@
             }).join('');
         }
 
-        function openPlayer(id, title, isTv) {
-            const mediaType = isTv ? 'tv' : 'movie';
-            // Прямая ссылка на Kinobox по TMDB ID с русской озвучкой
-            const playerUrl = `https://kinobox.in/embed/${mediaType}/tmdb-${id}`;
+        function openPlayer(id, title) {
+            // Используем прямой плеер Kodik, который открывает видео сразу по TMDB ID с русской озвучкой
+            const playerUrl = `https://kodik.info/find-by-tmdb/${id}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <div style="margin-bottom: 15px;">
