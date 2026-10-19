@@ -193,6 +193,7 @@
             gap: 10px;
             margin-bottom: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .server-btn {
@@ -288,7 +289,7 @@
     </header>
 
     <div class="container">
-        <!-- Блок для заработка на рекламе -->
+        <!-- Блок рекламы для заработка -->
         <div class="ad-banner" id="topAdSlot">
             <span>📢 Рекламный блок (728x90)</span>
         </div>
@@ -418,23 +419,24 @@
 
         function startMedia(id, title) {
             const isMovie = (currentCategory === 'movies');
-            const s1 = isMovie ? `https://vidsrc.to/embed/movie/${id}` : `https://vidsrc.to/embed/tv/${id}`;
-            const s2 = isMovie ? `https://vidsrc.me/embed/movie?tmdb=${id}` : `https://vidsrc.me/embed/tv?tmdb=${id}`;
-            const s3 = isMovie ? `https://2embed.org/embed/movie?tmdb=${id}` : `https://2embed.org/embed/series?tmdb=${id}`;
+            // Подключаем Kodik как основной плеер для аниме/сериалов (как на Jutsu TV), а также Vidsrc для резерва
+            const s1 = isMovie ? `https://vidsrc.to/embed/movie/${id}` : `https://kodik.cc/find-player?tmdb=${id}`;
+            const s2 = isMovie ? `https://vidsrc.me/embed/movie?tmdb=${id}` : `https://vidsrc.to/embed/tv/${id}`;
+            const s3 = isMovie ? `https://2embed.org/embed/movie?tmdb=${id}` : `https://vidsrc.me/embed/tv?tmdb=${id}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
                 <div class="server-selector">
-                    <span style="font-size:13px; color:#9ca3af;">Плеер:</span>
-                    <button class="server-btn active" onclick="changeServer('${s1}', this)">Сервер 1</button>
-                    <button class="server-btn" onclick="changeServer('${s2}', this)">Сервер 2</button>
-                    <button class="server-btn" onclick="changeServer('${s3}', this)">Сервер 3</button>
+                    <span style="font-size:13px; color:#9ca3af;">Источники плеера:</span>
+                    <button class="server-btn active" onclick="changeServer('${s1}', this)">Kodik (Основной)</button>
+                    <button class="server-btn" onclick="changeServer('${s2}', this)">Резерв 1</button>
+                    <button class="server-btn" onclick="changeServer('${s3}', this)">Резерв 2</button>
                 </div>
 
                 <iframe id="videoPlayerIframe" src="${s1}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
-                <!-- Второй рекламный блок под плеером -->
+                <!-- Блок рекламы под плеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
                 </div>
