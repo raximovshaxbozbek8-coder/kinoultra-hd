@@ -188,12 +188,36 @@
 
         .play-btn:hover { background: var(--accent-hover); }
 
-        #kinobox-player {
+        .server-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .server-btn {
+            background: #252836;
+            color: #fff;
+            border: 1px solid #3d4152;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .server-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        iframe {
             width: 100%;
-            min-height: 480px;
-            background: #000;
+            height: 480px;
+            border: none;
             border-radius: 8px;
-            overflow: hidden;
+            background: #000;
         }
 
         .reviews-section {
@@ -251,8 +275,6 @@
             margin-bottom: 4px;
         }
     </style>
-    <!-- Подключаем библиотеку Kinobox для вывода русских плееров -->
-    <script src="https://kinobox.in/kinobox.min.js"></script>
 </head>
 <body>
 
@@ -382,19 +404,41 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMedia(${m.id}, '${title.replace(/'/g, "")}')">Смотреть на русском</button>
+                        <button class="play-btn" onclick="startMedia(${m.id}, '${title.replace(/'/g, "")}')">Смотреть плеер</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
+        function changeServer(url, btn) {
+            document.getElementById('videoPlayerIframe').src = url;
+            const buttons = document.querySelectorAll('.server-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
         function startMedia(id, title) {
+            const isMovie = (currentCategory === 'movies');
+            
+            // Русские и резервные серверы напрямую
+            const kodik = `https://kodik.cc/find-player?tmdb=${id}`;
+            const alloha = isMovie ? `https://api.alloha.tv/?token=04941a9a3ca4166c0801a300d64700&tmdb=${id}` : `https://api.alloha.tv/?token=04941a9a3ca4166c0801a300d64700&tmdb=${id}`;
+            const vidsrc = isMovie ? `https://vidsrc.to/embed/movie/${id}` : `https://vidsrc.to/embed/tv/${id}`;
+
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
-                <div id="kinobox-player"></div>
+                <div class="server-selector">
+                    <span style="font-size:13px; color:#9ca3af;">Выберите сервер:</span>
+                    <button class="server-btn active" onclick="changeServer('${kodik}', this)">🇷🇺 Kodik (Русская озвучка)</button>
+                    <button class="server-btn" onclick="changeServer('${alloha}', this)">🇷🇺 Alloha (Русский)</button>
+                    <button class="server-btn" onclick="changeServer('${vidsrc}', this)">🌐 Резерв (Vidsrc)</button>
+                </div>
+
+                <iframe id="videoPlayerIframe" src="${kodik}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
+                <!-- Рекламный блок под плеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
                 </div>
@@ -414,28 +458,6 @@
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
-
-            // Настройка русскоязычных видеобаз для аниме и фильмов
-            if (window.Kinobox) {
-                new Kinobox('#kinobox-player', {
-                    search: {
-                        tmdb: id,
-                        title: title
-                    },
-                    menu: {
-                        default: 'menuList',
-                        mobile: 'menuList'
-                    },
-                    players: {
-                        kodik: { enable: true, priority: 1 },
-                        alloha: { enable: true, priority: 2 },
-                        voidboost: { enable: true, priority: 3 },
-                        collaps: { enable: true, priority: 4 }
-                    }
-                }).init();
-            } else {
-                document.getElementById('kinobox-player').innerHTML = '<p style="color:#e50914; text-align:center; padding-top:200px;">Плеер загружается, пожалуйста, обновите страницу.</p>';
-            }
 
             loadReviews(id);
         }
