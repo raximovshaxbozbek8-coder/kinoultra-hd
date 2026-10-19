@@ -4,7 +4,7 @@
     <meta name="google-site-verification" content="fNl9QEdvjZOO-HoHmPcxZNIFtOfWZEE2euZz_bybCu0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Смотреть фильмы онлайн</title>
+    <title>KinoUltra — Фильмы и Аниме онлайн</title>
     <!-- Иконка с буквой K -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
@@ -35,12 +35,37 @@
             padding: 15px 30px;
             background: #15161d;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
             color: var(--accent);
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
         }
 
         .search-box input {
@@ -231,9 +256,13 @@
 <body>
 
     <header>
-        <div class="logo">KinoUltra</div>
+        <div class="header-left">
+            <div class="logo">KinoUltra</div>
+            <button class="nav-btn active" id="btnMovies" onclick="switchCategory('movies')">🎬 Фильмы</button>
+            <button class="nav-btn" id="btnAnime" onclick="switchCategory('anime')">⛩️ Аниме</button>
+        </div>
         <div class="search-box">
-            <input type="text" placeholder="Поиск фильмов..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
+            <input type="text" placeholder="Поиск..." onkeydown="if(event.key==='Enter') searchContent(this.value)">
         </div>
     </header>
 
@@ -242,7 +271,7 @@
             <span>📢 Рекламный блок (728x90)</span>
         </div>
 
-        <h2>Популярные фильмы</h2>
+        <h2 id="sectionTitle">Популярные фильмы</h2>
         <div class="grid" id="movieGrid">Загрузка каталога...</div>
     </div>
 
@@ -255,55 +284,95 @@
 
     <script>
         const API_KEY = 'f13df4519e4be31e6c1c1c5973055a04';
-        let moviesList = [];
+        let currentCategory = 'movies'; // 'movies' или 'anime'
+        let itemsList = [];
         let currentSelectedRating = 5;
 
-        async function loadMovies() {
+        function switchCategory(cat) {
+            currentCategory = cat;
+            document.getElementById('btnMovies').classList.toggle('active', cat === 'movies');
+            document.getElementById('btnAnime').classList.toggle('active', cat === 'anime');
+            document.getElementById('sectionTitle').innerText = cat === 'movies' ? 'Популярные фильмы' : 'Популярные аниме';
+            loadContent();
+        }
+
+        async function fetchAPI(url) {
+            let res = await fetch(url);
+            if (!res.ok) {
+                res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
+            }
+            return await res.json();
+        }
+
+        async function loadContent() {
+            const grid = document.getElementById('movieGrid');
+            grid.innerHTML = "Загрузка каталога...";
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`);
-                const data = await res.json();
-                moviesList = data.results || [];
-                render(moviesList);
+                let url = '';
+                if (currentCategory === 'movies') {
+                    url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`;
+                } else {
+                    // Аниме-сериалы по жанру 16 (Animation) и стране JP (Япония)
+                    url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=ru-RU&with_genres=16&with_origin_country=JP&sort_by=popularity.desc`;
+                }
+
+                const data = await fetchAPI(url);
+                itemsList = data.results || [];
+                render(itemsList);
             } catch (e) {
-                document.getElementById('movieGrid').innerText = "Ошибка загрузки каталога.";
+                console.error(e);
+                grid.innerHTML = "<p style='color: #e50914;'>Не удалось загрузить каталог.</p>";
             }
         }
 
-        async function searchMovie(q) {
-            if(!q) return loadMovies();
+        async function searchContent(q) {
+            if(!q) return loadContent();
+            const grid = document.getElementById('movieGrid');
+            grid.innerHTML = "Поиск...";
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
-                const data = await res.json();
-                moviesList = data.results || [];
-                render(moviesList);
+                let url = '';
+                if (currentCategory === 'movies') {
+                    url = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`;
+                } else {
+                    url = `https://api.themoviedb.org/3/search/tv?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`;
+                }
+
+                const data = await fetchAPI(url);
+                itemsList = data.results || [];
+                render(itemsList);
             } catch (e) {
                 console.error(e);
+                grid.innerHTML = "<p style='color: #e50914;'>Ошибка при поиске.</p>";
             }
         }
 
         function render(list) {
             const grid = document.getElementById('movieGrid');
             if (!list || list.length === 0) {
-                grid.innerText = "Фильмы не найдены.";
+                grid.innerHTML = "<p>Ничего не найдено.</p>";
                 return;
             }
-            grid.innerHTML = list.map(m => `
-                <div class="card" onclick="openInfo(${m.id})">
-                    <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450'}" alt="${m.title}">
-                    <div class="card-info">
-                        <div class="card-title">${m.title}</div>
-                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div>
+            grid.innerHTML = list.map(m => {
+                const title = m.title || m.name || 'Без названия';
+                const date = (m.release_date || m.first_air_date || '').split('-')[0];
+                return `
+                    <div class="card" onclick="openInfo(${m.id})">
+                        <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450'}" alt="${title}">
+                        <div class="card-info">
+                            <div class="card-title">${title}</div>
+                            <div class="card-meta">${date} • ★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function openInfo(id) {
-            const m = moviesList.find(item => item.id === id);
+            const m = itemsList.find(item => item.id === id);
             if (!m) return;
 
             const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : '';
-            const title = m.title;
+            const title = m.title || m.name || 'Без названия';
             const desc = m.overview || "Описание пока отсутствует.";
 
             document.getElementById('modalBody').innerHTML = `
@@ -312,17 +381,26 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть фильм</button>
+                        <button class="play-btn" onclick="startMedia(${m.id}, '${title.replace(/'/g, "")}', '${m.original_name ? m.original_name.replace(/'/g, "") : ''}')">Смотреть</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        function startMovie(id, title) {
+        function startMedia(id, title, origTitle) {
+            // Для аниме передаем название для более точного поиска сезонов и серий
+            let playerSrc = '';
+            if (currentCategory === 'movies') {
+                playerSrc = `https://kinobox.in/embed?tmdb=${id}`;
+            } else {
+                const queryTitle = encodeURIComponent(origTitle || title);
+                playerSrc = `https://kinobox.in/embed?tmdb=${id}&title=${queryTitle}`;
+            }
+
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://kinobox.in/embed?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                <iframe src="${playerSrc}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
@@ -337,7 +415,7 @@
                         <span class="star active" onclick="setRating(4)">★</span>
                         <span class="star active" onclick="setRating(5)">★</span>
                     </div>
-                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваше мнение о фильме..."></textarea>
+                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваше мнение..."></textarea>
                     <button class="review-btn" onclick="submitReview(${id})">Отправить отзыв</button>
                     
                     <div class="reviews-list" id="reviewsListContainer"></div>
@@ -358,11 +436,11 @@
             });
         }
 
-        function submitReview(movieId) {
-            const text = document.getElementById('reviewText'].value.trim();
+        function submitReview(id) {
+            const text = document.getElementById('reviewText').value.trim();
             if (!text) return alert('Напишите текст отзыва!');
 
-            const reviewsKey = 'reviews_' + movieId;
+            const reviewsKey = 'reviews_' + id;
             const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
             const newReview = {
@@ -375,11 +453,11 @@
             localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
 
             document.getElementById('reviewText').value = '';
-            loadReviews(movieId);
+            loadReviews(id);
         }
 
-        function loadReviews(movieId) {
-            const reviewsKey = 'reviews_' + movieId;
+        function loadReviews(id) {
+            const reviewsKey = 'reviews_' + id;
             const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
             const container = document.getElementById('reviewsListContainer');
 
@@ -404,7 +482,7 @@
             document.getElementById('modalBody').innerHTML = '';
         }
 
-        loadMovies();
+        loadContent();
     </script>
 </body>
 </html>
