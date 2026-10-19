@@ -4,7 +4,7 @@
     <meta name="google-site-verification" content="fNl9QEdvjZOO-HoHmPcxZNIFtOfWZEE2euZz_bybCu0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Фильмы и Аниме онлайн</title>
+    <title>KinoUltra — Смотреть фильмы и аниме онлайн</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
     <style>
@@ -288,6 +288,7 @@
     </header>
 
     <div class="container">
+        <!-- Блок для заработка на рекламе -->
         <div class="ad-banner" id="topAdSlot">
             <span>📢 Рекламный блок (728x90)</span>
         </div>
@@ -416,7 +417,6 @@
         }
 
         function startMedia(id, title) {
-            // Разные варианты серверов для обхода черного экрана
             const isMovie = (currentCategory === 'movies');
             const s1 = isMovie ? `https://vidsrc.to/embed/movie/${id}` : `https://vidsrc.to/embed/tv/${id}`;
             const s2 = isMovie ? `https://vidsrc.me/embed/movie?tmdb=${id}` : `https://vidsrc.me/embed/tv?tmdb=${id}`;
@@ -426,7 +426,7 @@
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
                 <div class="server-selector">
-                    <span style="font-size:13px; color:#9ca3af;">Выберите плеер:</span>
+                    <span style="font-size:13px; color:#9ca3af;">Плеер:</span>
                     <button class="server-btn active" onclick="changeServer('${s1}', this)">Сервер 1</button>
                     <button class="server-btn" onclick="changeServer('${s2}', this)">Сервер 2</button>
                     <button class="server-btn" onclick="changeServer('${s3}', this)">Сервер 3</button>
@@ -434,6 +434,7 @@
 
                 <iframe id="videoPlayerIframe" src="${s1}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
+                <!-- Второй рекламный блок под плеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
                 </div>
