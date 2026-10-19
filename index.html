@@ -421,7 +421,7 @@
         function startMedia(id, title) {
             const isMovie = (currentCategory === 'movies');
             
-            // Автоматическая ссылка Kinobox (русские озвучки) + Vidsrc для резерва
+            // Прямой встроенный плеер Kinobox по ID TMDB
             const kinoboxUrl = `https://kinobox.in/embed/tmdb/${id}`;
             const vidsrcUrl = isMovie 
                 ? `https://vidsrc.to/embed/movie/${id}?ds_lang=ru` 
@@ -431,8 +431,8 @@
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
                 <div class="server-selector">
-                    <span style="font-size:13px; color:#9ca3af;">Выберите сервер:</span>
-                    <button class="server-btn active" onclick="changeServer('${kinoboxUrl}', this)">🇷🇺 Русская озвучка (Основной)</button>
+                    <span style="font-size:13px; color:#9ca3af;">Плеер:</span>
+                    <button class="server-btn active" onclick="changeServer('${kinoboxUrl}', this)">🇷🇺 Kinobox (Русская озвучка)</button>
                     <button class="server-btn" onclick="changeServer('${vidsrcUrl}', this)">🌐 Vidsrc (Резерв)</button>
                 </div>
 
