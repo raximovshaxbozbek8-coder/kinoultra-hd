@@ -3,288 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Онлайн кинотеатр</title>
+    <title>KinoUltra — Смотреть фильмы онлайн</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e50914'><path d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/></svg>">
     
     <style>
         :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
+            --bg: #0f1015;
+            --card-bg: #1a1c24;
             --accent: #e50914;
-            --text-main: #ffffff;
-            --text-gray: #9ca3af;
+            --accent-hover: #b20710;
+            --text: #ffffff;
+            --text-sub: #9ca3af;
+            --ad-bg: #1e2029;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 5%; background: rgba(11, 12, 16, 0.95); backdrop-filter: blur(10px);
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #15161d;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .logo { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 900; cursor: pointer; letter-spacing: 1px; }
-        .logo-icon { filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6)); }
-        .logo .highlight { color: var(--accent); }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent);
+            cursor: pointer;
+            letter-spacing: 1px;
+        }
 
-        .search-box { display: flex; gap: 8px; width: 100%; max-width: 400px; }
-        .search-box input { width: 100%; padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; outline: none; }
-        .search-box button { padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; }
+        .search-box input {
+            padding: 10px 18px;
+            width: 280px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            background: #222;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
 
-        nav { display: flex; gap: 12px; padding: 15px 5%; background: #12141d; overflow-x: auto; }
-        nav button { background: transparent; color: var(--text-gray); border: none; padding: 8px 16px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; white-space: nowrap; }
-        nav button.active, nav button:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            flex: 1;
+            width: 100%;
+        }
 
-        main { padding: 25px 5%; flex: 1; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s; }
-        .card:hover { transform: translateY(-6px); }
-        .card img { width: 100%; height: 270px; object-fit: cover; }
-        .card-info { padding: 12px; }
+        .ad-banner {
+            background: var(--ad-bg);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+        }
+
+        .card-info { padding: 10px; }
         .card-title { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-gray); margin-top: 6px; }
+        .card-meta { font-size: 12px; color: var(--text-sub); margin-top: 5px; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
 
-        .player-container { width: 100%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        .player-container video { width: 100%; height: 450px; display: block; outline: none; background: #000; }
+        .modal-content {
+            background: #181922;
+            width: 880px;
+            max-width: 95%;
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
 
-        .video-input-box { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08); }
-        .video-input-box label { display: block; font-size: 13px; color: var(--text-gray); margin-bottom: 8px; font-weight: 600; }
-        .video-input-row { display: flex; gap: 8px; }
-        .video-input-row input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 13px; }
-        .video-input-row button { padding: 10px 18px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; font-size: 13px; }
+        .close {
+            position: absolute;
+            top: 10px; right: 18px;
+            color: var(--text-sub);
+            font-size: 32px;
+            cursor: pointer;
+            line-height: 1;
+        }
 
-        .reviews-section { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
-        .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
-        .star-rating .star.active { color: #ffc107; }
-        .review-input { width: 100%; height: 80px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; resize: none; margin-bottom: 10px; }
-        .review-btn { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .reviews-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .review-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; font-size: 14px; }
-        .review-item-header { display: flex; justify-content: space-between; color: var(--text-gray); font-size: 12px; margin-bottom: 6px; }
+        .close:hover { color: white; }
+
+        .movie-info-box {
+            display: flex;
+            gap: 20px;
+        }
+
+        .modal-poster {
+            width: 160px;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+        }
+
+        .play-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+            margin-top: 15px;
+        }
+
+        .play-btn:hover { background: var(--accent-hover); }
+
+        iframe {
+            width: 100%;
+            height: 480px;
+            border: none;
+            border-radius: 8px;
+            background: #000;
+        }
     </style>
+
+    <!-- Твоя рекламная сеть -->
+    <script data-cfasync="false" src="https://aarems.org/1/fc63adad21599d5019e3641c3dda462d"></script>
 </head>
 <body>
 
     <header>
-        <div class="logo" onclick="loadCategory('popular')">
-            <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#e50914" width="32" height="32">
-                <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
-            </svg>
-            <span>KINO<span class="highlight">ULTRA</span></span>
-        </div>
-
+        <div class="logo" onclick="loadMovies()">KinoUltra</div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Поиск фильмов, сериалов, аниме..." onkeyup="if(event.key === 'Enter') searchMovie(this.value)">
-            <button onclick="searchMovie(document.getElementById('searchInput').value)">Поиск</button>
+            <input type="text" placeholder="Поиск фильмов..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
         </div>
     </header>
 
-    <nav>
-        <button id="btn-popular" class="active" onclick="loadCategory('popular')">🔥 Популярные</button>
-        <button id="btn-russian" onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
-        <button id="btn-anime" onclick="loadCategory('anime')">⛩️ Аниме</button>
-    </nav>
+    <div class="container">
+        <!-- БЛОК РЕКЛАМЫ #1: Верхний баннер -->
+        <div class="ad-banner" id="topAdSlot">
+            <span>📢 Рекламный блок (728x90) — Вставьте ваш баннерный код сюда</span>
+        </div>
 
-    <main>
-        <h2 id="sectionTitle">🔥 Популярные фильмы и аниме</h2>
-        <div id="movieGrid" class="grid"></div>
-    </main>
+        <h2 id="catalogTitle">Популярные фильмы</h2>
+        <div class="grid" id="movieGrid">Загрузка каталога...</div>
+    </div>
 
-    <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
+    <div class="modal" id="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <div id="modalBody"></div>
         </div>
     </div>
 
     <script>
-        const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
+        const API_KEY = '3fd2be6f0c70a2a598f084ddfb75487c';
         let moviesList = [];
-        let currentSelectedRating = 5;
 
-        async function fetchTMDB(endpoint) {
+        async function loadMovies() {
+            document.getElementById('catalogTitle').innerText = "Популярные фильмы";
             try {
-                const separator = endpoint.includes('?') ? '&' : '?';
-                const res = await fetch(`https://api.themoviedb.org/3${endpoint}${separator}api_key=${API_KEY}&language=ru-RU`);
-                if (res.ok) return await res.json();
-            } catch (e) {
-                console.error("Ошибка TMDB:", e);
-            }
-            return null;
-        }
-
-        async function loadMovies(endpoint, title = "Фильмы") {
-            document.getElementById('sectionTitle').innerText = title;
-            document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Загрузка каталога...</div>';
-            
-            const data = await fetchTMDB(endpoint);
-            if (data && data.results && data.results.length > 0) {
-                moviesList = data.results;
+                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`);
+                const data = await res.json();
+                moviesList = data.results || [];
                 render(moviesList);
-            } else {
-                document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Не удалось загрузить данные.</div>';
-            }
-        }
-
-        function loadCategory(type) {
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            if (type === 'popular') {
-                document.getElementById('btn-popular')?.classList.add('active');
-                loadMovies('/movie/popular', "🔥 Популярные фильмы");
-            } else if (type === 'russian') {
-                document.getElementById('btn-russian')?.classList.add('active');
-                loadMovies('/discover/movie?with_original_language=ru&sort_by=popularity.desc', "🇷🇺 Русское кино");
-            } else if (type === 'anime') {
-                document.getElementById('btn-anime')?.classList.add('active');
-                loadMovies('/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "⛩️ Популярное Аниме");
+            } catch (e) {
+                document.getElementById('movieGrid').innerText = "Не удалось загрузить каталог фильмов.";
             }
         }
 
         async function searchMovie(q) {
-            if (!q) return loadCategory('popular');
-            document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
-            document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Поиск...</div>';
-            
-            const data = await fetchTMDB(`/search/multi?query=${encodeURIComponent(q)}`);
-            if (data && data.results && data.results.length > 0) {
-                moviesList = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
+            if(!q) return loadMovies();
+            document.getElementById('catalogTitle').innerText = `Результаты поиска: "${q}"`;
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                moviesList = data.results || [];
                 render(moviesList);
-            } else {
-                document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding: 40px;">По вашему запросу ничего не найдено.</div>';
+            } catch (e) {
+                document.getElementById('movieGrid').innerText = "Ошибка при поиске.";
             }
         }
 
         function render(list) {
             const grid = document.getElementById('movieGrid');
             if (!list || list.length === 0) {
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Ничего не найдено</div>';
+                grid.innerHTML = '<div>Ничего не найдено</div>';
                 return;
             }
-            grid.innerHTML = list.map(m => {
-                const title = m.title || m.name || 'Без названия';
-                const date = (m.release_date || m.first_air_date || '').split('-')[0];
-                const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
-                const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
-                const safeTitle = title.replace(/'/g, "");
-                return `
-                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}')">
-                        <img src="${poster}" alt="${title}" loading="lazy">
-                        <div class="card-info">
-                            <div class="card-title">${title}</div>
-                            <div class="card-meta"><span>${date}</span><span>★ ${rating}</span></div>
-                        </div>
+            grid.innerHTML = list.map(m => `
+                <div class="card" onclick="openInfo(${m.id})">
+                    <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки'}" alt="${m.title}">
+                    <div class="card-info">
+                        <div class="card-title">${m.title}</div>
+                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div>
                     </div>
-                `;
-            }).join('');
-        }
-
-        function openPlayer(id, title) {
-            const savedVideoKey = 'video_url_' + id;
-            const savedUrl = localStorage.getItem(savedVideoKey) || '';
-
-            document.getElementById('modalBody').innerHTML = `
-                <div style="margin-bottom: 15px;">
-                    <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; margin-bottom: 4px;">🎬 ${title}</h3>
-                </div>
-
-                <div class="player-container">
-                    <video id="mainVideoPlayer" controls poster="">
-                        <source id="videoSource" src="${savedUrl}" type="video/mp4">
-                        Ваш браузер не поддерживает видео HTML5.
-                    </video>
-                </div>
-
-                <div class="video-input-box">
-                    <label>🔗 Вставьте прямую ссылку на видеофайл (.mp4):</label>
-                    <div class="video-input-row">
-                        <input type="text" id="videoUrlInput" placeholder="https://пример.com/video.mp4" value="${savedUrl}">
-                        <button onclick="playCustomVideo(${id})">Запустить</button>
-                    </div>
-                </div>
-
-                <div class="reviews-section">
-                    <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
-                    <div class="star-rating" id="starContainer">
-                        <span class="star active" onclick="setRating(1)">★</span>
-                        <span class="star active" onclick="setRating(2)">★</span>
-                        <span class="star active" onclick="setRating(3)">★</span>
-                        <span class="star active" onclick="setRating(4)">★</span>
-                        <span class="star active" onclick="setRating(5)">★</span>
-                    </div>
-                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв..."></textarea>
-                    <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
-                    <div class="reviews-list" id="reviewsListContainer"></div>
-                </div>
-            `;
-            
-            document.getElementById('modal').style.display = 'flex';
-            loadReviews(id);
-        }
-
-        function playCustomVideo(movieId) {
-            const url = document.getElementById('videoUrlInput').value.trim();
-            if (!url) return alert('Пожалуйста, введите ссылку на видео!');
-
-            localStorage.setItem('video_url_' + movieId, url);
-            
-            const video = document.getElementById('mainVideoPlayer');
-            const source = document.getElementById('videoSource');
-            source.src = url;
-            video.load();
-            video.play().catch(e => alert('Не удалось запустить видео. Убедитесь, что ссылка ведет напрямую на файл (.mp4).'));
-        }
-
-        function setRating(rating) {
-            currentSelectedRating = rating;
-            const stars = document.querySelectorAll('#starContainer .star');
-            stars.forEach((star, index) => {
-                if (index < rating) star.classList.add('active');
-                else star.classList.remove('active');
-            });
-        }
-
-        function submitReview(movieId) {
-            const text = document.getElementById('reviewText').value.trim();
-            if (!text) return alert('Пожалуйста, напишите текст отзыва!');
-
-            const reviewsKey = 'reviews_' + movieId;
-            const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
-
-            existingReviews.unshift({
-                rating: currentSelectedRating,
-                text: text,
-                date: new Date().toLocaleDateString()
-            });
-
-            localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
-            document.getElementById('reviewText').value = '';
-            loadReviews(movieId);
-        }
-
-        function loadReviews(movieId) {
-            const reviewsKey = 'reviews_' + movieId;
-            const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
-            const container = document.getElementById('reviewsListContainer');
-
-            if (reviews.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-gray); font-size:13px;">Пока нет отзывов. Напишите первый комментарий!</div>';
-                return;
-            }
-
-            container.innerHTML = reviews.map(r => `
-                <div class="review-item">
-                    <div class="review-item-header">
-                        <span>Оценка: ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
-                        <span>${r.date}</span>
-                    </div>
-                    <div>${r.text}</div>
                 </div>
             `).join('');
+        }
+
+        function openInfo(id) {
+            const m = moviesList.find(item => item.id === id);
+            if (!m) return;
+
+            const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
+            const title = m.title;
+            const desc = m.overview || "Описание фильма пока отсутствует.";
+
+            document.getElementById('modalBody').innerHTML = `
+                <h2 style="margin-top:0;">${title}</h2>
+                <div class="movie-info-box">
+                    <img class="modal-poster" src="${poster}" alt="${title}">
+                    <div class="modal-details">
+                        <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
+                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">▶ Смотреть фильм</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function startMovie(id, title) {
+            document.getElementById('modalBody').innerHTML = `
+                <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
+                <iframe src="https://vidlink.pro/movie/${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                
+                <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
+                <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
+                    <span>🎰 Рекламный баннер спонсора / промокоды (под плеером)</span>
+                </div>
+            `;
         }
 
         function closeModal() {
@@ -292,7 +294,7 @@
             document.getElementById('modalBody').innerHTML = '';
         }
 
-        loadCategory('popular');
+        loadMovies();
     </script>
 </body>
 </html>
