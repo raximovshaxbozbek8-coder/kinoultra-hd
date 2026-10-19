@@ -421,22 +421,22 @@
         function startMedia(id, title) {
             const isMovie = (currentCategory === 'movies');
             
-            // Русские и резервные серверы напрямую
-            const kodik = `https://kodik.cc/find-player?tmdb=${id}`;
-            const alloha = isMovie ? `https://api.alloha.tv/?token=04941a9a3ca4166c0801a300d64700&tmdb=${id}` : `https://api.alloha.tv/?token=04941a9a3ca4166c0801a300d64700&tmdb=${id}`;
-            const vidsrc = isMovie ? `https://vidsrc.to/embed/movie/${id}` : `https://vidsrc.to/embed/tv/${id}`;
+            // Автоматическая ссылка Kinobox (русские озвучки) + Vidsrc для резерва
+            const kinoboxUrl = `https://kinobox.in/embed/tmdb/${id}`;
+            const vidsrcUrl = isMovie 
+                ? `https://vidsrc.to/embed/movie/${id}?ds_lang=ru` 
+                : `https://vidsrc.to/embed/tv/${id}?ds_lang=ru`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
                 
                 <div class="server-selector">
                     <span style="font-size:13px; color:#9ca3af;">Выберите сервер:</span>
-                    <button class="server-btn active" onclick="changeServer('${kodik}', this)">🇷🇺 Kodik (Русская озвучка)</button>
-                    <button class="server-btn" onclick="changeServer('${alloha}', this)">🇷🇺 Alloha (Русский)</button>
-                    <button class="server-btn" onclick="changeServer('${vidsrc}', this)">🌐 Резерв (Vidsrc)</button>
+                    <button class="server-btn active" onclick="changeServer('${kinoboxUrl}', this)">🇷🇺 Русская озвучка (Основной)</button>
+                    <button class="server-btn" onclick="changeServer('${vidsrcUrl}', this)">🌐 Vidsrc (Резерв)</button>
                 </div>
 
-                <iframe id="videoPlayerIframe" src="${kodik}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                <iframe id="videoPlayerIframe" src="${kinoboxUrl}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
                 <!-- Рекламный блок под плеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
