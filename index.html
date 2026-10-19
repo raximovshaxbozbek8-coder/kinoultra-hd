@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta name="google-site-verification" content="fNl9QEdvjZOO-HoHmPcxZNIFtOfWZEE2euZz_bybCu0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Watch Movies Online</title>
+    <title>KinoUltra — Смотреть фильмы онлайн</title>
     <!-- Красная иконка с буквой K для вкладки браузера -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
@@ -236,18 +236,18 @@
     <header>
         <div class="logo">KinoUltra</div>
         <div class="search-box">
-            <input type="text" placeholder="Search movies..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
+            <input type="text" placeholder="Поиск фильмов..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
         </div>
     </header>
 
     <div class="container">
         <!-- БЛОК РЕКЛАМЫ #1: Верхний баннер -->
         <div class="ad-banner" id="topAdSlot">
-            <span>📢 Advertisement Space (728x90) — Place your ad script here</span>
+            <span>📢 Рекламный блок (728x90)</span>
         </div>
 
-        <h2>Popular Movies</h2>
-        <div class="grid" id="movieGrid">Loading catalog...</div>
+        <h2>Популярные фильмы</h2>
+        <div class="grid" id="movieGrid">Загрузка каталога...</div>
     </div>
 
     <div class="modal" id="modal">
@@ -262,20 +262,21 @@
         let moviesList = [];
         let currentSelectedRating = 5;
 
+        // Загрузка каталога на русском языке (language=ru-RU)
         async function loadMovies() {
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`);
+                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`);
                 const data = await res.json();
                 moviesList = data.results || [];
                 render(moviesList);
             } catch (e) {
-                document.getElementById('movieGrid').innerText = "Failed to load movie catalog.";
+                document.getElementById('movieGrid').innerText = "Ошибка загрузки каталога фильмов.";
             }
         }
 
         async function searchMovie(q) {
             if(!q) return loadMovies();
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(q)}`);
+            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
             const data = await res.json();
             moviesList = data.results || [];
             render(moviesList);
@@ -300,7 +301,7 @@
 
             const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : '';
             const title = m.title;
-            const desc = m.overview || "No description available.";
+            const desc = m.overview || "Описание пока отсутствует.";
 
             document.getElementById('modalBody').innerHTML = `
                 <h2 style="margin-top:0;">${title}</h2>
@@ -308,7 +309,7 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть фильм</button>
+                        <button class="play-btn" onclick="startMovie(${m.id}, '${title.replace(/'/g, "")}')">Смотреть фильм (на русском)</button>
                     </div>
                 </div>
             `;
@@ -316,13 +317,14 @@
         }
 
         function startMovie(id, title) {
+            // Плеер с русской озвучкой по TMDB ID
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://vidlink.pro/movie/${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://player.vidking.top/movie/${id}?locale=ru" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
-                    <span>📺 Sponsor Ad / Promo Code Banner (Under Player)</span>
+                    <span>📺 Рекламный баннер под плеером</span>
                 </div>
 
                 <!-- БЛОК ОТЗЫВОВ И ЗВЁЗД -->
