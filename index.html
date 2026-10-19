@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KinoUltra — Фильмы и Аниме онлайн</title>
-    <!-- Иконка с буквой K -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
     <style>
@@ -188,6 +187,28 @@
         }
 
         .play-btn:hover { background: var(--accent-hover); }
+
+        .server-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .server-btn {
+            background: #252836;
+            color: #fff;
+            border: 1px solid #3d4152;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .server-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
 
         iframe {
             width: 100%;
@@ -387,15 +408,31 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
+        function changeServer(url, btn) {
+            document.getElementById('videoPlayerIframe').src = url;
+            const buttons = document.querySelectorAll('.server-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
         function startMedia(id, title) {
-            // Надежный универсальный плеер voidboost / cdnmovies
-            const playerUrl = currentCategory === 'movies' 
-                ? `https://voidboost.net/embed/${id}?tmdb=1`
-                : `https://voidboost.net/embed/${id}?tmdb=1&type=tv`;
+            // Разные варианты серверов для обхода черного экрана
+            const isMovie = (currentCategory === 'movies');
+            const s1 = isMovie ? `https://vidsrc.to/embed/movie/${id}` : `https://vidsrc.to/embed/tv/${id}`;
+            const s2 = isMovie ? `https://vidsrc.me/embed/movie?tmdb=${id}` : `https://vidsrc.me/embed/tv?tmdb=${id}`;
+            const s3 = isMovie ? `https://2embed.org/embed/movie?tmdb=${id}` : `https://2embed.org/embed/series?tmdb=${id}`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                
+                <div class="server-selector">
+                    <span style="font-size:13px; color:#9ca3af;">Выберите плеер:</span>
+                    <button class="server-btn active" onclick="changeServer('${s1}', this)">Сервер 1</button>
+                    <button class="server-btn" onclick="changeServer('${s2}', this)">Сервер 2</button>
+                    <button class="server-btn" onclick="changeServer('${s3}', this)">Сервер 3</button>
+                </div>
+
+                <iframe id="videoPlayerIframe" src="${s1}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
