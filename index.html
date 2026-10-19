@@ -1,441 +1,298 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PES Style — Улучшенная</title>
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-        background: #0a0a0a;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        color: #fff;
-        overflow: hidden;
-        user-select: none;
-    }
-    #ui {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 960px;
-        max-width: 96vw;
-        margin-bottom: 12px;
-        font-size: 20px;
-        font-weight: 700;
-    }
-    #scoreBoard, #timer {
-        background: rgba(0,0,0,0.65);
-        padding: 8px 22px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.15);
-    }
-    canvas {
-        background: #1b5e20;
-        border: 5px solid #eee;
-        border-radius: 8px;
-        box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        max-width: 96vw;
-    }
-    .info {
-        margin-top: 14px;
-        font-size: 13px;
-        opacity: 0.75;
-        text-align: center;
-        line-height: 1.5;
-    }
-    button {
-        margin-top: 16px;
-        padding: 11px 32px;
-        font-size: 16px;
-        background: #d32f2f;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.2s;
-    }
-    button:hover { background: #b71c1c; transform: scale(1.03); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinoUltra — Онлайн кинотеатр</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e50914'><path d='M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z'/></svg>">
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --accent: #e50914;
+            --text-main: #ffffff;
+            --text-gray: #9ca3af;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background: rgba(11, 12, 16, 0.95); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 900; cursor: pointer; letter-spacing: 1px; }
+        .logo-icon { filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.6)); }
+        .logo .highlight { color: var(--accent); }
+
+        .search-box { display: flex; gap: 8px; width: 100%; max-width: 400px; }
+        .search-box input { width: 100%; padding: 10px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: #fff; outline: none; }
+        .search-box button { padding: 10px 20px; border-radius: 20px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; }
+
+        nav { display: flex; gap: 12px; padding: 15px 5%; background: #12141d; overflow-x: auto; }
+        nav button { background: transparent; color: var(--text-gray); border: none; padding: 8px 16px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 8px; white-space: nowrap; }
+        nav button.active, nav button:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+        main { padding: 25px 5%; flex: 1; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .card { background: var(--card-bg); border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform 0.3s; }
+        .card:hover { transform: translateY(-6px); }
+        .card img { width: 100%; height: 270px; object-fit: cover; }
+        .card-info { padding: 12px; }
+        .card-title { font-size: 14px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-gray); margin-top: 6px; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #161922; width: 100%; max-width: 900px; border-radius: 16px; padding: 24px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: var(--text-gray); }
+
+        .player-container { width: 100%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .player-container video { width: 100%; height: 450px; display: block; outline: none; background: #000; }
+
+        .video-input-box { background: rgba(255,255,255,0.04); padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08); }
+        .video-input-box label { display: block; font-size: 13px; color: var(--text-gray); margin-bottom: 8px; font-weight: 600; }
+        .video-input-row { display: flex; gap: 8px; }
+        .video-input-row input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #fff; outline: none; font-size: 13px; }
+        .video-input-row button { padding: 10px 18px; border-radius: 8px; border: none; background: var(--accent); color: #fff; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+        .reviews-section { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .star-rating { display: flex; gap: 5px; font-size: 20px; cursor: pointer; color: #444; margin-bottom: 12px; }
+        .star-rating .star.active { color: #ffc107; }
+        .review-input { width: 100%; height: 80px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; resize: none; margin-bottom: 10px; }
+        .review-btn { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .reviews-list { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .review-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; font-size: 14px; }
+        .review-item-header { display: flex; justify-content: space-between; color: var(--text-gray); font-size: 12px; margin-bottom: 6px; }
+    </style>
 </head>
 <body>
-    <div id="ui">
-        <div id="scoreBoard">Ты 0 : 0 Комп</div>
-        <div id="timer">2:00</div>
+
+    <header>
+        <div class="logo" onclick="loadCategory('popular')">
+            <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#e50914" width="32" height="32">
+                <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
+            </svg>
+            <span>KINO<span class="highlight">ULTRA</span></span>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Поиск фильмов, сериалов, аниме..." onkeyup="if(event.key === 'Enter') searchMovie(this.value)">
+            <button onclick="searchMovie(document.getElementById('searchInput').value)">Поиск</button>
+        </div>
+    </header>
+
+    <nav>
+        <button id="btn-popular" class="active" onclick="loadCategory('popular')">🔥 Популярные</button>
+        <button id="btn-russian" onclick="loadCategory('russian')">🇷🇺 Русское кино</button>
+        <button id="btn-anime" onclick="loadCategory('anime')">⛩️ Аниме</button>
+    </nav>
+
+    <main>
+        <h2 id="sectionTitle">🔥 Популярные фильмы и аниме</h2>
+        <div id="movieGrid" class="grid"></div>
+    </main>
+
+    <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
     </div>
-    <canvas id="game" width="960" height="540"></canvas>
-    <div class="info">
-        WASD / Стрелки — бег &nbsp;|&nbsp; Shift — спринт &nbsp;|&nbsp; Пробел — удар / пас<br>
-        <b>Q</b> — переключить игрока &nbsp;|&nbsp; Чем ближе к мячу + спринт = сильнее удар
-    </div>
-    <button onclick="restart()">Новый матч</button>
 
-<script>
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
-const W = canvas.width;
-const H = canvas.height;
+    <script>
+        const API_KEY = '8baba8ab6b8bbe247645bcae7df63d0d';
+        let moviesList = [];
+        let currentSelectedRating = 5;
 
-let keys = {};
-let scorePlayer = 0;
-let scoreAI = 0;
-let timeLeft = 120;
-let gameOver = false;
-let lastTime = performance.now();
-let controlledIndex = 0; // какой игрок сейчас под контролем
-
-// ===== ТВОЯ КОМАНДА (3 игрока) =====
-const team = [
-    { x: 220, y: H/2,       radius: 15, speed: 3.6, sprint: 5.6, color: '#1565c0', angle: 0 },
-    { x: 180, y: H/2 - 100, radius: 14, speed: 3.3, sprint: 5.2, color: '#1976d2', angle: 0 },
-    { x: 180, y: H/2 + 100, radius: 14, speed: 3.3, sprint: 5.2, color: '#1976d2', angle: 0 }
-];
-
-// ===== МЯЧ =====
-const ball = {
-    x: W/2, y: H/2,
-    radius: 9,
-    vx: 0, vy: 0,
-    friction: 0.976
-};
-
-// ===== ВРАТАРЬ =====
-const goalie = {
-    x: W - 48, y: H/2,
-    radius: 16,
-    speed: 3.5,
-    color: '#c62828',
-    angle: Math.PI
-};
-
-// ===== ЗАЩИТНИКИ ИИ =====
-const defenders = [
-    { x: W - 170, y: H/2 - 95, radius: 14, speed: 2.7, color: '#e53935', angle: Math.PI },
-    { x: W - 170, y: H/2 + 95, radius: 14, speed: 2.7, color: '#e53935', angle: Math.PI },
-    { x: W - 260, y: H/2,      radius: 14, speed: 2.5, color: '#e53935', angle: Math.PI },
-    { x: W - 320, y: H/2 - 50, radius: 13, speed: 2.4, color: '#ef5350', angle: Math.PI }
-];
-
-const goalRight = { x: W - 16, y: H/2 - 78, w: 16, h: 156 };
-const goalLeft  = { x: 0,      y: H/2 - 78, w: 16, h: 156 };
-
-function restart() {
-    scorePlayer = 0;
-    scoreAI = 0;
-    timeLeft = 120;
-    gameOver = false;
-    controlledIndex = 0;
-    resetPositions();
-    updateUI();
-}
-
-function resetPositions() {
-    team[0].x = 220; team[0].y = H/2;
-    team[1].x = 180; team[1].y = H/2 - 100;
-    team[2].x = 180; team[2].y = H/2 + 100;
-    ball.x = W/2; ball.y = H/2;
-    ball.vx = 0; ball.vy = 0;
-    goalie.y = H/2;
-    defenders[0].y = H/2 - 95;
-    defenders[1].y = H/2 + 95;
-    defenders[2].y = H/2;
-    defenders[3].y = H/2 - 50;
-}
-
-function updateUI() {
-    document.getElementById('scoreBoard').textContent = `Ты ${scorePlayer} : ${scoreAI} Комп`;
-    const m = Math.floor(timeLeft / 60);
-    const s = Math.floor(timeLeft % 60).toString().padStart(2, '0');
-    document.getElementById('timer').textContent = `${m}:${s}`;
-}
-
-window.addEventListener('keydown', e => {
-    keys[e.key.toLowerCase()] = true;
-    if (e.code === 'Space') {
-        e.preventDefault();
-        kickOrPass();
-    }
-    if (e.key.toLowerCase() === 'q') {
-        // Переключение на ближайшего к мячу партнёра
-        let best = 0;
-        let bestDist = 9999;
-        team.forEach((p, i) => {
-            const d = Math.hypot(p.x - ball.x, p.y - ball.y);
-            if (d < bestDist) {
-                bestDist = d;
-                best = i;
+        async function fetchTMDB(endpoint) {
+            try {
+                const separator = endpoint.includes('?') ? '&' : '?';
+                const res = await fetch(`https://api.themoviedb.org/3${endpoint}${separator}api_key=${API_KEY}&language=ru-RU`);
+                if (res.ok) return await res.json();
+            } catch (e) {
+                console.error("Ошибка TMDB:", e);
             }
-        });
-        controlledIndex = best;
-    }
-});
-window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
-
-function kickOrPass() {
-    const p = team[controlledIndex];
-    const dx = ball.x - p.x;
-    const dy = ball.y - p.y;
-    const dist = Math.hypot(dx, dy);
-
-    if (dist > p.radius + ball.radius + 32) return;
-
-    // Ищем ближайшего партнёра для паса
-    let nearest = null;
-    let nearestDist = 999;
-    team.forEach((t, i) => {
-        if (i === controlledIndex) return;
-        const d = Math.hypot(t.x - p.x, t.y - p.y);
-        if (d < nearestDist && d < 180) {
-            nearestDist = d;
-            nearest = t;
-        }
-    });
-
-    const isSprinting = keys['shift'];
-    let power = isSprinting ? 14.5 : 11.5;
-
-    // Если есть партнёр рядом и мы не в штрафной — делаем пас
-    if (nearest && p.x < W - 220) {
-        const angle = Math.atan2(nearest.y - ball.y, nearest.x - ball.x);
-        power = 9.5; // пас мягче
-        ball.vx = Math.cos(angle) * power;
-        ball.vy = Math.sin(angle) * power;
-    } else {
-        // Обычный удар в направлении от игрока к мячу + немного в сторону движения
-        let angle = Math.atan2(dy, dx);
-        ball.vx = Math.cos(angle) * power;
-        ball.vy = Math.sin(angle) * power;
-    }
-}
-
-function moveControlled() {
-    const p = team[controlledIndex];
-    const spd = keys['shift'] ? p.sprint : p.speed;
-    let dx = 0, dy = 0;
-
-    if (keys['arrowup'] || keys['w']) dy -= 1;
-    if (keys['arrowdown'] || keys['s']) dy += 1;
-    if (keys['arrowleft'] || keys['a']) dx -= 1;
-    if (keys['arrowright'] || keys['d']) dx += 1;
-
-    if (dx !== 0 || dy !== 0) {
-        const len = Math.hypot(dx, dy);
-        p.x += (dx / len) * spd;
-        p.y += (dy / len) * spd;
-        p.angle = Math.atan2(dy, dx);
-    }
-
-    p.x = Math.max(p.radius + 8, Math.min(W - p.radius - 25, p.x));
-    p.y = Math.max(p.radius + 8, Math.min(H - p.radius - 8, p.y));
-}
-
-function updateTeammatesAI() {
-    team.forEach((p, i) => {
-        if (i === controlledIndex) return;
-
-        // Простая поддержка: держаться на разумной позиции относительно мяча и контролируемого
-        const controlled = team[controlledIndex];
-        let targetX = ball.x - 90;
-        let targetY = (i === 1) ? ball.y - 85 : ball.y + 85;
-
-        // Если мяч далеко впереди — подключаться
-        if (ball.x > W * 0.55) {
-            targetX = ball.x - 50;
-            targetY = ball.y + (i === 1 ? -60 : 60);
+            return null;
         }
 
-        const dx = targetX - p.x;
-        const dy = targetY - p.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist > 12) {
-            p.x += (dx / dist) * p.speed * 0.85;
-            p.y += (dy / dist) * p.speed * 0.85;
-            p.angle = Math.atan2(dy, dx);
+        async function loadMovies(endpoint, title = "Фильмы") {
+            document.getElementById('sectionTitle').innerText = title;
+            document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Загрузка каталога...</div>';
+            
+            const data = await fetchTMDB(endpoint);
+            if (data && data.results && data.results.length > 0) {
+                moviesList = data.results;
+                render(moviesList);
+            } else {
+                document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #f55; padding: 40px;">Не удалось загрузить данные.</div>';
+            }
         }
 
-        p.x = Math.max(40, Math.min(W - 100, p.x));
-        p.y = Math.max(30, Math.min(H - 30, p.y));
-    });
-}
-
-function updateAI() {
-    // Вратарь
-    const targetY = ball.y + (Math.random() - 0.5) * 10;
-    if (goalie.y < targetY - 6) goalie.y += goalie.speed;
-    if (goalie.y > targetY + 6) goalie.y -= goalie.speed;
-    goalie.y = Math.max(goalRight.y + 22, Math.min(goalRight.y + goalRight.h - 22, goalie.y));
-    goalie.angle = Math.atan2(ball.y - goalie.y, ball.x - goalie.x);
-
-    // Защитники
-    defenders.forEach((d, i) => {
-        let tx, ty;
-        if (i === 2) {
-            tx = Math.min(ball.x - 40, W - 200);
-            ty = ball.y;
-        } else if (i === 3) {
-            tx = Math.min(ball.x - 70, W - 250);
-            ty = ball.y - 40;
-        } else {
-            tx = W - 190;
-            ty = (i === 0) ? ball.y - 80 : ball.y + 80;
+        function loadCategory(type) {
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            if (type === 'popular') {
+                document.getElementById('btn-popular')?.classList.add('active');
+                loadMovies('/movie/popular', "🔥 Популярные фильмы");
+            } else if (type === 'russian') {
+                document.getElementById('btn-russian')?.classList.add('active');
+                loadMovies('/discover/movie?with_original_language=ru&sort_by=popularity.desc', "🇷🇺 Русское кино");
+            } else if (type === 'anime') {
+                document.getElementById('btn-anime')?.classList.add('active');
+                loadMovies('/discover/tv?with_genres=16&with_original_language=ja&sort_by=popularity.desc', "⛩️ Популярное Аниме");
+            }
         }
 
-        // Давление если мяч близко
-        if (ball.x > W * 0.55) {
-            tx = ball.x - 55;
-            ty = ball.y + (i % 2 === 0 ? -45 : 45);
+        async function searchMovie(q) {
+            if (!q) return loadCategory('popular');
+            document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
+            document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px;">Поиск...</div>';
+            
+            const data = await fetchTMDB(`/search/multi?query=${encodeURIComponent(q)}`);
+            if (data && data.results && data.results.length > 0) {
+                moviesList = data.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
+                render(moviesList);
+            } else {
+                document.getElementById('movieGrid').innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #9ca3af; padding: 40px;">По вашему запросу ничего не найдено.</div>';
+            }
         }
 
-        const dx = tx - d.x;
-        const dy = ty - d.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist > 8) {
-            d.x += (dx / dist) * d.speed;
-            d.y += (dy / dist) * d.speed;
-            d.angle = Math.atan2(dy, dx);
+        function render(list) {
+            const grid = document.getElementById('movieGrid');
+            if (!list || list.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">Ничего не найдено</div>';
+                return;
+            }
+            grid.innerHTML = list.map(m => {
+                const title = m.title || m.name || 'Без названия';
+                const date = (m.release_date || m.first_air_date || '').split('-')[0];
+                const rating = m.vote_average ? m.vote_average.toFixed(1) : '0';
+                const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки';
+                const safeTitle = title.replace(/'/g, "");
+                return `
+                    <div class="card" onclick="openPlayer(${m.id}, '${safeTitle}')">
+                        <img src="${poster}" alt="${title}" loading="lazy">
+                        <div class="card-info">
+                            <div class="card-title">${title}</div>
+                            <div class="card-meta"><span>${date}</span><span>★ ${rating}</span></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
-        d.x = Math.max(W/2 + 30, Math.min(W - 70, d.x));
-        d.y = Math.max(25, Math.min(H - 25, d.y));
-    });
-}
 
-function collideCircle(a, b, pushBall = false) {
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const dist = Math.hypot(dx, dy);
-    const minDist = a.radius + b.radius;
-    if (dist < minDist && dist > 0) {
-        const angle = Math.atan2(dy, dx);
-        const overlap = minDist - dist;
-        const push = overlap * 0.5;
-        a.x -= Math.cos(angle) * push;
-        a.y -= Math.sin(angle) * push;
-        b.x += Math.cos(angle) * push;
-        b.y += Math.sin(angle) * push;
+        function openPlayer(id, title) {
+            const savedVideoKey = 'video_url_' + id;
+            const savedUrl = localStorage.getItem(savedVideoKey) || '';
 
-        if (pushBall && b === ball) {
-            const force = 2.2;
-            ball.vx += Math.cos(angle) * force;
-            ball.vy += Math.sin(angle) * force;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <h3 style="margin:0; color:#fff; font-size: 22px; font-weight: 800; margin-bottom: 4px;">🎬 ${title}</h3>
+                </div>
+
+                <div class="player-container">
+                    <video id="mainVideoPlayer" controls poster="">
+                        <source id="videoSource" src="${savedUrl}" type="video/mp4">
+                        Ваш браузер не поддерживает видео HTML5.
+                    </video>
+                </div>
+
+                <div class="video-input-box">
+                    <label>🔗 Вставьте прямую ссылку на видеофайл (.mp4):</label>
+                    <div class="video-input-row">
+                        <input type="text" id="videoUrlInput" placeholder="https://пример.com/video.mp4" value="${savedUrl}">
+                        <button onclick="playCustomVideo(${id})">Запустить</button>
+                    </div>
+                </div>
+
+                <div class="reviews-section">
+                    <h4 style="margin-top:0; margin-bottom:12px; font-size: 18px;">💬 Оставить отзыв и оценку</h4>
+                    <div class="star-rating" id="starContainer">
+                        <span class="star active" onclick="setRating(1)">★</span>
+                        <span class="star active" onclick="setRating(2)">★</span>
+                        <span class="star active" onclick="setRating(3)">★</span>
+                        <span class="star active" onclick="setRating(4)">★</span>
+                        <span class="star active" onclick="setRating(5)">★</span>
+                    </div>
+                    <textarea class="review-input" id="reviewText" placeholder="Напишите ваш отзыв..."></textarea>
+                    <button class="review-btn" onclick="submitReview(${id})">Опубликовать отзыв</button>
+                    <div class="reviews-list" id="reviewsListContainer"></div>
+                </div>
+            `;
+            
+            document.getElementById('modal').style.display = 'flex';
+            loadReviews(id);
         }
-        return true;
-    }
-    return false;
-}
 
-function updateBall() {
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-    ball.vx *= ball.friction;
-    ball.vy *= ball.friction;
+        function playCustomVideo(movieId) {
+            const url = document.getElementById('videoUrlInput').value.trim();
+            if (!url) return alert('Пожалуйста, введите ссылку на видео!');
 
-    // Отскоки
-    if (ball.y < ball.radius) { ball.y = ball.radius; ball.vy *= -0.82; }
-    if (ball.y > H - ball.radius) { ball.y = H - ball.radius; ball.vy *= -0.82; }
-    if (ball.x < ball.radius) { ball.x = ball.radius; ball.vx *= -0.75; }
-
-    // Гол тебе
-    if (ball.x + ball.radius > goalRight.x &&
-        ball.y > goalRight.y && ball.y < goalRight.y + goalRight.h) {
-        scorePlayer++;
-        updateUI();
-        resetPositions();
-        return;
-    }
-
-    // Гол ИИ (редко, но возможно)
-    if (ball.x - ball.radius < 4 &&
-        ball.y > goalLeft.y && ball.y < goalLeft.y + goalLeft.h) {
-        scoreAI++;
-        updateUI();
-        resetPositions();
-        return;
-    }
-
-    if (ball.x > W + 50) resetPositions();
-}
-
-function update(dt) {
-    if (gameOver) return;
-
-    timeLeft -= dt;
-    if (timeLeft <= 0) {
-        timeLeft = 0;
-        gameOver = true;
-        updateUI();
-        return;
-    }
-    updateUI();
-
-    moveControlled();
-    updateTeammatesAI();
-    updateAI();
-
-    // Коллизии
-    const controlled = team[controlledIndex];
-    collideCircle(controlled, ball, true);
-    team.forEach((p, i) => {
-        if (i !== controlledIndex) collideCircle(p, ball, true);
-    });
-    collideCircle(goalie, ball, true);
-    defenders.forEach(d => collideCircle(d, ball, true));
-
-    // Игроки между собой
-    for (let i = 0; i < team.length; i++) {
-        for (let j = i + 1; j < team.length; j++) {
-            collideCircle(team[i], team[j]);
+            localStorage.setItem('video_url_' + movieId, url);
+            
+            const video = document.getElementById('mainVideoPlayer');
+            const source = document.getElementById('videoSource');
+            source.src = url;
+            video.load();
+            video.play().catch(e => alert('Не удалось запустить видео. Убедитесь, что ссылка ведет напрямую на файл (.mp4).'));
         }
-        defenders.forEach(d => collideCircle(team[i], d));
-    }
 
-    updateBall();
-}
+        function setRating(rating) {
+            currentSelectedRating = rating;
+            const stars = document.querySelectorAll('#starContainer .star');
+            stars.forEach((star, index) => {
+                if (index < rating) star.classList.add('active');
+                else star.classList.remove('active');
+            });
+        }
 
-function drawField() {
-    ctx.fillStyle = '#2e7d32';
-    ctx.fillRect(0, 0, W, H);
+        function submitReview(movieId) {
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text) return alert('Пожалуйста, напишите текст отзыва!');
 
-    ctx.fillStyle = 'rgba(255,255,255,0.05)';
-    for (let i = 0; i < W; i += 80) ctx.fillRect(i, 0, 40, H);
+            const reviewsKey = 'reviews_' + movieId;
+            const existingReviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.75)';
-    ctx.lineWidth = 3;
+            existingReviews.unshift({
+                rating: currentSelectedRating,
+                text: text,
+                date: new Date().toLocaleDateString()
+            });
 
-    // Центр
-    ctx.beginPath();
-    ctx.moveTo(W/2, 0);
-    ctx.lineTo(W/2, H);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(W/2, H/2, 75, 0, Math.PI * 2);
-    ctx.stroke();
+            localStorage.setItem(reviewsKey, JSON.stringify(existingReviews));
+            document.getElementById('reviewText').value = '';
+            loadReviews(movieId);
+        }
 
-    // Штрафные
-    ctx.strokeRect(0, H/2 - 120, 120, 240);
-    ctx.strokeRect(W - 120, H/2 - 120, 120, 240);
+        function loadReviews(movieId) {
+            const reviewsKey = 'reviews_' + movieId;
+            const reviews = JSON.parse(localStorage.getItem(reviewsKey) || '[]');
+            const container = document.getElementById('reviewsListContainer');
 
-    // Ворота
-    ctx.fillStyle = 'rgba(255,255,255,0.1)';
-    ctx.fillRect(goalRight.x, goalRight.y, goalRight.w, goalRight.h);
-    ctx.fillRect(goalLeft.x, goalLeft.y, goalLeft.w, goalLeft.h);
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(goalRight.x, goalRight.y, goalRight.w, goalRight.h);
-    ctx.strokeRect(goalLeft.x, goalLeft.y, goalLeft.w, goalLeft.h);
-}
+            if (reviews.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-gray); font-size:13px;">Пока нет отзывов. Напишите первый комментарий!</div>';
+                return;
+            }
 
-function drawPlayer(p, isControlled = false) {
-    // Тень
-    ctx.beginPath();
-    ctx.arc(p.x + 2, p.y + 3, p.radius, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
-    ctx.fill();
+            container.innerHTML = reviews.map(r => `
+                <div class="review-item">
+                    <div class="review-item-header">
+                        <span>Оценка: ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                        <span>${r.date}</span>
+                    </div>
+                    <div>${r.text}</div>
+                </div>
+            `).join('');
+        }
 
-    // Тело
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, 
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('modalBody').innerHTML = '';
+        }
+
+        loadCategory('popular');
+    </script>
+</body>
+</html>
