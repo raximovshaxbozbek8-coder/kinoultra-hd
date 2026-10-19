@@ -284,7 +284,7 @@
 
     <script>
         const API_KEY = 'f13df4519e4be31e6c1c1c5973055a04';
-        let currentCategory = 'movies'; // 'movies' или 'anime'
+        let currentCategory = 'movies';
         let itemsList = [];
         let currentSelectedRating = 5;
 
@@ -312,7 +312,6 @@
                 if (currentCategory === 'movies') {
                     url = `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`;
                 } else {
-                    // Аниме-сериалы по жанру 16 (Animation) и стране JP (Япония)
                     url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&language=ru-RU&with_genres=16&with_origin_country=JP&sort_by=popularity.desc`;
                 }
 
@@ -381,26 +380,22 @@
                     <img class="modal-poster" src="${poster}" alt="${title}">
                     <div class="modal-details">
                         <p style="color:#9ca3af; line-height:1.4;">${desc}</p>
-                        <button class="play-btn" onclick="startMedia(${m.id}, '${title.replace(/'/g, "")}', '${m.original_name ? m.original_name.replace(/'/g, "") : ''}')">Смотреть</button>
+                        <button class="play-btn" onclick="startMedia(${m.id}, '${title.replace(/'/g, "")}')">Смотреть</button>
                     </div>
                 </div>
             `;
             document.getElementById('modal').style.display = 'flex';
         }
 
-        function startMedia(id, title, origTitle) {
-            // Для аниме передаем название для более точного поиска сезонов и серий
-            let playerSrc = '';
-            if (currentCategory === 'movies') {
-                playerSrc = `https://kinobox.in/embed?tmdb=${id}`;
-            } else {
-                const queryTitle = encodeURIComponent(origTitle || title);
-                playerSrc = `https://kinobox.in/embed?tmdb=${id}&title=${queryTitle}`;
-            }
+        function startMedia(id, title) {
+            // Надежный универсальный плеер voidboost / cdnmovies
+            const playerUrl = currentCategory === 'movies' 
+                ? `https://voidboost.net/embed/${id}?tmdb=1`
+                : `https://voidboost.net/embed/${id}?tmdb=1&type=tv`;
 
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="${playerSrc}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                <iframe src="${playerUrl}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
