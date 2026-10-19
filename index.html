@@ -271,20 +271,28 @@
 
         async function searchMovie(q) {
             if(!q) return loadMovies();
-            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
-            const data = await res.json();
-            moviesList = data.results || [];
-            render(moviesList);
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                moviesList = data.results || [];
+                render(moviesList);
+            } catch (e) {
+                console.error(e);
+            }
         }
 
         function render(list) {
             const grid = document.getElementById('movieGrid');
+            if (!list || list.length === 0) {
+                grid.innerText = "Фильмы не найдены.";
+                return;
+            }
             grid.innerHTML = list.map(m => `
                 <div class="card" onclick="openInfo(${m.id})">
                     <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450'}" alt="${m.title}">
                     <div class="card-info">
                         <div class="card-title">${m.title}</div>
-                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average.toFixed(1)}</div>
+                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div>
                     </div>
                 </div>
             `).join('');
@@ -314,7 +322,7 @@
         function startMovie(id, title) {
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://kinobox.in/embed?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                <iframe src="https://vidsrc.me/embed/movie?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
@@ -351,7 +359,7 @@
         }
 
         function submitReview(movieId) {
-            const text = document.getElementById('reviewText'].value.trim();
+            const text = document.getElementById('reviewText').value.trim();
             if (!text) return alert('Напишите текст отзыва!');
 
             const reviewsKey = 'reviews_' + movieId;
