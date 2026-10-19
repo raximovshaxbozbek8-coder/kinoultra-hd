@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KinoUltra — Смотреть фильмы онлайн</title>
-    <!-- Красная иконка с буквой K для вкладки браузера -->
+    <!-- Иконка с буквой K -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
     <style>
@@ -172,7 +172,6 @@
             background: #000;
         }
 
-        /* Стили для системы отзывов и звёзд */
         .reviews-section {
             margin-top: 25px;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -228,8 +227,6 @@
             margin-bottom: 4px;
         }
     </style>
-
-    <script data-cfasync="false" src="https://aarems.org/1/fc63adad21599d5019e3641c3dda462d"></script>
 </head>
 <body>
 
@@ -241,7 +238,6 @@
     </header>
 
     <div class="container">
-        <!-- БЛОК РЕКЛАМЫ #1 -->
         <div class="ad-banner" id="topAdSlot">
             <span>📢 Рекламный блок (728x90)</span>
         </div>
@@ -316,17 +312,14 @@
         }
 
         function startMovie(id, title) {
-            // Используем стабильный iframe-плеер vidsrc.net с поддержкой русской озвучки
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://vidsrc.net/embed/movie?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://vidsrc.me/embed/movie?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
-                <!-- БЛОК РЕКЛАМЫ #2 -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
                 </div>
 
-                <!-- БЛОК ОТЗЫВОВ И ЗВЁЗД -->
                 <div class="reviews-section">
                     <h4>Оставить отзыв и оценку</h4>
                     <div class="star-rating" id="starContainer">
@@ -405,6 +398,5 @@
 
         loadMovies();
     </script>
-    <script data-cfasync="false" src="https://bancadeltempoidea.org/14/eba8d4d2487e475023c1c30825def61d"></script>
 </body>
 </html>
