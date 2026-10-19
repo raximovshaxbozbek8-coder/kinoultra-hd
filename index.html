@@ -314,7 +314,7 @@
         function startMovie(id, title) {
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://vidsrc.me/embed/movie?tmdb=${id}&lang=ru" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                <iframe src="https://vidsrc.me/embed/movie?tmdb=${id}&lang=ru" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
                 
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
