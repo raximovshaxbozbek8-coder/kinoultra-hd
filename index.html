@@ -164,12 +164,13 @@
 
         .play-btn:hover { background: var(--accent-hover); }
 
-        iframe {
+        /* Контейнер для плеера Kinobox */
+        #kinobox-player {
             width: 100%;
             height: 480px;
-            border: none;
             border-radius: 8px;
             background: #000;
+            overflow: hidden;
         }
 
         .reviews-section {
@@ -253,6 +254,9 @@
         </div>
     </div>
 
+    <!-- Подключаем скрипт плеера Kinobox -->
+    <script src="https://kinobox.in/kinobox.min.js"></script>
+
     <script>
         const API_KEY = 'f13df4519e4be31e6c1c1c5973055a04';
         let moviesList = [];
@@ -322,7 +326,7 @@
         function startMovie(id, title) {
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://vidsrc.me/embed/movie?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
+                <div id="kinobox-player"></div>
                 
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Рекламный баннер под плеером</span>
@@ -343,6 +347,16 @@
                     <div class="reviews-list" id="reviewsListContainer"></div>
                 </div>
             `;
+
+            // Инициализация Kinobox с поддержкой русских переводов и полноэкранного режима
+            new Kinobox('#kinobox-player', {
+                search: { tmdb: id },
+                params: {
+                    menu: 1,
+                    resize: 1
+                }
+            }).init();
+
             loadReviews(id);
         }
 
