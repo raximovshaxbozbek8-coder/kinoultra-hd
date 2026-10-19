@@ -1,14 +1,1 @@
-iframe {
-            width: 100%;
-            height: 480px;
-            border: none;
-            border-radius: 8px;
-            background: #000;
-        }
 
-        /* Добавляем адаптивность для мобильных телефонов */
-        @media (max-width: 768px) {
-            iframe {
-                height: 250px; /* Плеер автоматически станет компактнее на смартфонах */
-            }
-        }
