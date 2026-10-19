@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta name="google-site-verification" content="fNl9QEdvjZOO-HoHmPcxZNIFtOfWZEE2euZz_bybCu0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Смотреть фильмы онлайн</title>
+    <title>KinoUltra — Watch Movies Online</title>
     <!-- Красная иконка с буквой K для вкладки браузера -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23e50914%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
     
@@ -26,9 +26,6 @@
             font-family: Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         header {
@@ -38,16 +35,12 @@
             padding: 15px 30px;
             background: #15161d;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
             color: var(--accent);
-            cursor: pointer;
         }
 
         .search-box input {
@@ -65,8 +58,6 @@
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 15px;
-            flex: 1;
-            width: 100%;
         }
 
         .ad-banner {
@@ -238,26 +229,25 @@
         }
     </style>
 
-    <!-- Рекламный скрипт #1 -->
     <script data-cfasync="false" src="https://aarems.org/1/fc63adad21599d5019e3641c3dda462d"></script>
 </head>
 <body>
 
     <header>
-        <div class="logo" onclick="loadMovies()">KinoUltra</div>
+        <div class="logo">KinoUltra</div>
         <div class="search-box">
-            <input type="text" placeholder="Поиск фильмов..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
+            <input type="text" placeholder="Search movies..." onkeydown="if(event.key==='Enter') searchMovie(this.value)">
         </div>
     </header>
 
     <div class="container">
         <!-- БЛОК РЕКЛАМЫ #1: Верхний баннер -->
         <div class="ad-banner" id="topAdSlot">
-            <span>📢 Рекламное место (728x90) — Место для вашего баннера</span>
+            <span>📢 Advertisement Space (728x90) — Place your ad script here</span>
         </div>
 
-        <h2 id="sectionTitle">Популярные фильмы</h2>
-        <div class="grid" id="movieGrid">Загрузка каталога...</div>
+        <h2>Popular Movies</h2>
+        <div class="grid" id="movieGrid">Loading catalog...</div>
     </div>
 
     <div class="modal" id="modal">
@@ -273,42 +263,32 @@
         let currentSelectedRating = 5;
 
         async function loadMovies() {
-            document.getElementById('sectionTitle').innerText = "Популярные фильмы";
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ru-RU`);
+                const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US`);
                 const data = await res.json();
                 moviesList = data.results || [];
                 render(moviesList);
             } catch (e) {
-                document.getElementById('movieGrid').innerText = "Не удалось загрузить каталог фильмов.";
+                document.getElementById('movieGrid').innerText = "Failed to load movie catalog.";
             }
         }
 
         async function searchMovie(q) {
             if(!q) return loadMovies();
-            document.getElementById('sectionTitle').innerText = `Поиск: "${q}"`;
-            try {
-                const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=ru-RU&query=${encodeURIComponent(q)}`);
-                const data = await res.json();
-                moviesList = data.results || [];
-                render(moviesList);
-            } catch (e) {
-                document.getElementById('movieGrid').innerText = "Ошибка при поиске.";
-            }
+            const res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&language=en-US&query=${encodeURIComponent(q)}`);
+            const data = await res.json();
+            moviesList = data.results || [];
+            render(moviesList);
         }
 
         function render(list) {
             const grid = document.getElementById('movieGrid');
-            if (!list || list.length === 0) {
-                grid.innerHTML = '<div>Ничего не найдено</div>';
-                return;
-            }
             grid.innerHTML = list.map(m => `
                 <div class="card" onclick="openInfo(${m.id})">
-                    <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450?text=Нет+обложки'}" alt="${m.title}">
+                    <img src="${m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : 'https://via.placeholder.com/300x450'}" alt="${m.title}">
                     <div class="card-info">
                         <div class="card-title">${m.title}</div>
-                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average ? m.vote_average.toFixed(1) : '0'}</div>
+                        <div class="card-meta">${(m.release_date||'').split('-')[0]} • ★ ${m.vote_average.toFixed(1)}</div>
                     </div>
                 </div>
             `).join('');
@@ -320,7 +300,7 @@
 
             const poster = m.poster_path ? 'https://image.tmdb.org/t/p/w500' + m.poster_path : '';
             const title = m.title;
-            const desc = m.overview || "Описание фильма отсутствует.";
+            const desc = m.overview || "No description available.";
 
             document.getElementById('modalBody').innerHTML = `
                 <h2 style="margin-top:0;">${title}</h2>
@@ -338,17 +318,11 @@
         function startMovie(id, title) {
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
+                <iframe src="https://vidlink.pro/movie/${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
-                <!-- Запасной стабильный плеер / мультиплеер -->
-                <iframe src="https://vidsrc.xyz/embed/movie?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-                
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <a href="https://www.google.com/search?q=смотреть+${encodeURIComponent(title)}+онлайн" target="_blank" style="flex:1; text-align:center; background:#222; color:#fff; padding:10px; border-radius:6px; text-decoration:none; font-size:13px;">🔍 Найти зеркалo / озвучку</a>
-                </div>
-
                 <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
-                    <span>📺 Спонсорский баннер / Промокоды (под плеером)</span>
+                    <span>📺 Sponsor Ad / Promo Code Banner (Under Player)</span>
                 </div>
 
                 <!-- БЛОК ОТЗЫВОВ И ЗВЁЗД -->
@@ -432,8 +406,6 @@
 
         loadMovies();
     </script>
-    
-    <!-- Рекламный скрипт #2 -->
     <script data-cfasync="false" src="https://bancadeltempoidea.org/14/eba8d4d2487e475023c1c30825def61d"></script>
 </body>
 </html>
