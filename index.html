@@ -338,8 +338,14 @@
         function startMovie(id, title) {
             document.getElementById('modalBody').innerHTML = `
                 <h3 style="margin-top:0; margin-bottom:12px;">${title}</h3>
-                <iframe src="https://vidlink.pro/movie/${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
                 
+                <!-- Запасной стабильный плеер / мультиплеер -->
+                <iframe src="https://vidsrc.xyz/embed/movie?tmdb=${id}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+                
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <a href="https://www.google.com/search?q=смотреть+${encodeURIComponent(title)}+онлайн" target="_blank" style="flex:1; text-align:center; background:#222; color:#fff; padding:10px; border-radius:6px; text-decoration:none; font-size:13px;">🔍 Найти зеркалo / озвучку</a>
+                </div>
+
                 <!-- БЛОК РЕКЛАМЫ #2: Баннер под видеоплеером -->
                 <div class="ad-banner" style="margin-top:15px; margin-bottom:0;">
                     <span>📺 Спонсорский баннер / Промокоды (под плеером)</span>
