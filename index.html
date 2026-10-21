@@ -1,359 +1,782 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CraftUltra — Играть в Майнкрафт онлайн бесплатно</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%235c8e32%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>M</text></svg>">
-    
+    <title>TestUz AI — Решебник и Помощник с ДЗ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        darkbg: '#0f172a',
+                        darkcard: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Katex for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <style>
-        :root {
-            --bg: #0f1015;
-            --card-bg: #1a1c24;
-            --accent: #5c8e32; /* Зеленый цвет травяного блока Minecraft */
-            --accent-hover: #487225;
-            --text: #ffffff;
-            --text-sub: #9ca3af;
-            --ad-bg: #1e2029;
-        }
-
-        * { box-sizing: border-box; }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: 'Inter', sans-serif;
         }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: #15161d;
-            border-bottom: 2px solid var(--accent);
-            flex-wrap: wrap;
-            gap: 15px;
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
         }
-
-        .logo {
-            font-size: 26px;
-            font-weight: bold;
-            color: var(--accent);
-            text-shadow: 0 0 10px rgba(92, 142, 50, 0.4);
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
         }
-
-        .nav-btn {
-            background: transparent;
-            color: var(--text-sub);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
-
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .search-box input {
-            padding: 10px 18px;
-            width: 240px;
-            border-radius: 20px;
-            border: 1px solid #333;
-            background: #222;
-            color: white;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        .ad-banner {
-            background: var(--ad-bg);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            color: var(--text-sub);
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .card:hover { 
-            transform: translateY(-6px); 
-            box-shadow: 0 8px 20px rgba(92, 142, 50, 0.3);
-            border-color: var(--accent);
-        }
-
-        .card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-        }
-
-        .card-info { padding: 12px; }
-        .card-title { font-size: 15px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-meta { font-size: 12px; color: var(--text-sub); margin-top: 6px; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.94);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: #181922;
-            width: 920px;
-            max-width: 95%;
-            border-radius: 12px;
-            padding: 20px;
-            position: relative;
-            max-height: 95vh;
-            overflow-y: auto;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px; right: 18px;
-            color: var(--text-sub);
-            font-size: 32px;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .close:hover { color: white; }
-
-        .game-frame-container {
-            width: 100%;
-            height: 540px;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .game-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            margin-bottom: 12px;
-        }
-
-        .fullscreen-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .fullscreen-btn:hover { background: var(--accent-hover); }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
 
-    <header>
-        <div class="header-left">
-            <div class="logo">⛏️ CraftUltra</div>
-            <button class="nav-btn active" onclick="filterCategory('all', this)">Все Майнкрафт Игры</button>
-            <button class="nav-btn" onclick="filterCategory('build', this)">🧱 Строительство</button>
-            <button class="nav-btn" onclick="filterCategory('parkour', this)">🏃 Паркур</button>
-            <button class="nav-btn" onclick="filterCategory('action', this)">⚔️ Выживание</button>
-        </div>
-        <div class="search-box">
-            <input type="text" placeholder="Поиск Майнкрафт игры..." onkeyup="searchGame(this.value)">
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('solver')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="sparkles" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">TestUz AI</span>
+                    <span class="text-xs block text-slate-400 -mt-1 font-medium">Решебник 24/7</span>
+                </div>
+            </div>
+
+            <nav class="flex items-center space-x-1 sm:space-x-2">
+                <button onclick="switchTab('solver')" id="nav-solver" class="px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2">
+                    <i data-lucide="file-search" class="w-4 h-4"></i>
+                    <span>Решение задач</span>
+                </button>
+                <button onclick="switchTab('chat')" id="nav-chat" class="px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2">
+                    <i data-lucide="message-square" class="w-4 h-4"></i>
+                    <span>ИИ-Чат</span>
+                </button>
+            </nav>
         </div>
     </header>
 
-    <div class="container">
-        <!-- Рекламный баннер -->
-        <div class="ad-banner">
-            <span>📢 Рекламный баннер (728x90)</span>
-        </div>
-
-        <h2 id="sectionTitle">Бесплатные игры в стиле Minecraft</h2>
-        <div class="grid" id="gameGrid"></div>
-    </div>
-
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modalBody"></div>
+    <!-- Top Monitization Banner -->
+    <div class="max-w-7xl mx-auto w-full px-4 pt-4">
+        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/60 rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
+            <div class="flex items-center gap-3">
+                <span class="bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">РЕКЛАМА</span>
+                <p class="text-xs sm:text-sm text-slate-300">🎓 <span class="font-semibold text-white">Подготовка к вступительным экзаменам DTM / ГЦТ!</span> Курсы со скидкой до 30%</p>
+            </div>
+            <a href="#" onclick="event.preventDefault(); alert('Рекламная ссылка: Переход на курс');" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition shrink-0">Узнать больше</a>
         </div>
     </div>
 
-    <script>
-        // База HTML5 игр про Майнкрафт
-        const games = [
-            {
-                id: 1,
-                title: "Minecraft Classic (Официальный)",
-                category: "build",
-                categoryName: "Строительство",
-                thumb: "https://images.crazygames.com/games/minecraft-classic/thumb-1557416345422.png?auto=format,compress&q=75&cs=strip&ch=DPR",
-                url: "https://classic.minecraft.net/"
-            },
-            {
-                id: 2,
-                title: "Voxel Craft 3D (Майнкрафт Песочница)",
-                category: "build",
-                categoryName: "Строительство",
-                thumb: "https://images.crazygames.com/bloxdhop-io/20210216162310/bloxdhop-io-cover?auto=format,compress&q=75&cs=strip&ch=DPR",
-                url: "https://bloxd.io/"
-            },
-            {
-                id: 3,
-                title: "Parkour Block 3D (Майнкрафт Паркур)",
-                category: "parkour",
-                categoryName: "Паркур",
-                thumb: "https://images.crazygames.com/parkour-block-3d/20210719163829/parkour-block-3d-cover?auto=format,compress&q=75&cs=strip&ch=DPR",
-                url: "https://html5.gamedistribution.com/f04c601f0161427c9b27fb3d2f974eb1/"
-            },
-            {
-                id: 4,
-                title: "Mine Shooter (Майнкрафт Зомби)",
-                category: "action",
-                categoryName: "Выживание",
-                thumb: "https://images.crazygames.com/mine-shooter/20211027151121/mine-shooter-cover?auto=format,compress&q=75&cs=strip&ch=DPR",
-                url: "https://html5.gamedistribution.com/a42b1022bebd42db9d259560f85eeecf/"
-            },
-            {
-                id: 5,
-                title: "Paper Minecraft 2D (Бумажный Майнкрафт)",
-                category: "build",
-                categoryName: "Строительство",
-                thumb: "https://images.crazygames.com/paper-minecraft/20201124151239/paper-minecraft-cover?auto=format,compress&q=75&cs=strip&ch=DPR",
-                url: "https://scratch.mit.edu/projects/10128407/embed"
-            },
-            {
-                id: 6,
-                title: "WorldCraft 3D (Строительство миров)",
-                category: "build",
-                categoryName: "Строительство",
-                thumb: "https://images.crazygames.com/world-craft-hd/20201124151240/world-craft-hd-cover?auto=format,compress&q=75&cs=strip&ch=DPR",
-                url: "https://html5.gamedistribution.com/db782a2dc34947ba9d16a690ea38a3d3/"
-            }
-        ];
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        function renderGames(list) {
-            const grid = document.getElementById('gameGrid');
-            if (!list || list.length === 0) {
-                grid.innerHTML = "<p>Игры не найдены.</p>";
-                return;
-            }
-            grid.innerHTML = list.map(g => `
-                <div class="card" onclick="openGame(${g.id})">
-                    <img src="${g.thumb}" alt="${g.title}">
-                    <div class="card-info">
-                        <div class="card-title">${g.title}</div>
-                        <div class="card-meta">Категория: ${g.categoryName}</div>
+        <!-- Left / Main Workspace Area -->
+        <div class="lg:col-col-span-12 lg:col-span-8 space-y-6">
+
+            <!-- TAB 1: SOLVER -->
+            <div id="tab-solver" class="space-y-6">
+                <!-- Subject Picker -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+                    <label class="block text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
+                        <i data-lucide="book-open" class="w-4 h-4 text-indigo-400"></i>
+                        Выберите предмет:
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="subject-selector">
+                        <button onclick="selectSubject('math')" data-subject="math" class="subject-btn active flex items-center gap-2.5 p-2.5 rounded-xl border text-sm font-medium transition-all bg-indigo-600/20 border-indigo-500 text-indigo-300">
+                            <span class="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400"><i data-lucide="calculator" class="w-4 h-4"></i></span>
+                            <span>Математика</span>
+                        </button>
+                        <button onclick="selectSubject('physics')" data-subject="physics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="atom" class="w-4 h-4"></i></span>
+                            <span>Физика</span>
+                        </button>
+                        <button onclick="selectSubject('chemistry')" data-subject="chemistry" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="flask-conical" class="w-4 h-4"></i></span>
+                            <span>Химия</span>
+                        </button>
+                        <button onclick="selectSubject('russian')" data-subject="russian" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="languages" class="w-4 h-4"></i></span>
+                            <span>Русский язык</span>
+                        </button>
+                        <button onclick="selectSubject('english')" data-subject="english" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="globe" class="w-4 h-4"></i></span>
+                            <span>Английский</span>
+                        </button>
+                        <button onclick="selectSubject('informatics')" data-subject="informatics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="code" class="w-4 h-4"></i></span>
+                            <span>Информатика</span>
+                        </button>
                     </div>
                 </div>
-            `).join('');
-        }
 
-        function filterCategory(cat, btn) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+                <!-- Input Box (Image Upload & Text Query) -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    
+                    <!-- Upload Drop Zone -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
+                            <i data-lucide="camera" class="w-4 h-4 text-indigo-400"></i>
+                            Прикрепить фото задачи / условия:
+                        </label>
+                        
+                        <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-6 text-center bg-slate-950/50 hover:bg-slate-950 transition cursor-pointer relative group">
+                            <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                            <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleFileSelect(event)">
+                            
+                            <div id="upload-prompt" class="space-y-3">
+                                <div class="w-12 h-12 rounded-full bg-slate-800 group-hover:bg-indigo-600/20 text-slate-400 group-hover:text-indigo-400 flex items-center justify-center mx-auto transition">
+                                    <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+                                </div>
+                                <div class="text-sm text-slate-400">
+                                    <span class="font-medium text-slate-200">Нажмите для загрузки</span> или перетащите фото сюда
+                                </div>
+                                <div class="flex items-center justify-center gap-3 pt-1">
+                                    <button type="button" onclick="document.getElementById('file-input').click()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition border border-slate-700">
+                                        📁 Из файла
+                                    </button>
+                                    <button type="button" onclick="document.getElementById('camera-input').click()" class="px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-xs font-medium rounded-lg transition border border-indigo-500">
+                                        📷 Сделать снимки
+                                    </button>
+                                </div>
+                            </div>
 
-            if (cat === 'all') {
-                renderGames(games);
+                            <!-- Preview Container -->
+                            <div id="preview-container" class="hidden relative inline-block max-w-full">
+                                <img id="image-preview" src="" alt="Предпросмотр" class="max-h-64 rounded-lg border border-slate-700 shadow-md object-contain">
+                                <button type="button" onclick="removeImage(event)" class="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white rounded-full p-1.5 shadow-lg transition">
+                                    <i data-lucide="x" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Input -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
+                            <i data-lucide="edit-3" class="w-4 h-4 text-indigo-400"></i>
+                            Текст вопроса или комментарий:
+                        </label>
+                        <textarea id="task-text" rows="3" placeholder="Введите условие задачи или добавьте пояснение к картинке..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm resize-none"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="solve-btn" onclick="solveProblem()" class="w-full py-3.5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        <span>Решить с помощью ИИ</span>
+                    </button>
+                </div>
+
+                <!-- Solution Output Card -->
+                <div id="solution-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-green-500/10 rounded-xl text-green-400 border border-green-500/20">
+                                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Разбор и решение задачи</h3>
+                                <p class="text-xs text-slate-400" id="solution-subject-tag">Предмет: Математика</p>
+                            </div>
+                        </div>
+                        <button onclick="copySolution()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition flex items-center gap-1.5 border border-slate-700">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span>Копировать</span>
+                        </button>
+                    </div>
+
+                    <!-- Quick Answer Highlight -->
+                    <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4">
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-1">⚡ Краткий ответ:</span>
+                        <div id="short-answer" class="text-xl font-extrabold text-white">--</div>
+                    </div>
+
+                    <!-- Step by Step -->
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                            <i data-lucide="list-ordered" class="w-4 h-4 text-indigo-400"></i>
+                            Пошаговое решение:
+                        </h4>
+                        <div id="step-by-step" class="prose prose-invert max-w-none text-slate-300 text-sm space-y-3 leading-relaxed">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i>
+                            Пояснение и правила:
+                        </h4>
+                        <p id="explanation-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            --
+                        </p>
+                    </div>
+
+                    <!-- Action to Ask Questions -->
+                    <div class="pt-2 flex justify-end">
+                        <button onclick="openChatWithContext()" class="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-medium transition flex items-center gap-2">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            Задать утоняющий вопрос по этому решению
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: AI CHAT -->
+            <div id="tab-chat" class="hidden bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[650px]">
+                <!-- Chat Header -->
+                <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 rounded-t-2xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                            AI
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-200 text-sm">Учебный ИИ-Консультант</h3>
+                            <span class="text-[10px] text-green-400 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> В сети
+                            </span>
+                        </div>
+                    </div>
+                    <button onclick="clearChat()" class="text-xs text-slate-500 hover:text-slate-300 transition flex items-center gap-1">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Очистить
+                    </button>
+                </div>
+
+                <!-- Chat Messages Body -->
+                <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
+                            AI
+                        </div>
+                        <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
+                            Привет! 👋 Я твой помощник по учебе. Можешь задать мне любой вопрос по домашке, попросить объяснить теорию или проверить твой ответ!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input Footer -->
+                <div class="p-3 border-t border-slate-800 bg-slate-900/80 rounded-b-2xl">
+                    <form onsubmit="sendChatMessage(event)" class="flex items-center gap-2">
+                        <input type="text" id="chat-input" placeholder="Задай вопрос ИИ (например: Объясни теорему Пифагора)..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
+                        <button type="submit" class="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition shadow-md shrink-0">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Sidebar (Ads, Info & Quick Tools) -->
+        <div class="lg:col-span-4 space-y-6">
+
+            <!-- Sidebar Banner 1 -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 relative overflow-hidden group">
+                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-600/10 rounded-full blur-xl group-hover:bg-indigo-600/20 transition"></div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Рекламный блок</span>
+                <h4 class="font-bold text-slate-200 text-sm mb-1">Репетиторы онлайн</h4>
+                <p class="text-xs text-slate-400 mb-3">Первое занятие бесплатно. Математика, физика, языки.</p>
+                <a href="#" onclick="event.preventDefault(); alert('Рекламный переход к репетиторам');" class="block text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-semibold rounded-xl border border-slate-700 transition">
+                    Записаться на урок →
+                </a>
+            </div>
+
+            <!-- Subject Quick Info Cards -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+                <h4 class="font-bold text-slate-200 text-sm flex items-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                    Как пользоваться решебником?
+                </h4>
+                <ul class="text-xs text-slate-400 space-y-2.5">
+                    <li class="flex items-start gap-2">
+                        <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
+                        <span>Выбери точный предмет для лучшего распознавания.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
+                        <span>Сделай четкое фото задачи или загрузите файл.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
+                        <span>ИИ проанализирует картинку и выдаст развернутое решение!</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Sidebar Banner 2 (Large Square Ad) -->
+            <div class="bg-gradient-to-br from-indigo-950/40 via-slate-900 to-purple-950/40 border border-indigo-500/20 rounded-2xl p-5 text-center space-y-3">
+                <span class="inline-block px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-[10px] font-bold rounded uppercase">PRO Версия</span>
+                <h4 class="font-bold text-white text-base">Безлимитный ИИ-Помощник</h4>
+                <p class="text-xs text-slate-400">Решай сложные варианты, загружай до 10 фото одновременно и получай быстрые ответы!</p>
+                <button onclick="alert('Спасибо за интерес! Раздел подписки в разработке.')" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-md">
+                    Попробовать TestUz PRO
+                </button>
+            </div>
+
+            <!-- Footer Stats / Copyright -->
+            <div class="text-center text-xs text-slate-500 space-y-1">
+                <p>© 2026 TestUz AI. Все права защищены.</p>
+                <p>Быстрое решение школьных задач по узбекской и международной программе.</p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Global Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-slate-100 border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none z-50 text-sm">
+        <i data-lucide="info" class="w-5 h-5 text-indigo-400" id="toast-icon"></i>
+        <span id="toast-message">Уведомление</span>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        // Global State
+        let selectedSubject = 'math';
+        let currentImageBase64 = null;
+        let lastSolutionText = '';
+
+        const subjectNames = {
+            math: 'Математика',
+            physics: 'Физика',
+            chemistry: 'Химия',
+            russian: 'Русский язык',
+            english: 'Английский язык',
+            informatics: 'Информатика'
+        };
+
+        // Initialize Icons
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            setupDragAndDrop();
+        });
+
+        // Tab Switcher
+        function switchTab(tab) {
+            const solverTab = document.getElementById('tab-solver');
+            const chatTab = document.getElementById('tab-chat');
+            const navSolver = document.getElementById('nav-solver');
+            const navChat = document.getElementById('nav-chat');
+
+            if (tab === 'solver') {
+                solverTab.classList.remove('hidden');
+                chatTab.classList.add('hidden');
+                navSolver.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2';
+                navChat.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2';
             } else {
-                const filtered = games.filter(g => g.category === cat);
-                renderGames(filtered);
+                solverTab.classList.add('hidden');
+                chatTab.classList.remove('hidden');
+                navChat.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2';
+                navSolver.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2';
             }
         }
 
-        function searchGame(query) {
-            const q = query.toLowerCase().trim();
-            const filtered = games.filter(g => g.title.toLowerCase().includes(q));
-            renderGames(filtered);
+        // Subject Selection
+        function selectSubject(subject) {
+            selectedSubject = subject;
+            document.querySelectorAll('.subject-btn').forEach(btn => {
+                if (btn.dataset.subject === subject) {
+                    btn.className = 'subject-btn active flex items-center gap-2.5 p-2.5 rounded-xl border text-sm font-medium transition-all bg-indigo-600/20 border-indigo-500 text-indigo-300';
+                    btn.querySelector('span:first-child').className = 'p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400';
+                } else {
+                    btn.className = 'subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700';
+                    btn.querySelector('span:first-child').className = 'p-1.5 rounded-lg bg-slate-700/50 text-slate-300';
+                }
+            });
         }
 
-        function openGame(id) {
-            const g = games.find(item => item.id === id);
-            if (!g) return;
+        // File Selection & Drag-Drop Handling
+        function setupDragAndDrop() {
+            const dropZone = document.getElementById('drop-zone');
 
-            document.getElementById('modalBody').innerHTML = `
-                <h3 style="margin-top:0; margin-bottom:10px;">${g.title}</h3>
-                
-                <div class="game-frame-container" id="gameContainer">
-                    <iframe id="gameIframe" src="${g.url}" allowfullscreen></iframe>
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.add('border-indigo-500', 'bg-indigo-950/20');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropZone.classList.remove('border-indigo-500', 'bg-indigo-950/20');
+                }, false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files && files.length > 0) {
+                    processImageFile(files[0]);
+                }
+            });
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                processImageFile(file);
+            }
+        }
+
+        function processImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showToast('Пожалуйста, выберите файл изображения', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImageBase64 = e.target.result.split(',')[1];
+                document.getElementById('image-preview').src = e.target.result;
+                document.getElementById('upload-prompt').classList.add('hidden');
+                document.getElementById('preview-container').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeImage(e) {
+            e.stopPropagation();
+            currentImageBase64 = null;
+            document.getElementById('image-preview').src = '';
+            document.getElementById('preview-container').classList.add('hidden');
+            document.getElementById('upload-prompt').classList.remove('hidden');
+            document.getElementById('file-input').value = '';
+            document.getElementById('camera-input').value = '';
+        }
+
+        // Main API Integration (Solve Problem)
+        async function solveProblem() {
+            const textQuery = document.getElementById('task-text').value.trim();
+
+            if (!textQuery && !currentImageBase64) {
+                showToast('Загрузите фото задачи или введите текст вопроса', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('solve-btn');
+            const originalBtnHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Анализируем решение...</span>`;
+            lucide.createIcons();
+
+            const systemPrompt = `Ты профессиональный репетитор и эксперт по школьному предмету "${subjectNames[selectedSubject]}".
+Твоя задача — детально разобрать задачу и дать понятный структурированный ответ на русском языке.
+
+Верни ответ СТРОГО в формате JSON с такой структурой:
+{
+  "shortAnswer": "Краткий ответ (например: x = 5 или Ответ: вариант B)",
+  "steps": [
+    "Шаг 1: Описание...",
+    "Шаг 2: Расчет...",
+    "Шаг 3: Вывод..."
+  ],
+  "explanation": "Объяснение используемых правил, формул или грамматики"
+}`;
+
+            try {
+                let userContent = [];
+                let promptText = `Предмет: ${subjectNames[selectedSubject]}.\n`;
+                if (textQuery) {
+                    promptText += `Текст задачи/вопроса: ${textQuery}`;
+                } else {
+                    promptText += `Проанализируй прикрепленное изображение задачи и дай решение.`;
+                }
+
+                userContent.push({ text: promptText });
+
+                if (currentImageBase64) {
+                    userContent.push({
+                        inlineData: {
+                            mimeType: "image/png",
+                            data: currentImageBase64
+                        }
+                    });
+                }
+
+                const payload = {
+                    contents: [{ role: "user", parts: userContent }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json"
+                    }
+                };
+
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!jsonText) {
+                    throw new Error("Не удалось получить корректное решение от ИИ.");
+                }
+
+                const result = JSON.parse(jsonText);
+                displaySolution(result);
+                showToast('Решение успешно сгенерировано!', 'success');
+
+            } catch (error) {
+                console.error(error);
+                showToast('Ошибка при генерации ответа. Попробуйте снова.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHtml;
+                lucide.createIcons();
+            }
+        }
+
+        // Display Solution in HTML
+        function displaySolution(data) {
+            const solutionCard = document.getElementById('solution-card');
+            document.getElementById('solution-subject-tag').innerText = `Предмет: ${subjectNames[selectedSubject]}`;
+            
+            // Short Answer
+            document.getElementById('short-answer').innerText = data.shortAnswer || "Не указан";
+
+            // Steps
+            const stepsContainer = document.getElementById('step-by-step');
+            stepsContainer.innerHTML = '';
+            if (Array.isArray(data.steps)) {
+                data.steps.forEach((step, idx) => {
+                    const stepEl = document.createElement('div');
+                    stepEl.className = 'flex items-start gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800';
+                    stepEl.innerHTML = `
+                        <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0">${idx + 1}</span>
+                        <div class="text-slate-200 text-sm leading-relaxed mt-0.5">${formatMathText(step)}</div>
+                    `;
+                    stepsContainer.appendChild(stepEl);
+                });
+            }
+
+            // Explanation
+            document.getElementById('explanation-text').innerText = data.explanation || "Дополнительные пояснения отсутствуют.";
+
+            // Save for copy/chat context
+            lastSolutionText = `Краткий ответ: ${data.shortAnswer}\nШаги:\n` + (data.steps ? data.steps.join('\n') : '') + `\nПояснение: ${data.explanation}`;
+
+            solutionCard.classList.remove('hidden');
+            solutionCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Simple helper for math syntax if needed
+        function formatMathText(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+
+        // Copy Solution
+        function copySolution() {
+            if (!lastSolutionText) return;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = lastSolutionText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            showToast('Решение скопировано в буфер обмена!', 'success');
+        }
+
+        // Transfer context to Chat Tab
+        function openChatWithContext() {
+            switchTab('chat');
+            const chatInput = document.getElementById('chat-input');
+            chatInput.value = `У меня вопрос по решению задачи (${subjectNames[selectedSubject]}): `;
+            chatInput.focus();
+        }
+
+        // Chat Logic
+        async function sendChatMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Render User Message
+            appendChatMessage('user', message);
+            input.value = '';
+
+            // Show Typing Indicator
+            const typingId = appendTypingIndicator();
+
+            const systemPrompt = `Ты вежливый и умный учебный ИИ-Консультант проекта TestUz AI. Помогаешь школьникам и студентам с домашним заданием. Отвечай кратко, четко и понятно на русском языке.`;
+
+            try {
+                let prompt = message;
+                if (lastSolutionText) {
+                    prompt = `[Контекст решения задачи]:\n${lastSolutionText}\n\n[Вопрос пользователя]: ${message}`;
+                }
+
+                const payload = {
+                    contents: [{ role: "user", parts: [{ text: prompt }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const response = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Извините, не удалось сформировать ответ.";
+
+                removeChatMessage(typingId);
+                appendChatMessage('ai', aiReply);
+
+            } catch (err) {
+                console.error(err);
+                removeChatMessage(typingId);
+                appendChatMessage('ai', 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.');
+            }
+        }
+
+        function appendChatMessage(role, text) {
+            const container = document.getElementById('chat-messages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'flex items-start gap-3';
+
+            if (role === 'user') {
+                msgDiv.innerHTML = `
+                    <div class="ml-auto bg-indigo-600 text-white rounded-2xl rounded-tr-none p-3.5 max-w-[85%] leading-relaxed shadow-md">
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-slate-300 shrink-0 text-xs font-bold">
+                        ВЫ
+                    </div>
+                `;
+            } else {
+                msgDiv.innerHTML = `
+                    <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
+                        AI
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+            }
+
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendTypingIndicator() {
+            const container = document.getElementById('chat-messages');
+            const id = 'typing-' + Date.now();
+            const msgDiv = document.createElement('div');
+            msgDiv.id = id;
+            msgDiv.className = 'flex items-start gap-3';
+            msgDiv.innerHTML = `
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
+                    AI
                 </div>
-
-                <div class="game-controls">
-                    <span style="color:#9ca3af; font-size:13px;">Управление: WASD + Мышь (кликни в окно игры для включения управления)</span>
-                    <button class="fullscreen-btn" onclick="toggleFullscreen()">На весь экран ⛶</button>
-                </div>
-
-                <div class="ad-banner" style="margin-top:10px; margin-bottom:0;">
-                    <span>📺 Рекламный баннер под игрой</span>
+                <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-400 flex items-center gap-1.5">
+                    <span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></span>
+                    <span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                    <span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                 </div>
             `;
-
-            document.getElementById('modal').style.display = 'flex';
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+            return id;
         }
 
-        function toggleFullscreen() {
-            const container = document.getElementById('gameContainer');
-            if (!document.fullscreenElement) {
-                container.requestFullscreen().catch(err => alert("Не удалось открыть на весь экран"));
+        function removeChatMessage(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        function clearChat() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
+                        AI
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
+                        Чат очищен! Готов отвечать на новые вопросы.
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toast Helper
+        function showToast(msg, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = msg;
+            if (type === 'error') {
+                toastIcon.setAttribute('data-lucide', 'alert-circle');
+                toastIcon.className = 'w-5 h-5 text-red-400';
+            } else if (type === 'success') {
+                toastIcon.setAttribute('data-lucide', 'check-circle');
+                toastIcon.className = 'w-5 h-5 text-green-400';
             } else {
-                document.exitFullscreen();
+                toastIcon.setAttribute('data-lucide', 'info');
+                toastIcon.className = 'w-5 h-5 text-indigo-400';
+            }
+            lucide.createIcons();
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Fetch with exponential backoff retry for network resiliency
+        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok && retries > 0) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response;
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(r => setTimeout(r, delay));
+                    return fetchWithRetry(url, options, retries - 1, delay * 2);
+                }
+                throw err;
             }
         }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('modalBody').innerHTML = '';
-        }
-
-        renderGames(games);
     </script>
 </body>
 </html>
