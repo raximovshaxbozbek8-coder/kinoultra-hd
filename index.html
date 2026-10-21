@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestUz AI — ИИ Помощник с ДЗ и Ответы (5-11 класс)</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563eb%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>T</text></svg>">
+    <title>TestUz AI — Ответы, ВПР, Решебник и Онлайн-курсы (5-11 класс)</title>
+    
+    <!-- Фиолетовая иконка сайта с буквой T -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%237c3aed%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>T</text></svg>">
     
     <style>
         :root {
-            --bg: #0f172a;
-            --card-bg: #1e293b;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
+            --bg: #0f1015;
+            --card-bg: #181922;
+            --accent: #7c3aed; /* Фиолетовый акцент */
+            --accent-hover: #6d28d9;
             --text: #ffffff;
-            --text-sub: #94a3b8;
-            --ad-bg: #090d16;
+            --text-sub: #9ca3af;
+            --ad-bg: #1e2029;
             --success: #16a34a;
+            --badge: #a78bfa;
+            --brand-purple: #7c3aed;
         }
 
         * { box-sizing: border-box; }
@@ -35,16 +39,58 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 30px;
-            background: #1e293b;
-            border-bottom: 2px solid var(--accent);
+            background: #15161d;
+            border-bottom: 2px solid var(--brand-purple);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .site-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--brand-purple);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.6);
         }
 
         .logo {
             font-size: 24px;
             font-weight: bold;
-            color: #38bdf8;
-            cursor: pointer;
+            color: #ffffff;
         }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            background: #252836;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .nav-link:hover { background: var(--brand-purple); }
 
         .container {
             max-width: 900px;
@@ -69,7 +115,7 @@
             background: var(--card-bg);
             border-radius: 16px;
             padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.08);
             margin-bottom: 20px;
         }
@@ -78,18 +124,18 @@
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
-            color: #38bdf8;
+            color: var(--badge);
         }
 
         .class-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
             margin-bottom: 20px;
         }
 
         .class-btn {
-            background: #334155;
+            background: #252836;
             color: white;
             border: 2px solid transparent;
             padding: 10px 5px;
@@ -98,33 +144,69 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
+            text-align: center;
         }
 
         .class-btn:hover, .class-btn.active {
-            background: var(--accent);
-            border-color: #38bdf8;
+            background: var(--brand-purple);
+            border-color: #c4b5fd;
         }
 
-        .upload-box {
-            border: 2px dashed #38bdf8;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-            background: rgba(56, 189, 248, 0.05);
-            cursor: pointer;
-            transition: background 0.2s;
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
             margin-bottom: 20px;
         }
 
-        .upload-box:hover {
-            background: rgba(56, 189, 248, 0.1);
+        .subject-btn {
+            background: #252836;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
         }
+
+        .subject-btn:hover {
+            background: var(--brand-purple);
+            transform: translateY(-2px);
+        }
+
+        /* Блок загрузки фото и камеры */
+        .photo-action-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 180px;
+            background: #252836;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover { background: #32364a; border-color: var(--badge); }
 
         textarea {
             width: 100%;
-            height: 100px;
-            background: #0f172a;
-            border: 1px solid #334155;
+            height: 90px;
+            background: #0f1015;
+            border: 1px solid #32364a;
             border-radius: 10px;
             padding: 12px;
             color: white;
@@ -135,7 +217,7 @@
         }
 
         .solve-btn {
-            background: var(--success);
+            background: var(--brand-purple);
             color: white;
             border: none;
             padding: 14px 28px;
@@ -147,72 +229,192 @@
             transition: background 0.2s;
         }
 
-        .solve-btn:hover { background: #15803d; }
-
-        .result-box {
-            display: none;
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--accent);
-            line-height: 1.6;
-        }
+        .solve-btn:hover { background: var(--accent-hover); }
 
         .preview-img {
-            max-width: 200px;
-            max-height: 200px;
+            max-width: 100%;
+            max-height: 220px;
             border-radius: 8px;
             margin-top: 10px;
             display: none;
         }
+
+        /* Таблица ответов для списывания */
+        .answers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .answers-table th, .answers-table td {
+            border: 1px solid #32364a;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .answers-table th { background: #0f1015; color: var(--badge); }
+        .answers-table td.ans { font-weight: bold; color: #a78bfa; background: rgba(124, 58, 237, 0.15); }
+
+        .back-btn {
+            background: #252836;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .back-btn:hover { background: #32364a; }
+
+        /* Промо-блоки и курсы */
+        .promo-card {
+            background: linear-gradient(135deg, #181922 0%, #0f1015 100%);
+            border: 1px solid var(--brand-purple);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .promo-title { font-size: 18px; font-weight: bold; color: #c4b5fd; margin-bottom: 8px; }
+        .discount-badge { background: #ef4444; color: white; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">⚡ TestUz AI — Помощник ДЗ</div>
+        <div class="logo-container" onclick="switchTab('home')">
+            <div class="site-icon">T</div>
+            <div class="logo">TestUz AI</div>
+        </div>
+        <div class="nav-links">
+            <button class="nav-link" onclick="switchTab('home')">🏠 Главная</button>
+            <button class="nav-link" onclick="switchTab('dtm')">🎯 ДТМ / ГЦТ Тесты</button>
+            <button class="nav-link" onclick="switchTab('courses')">🔥 Курсы (-30%)</button>
+            <button class="nav-link" onclick="switchTab('tutors')">👨‍🏫 Репетиторы онлайн</button>
+        </div>
     </header>
 
     <div class="container">
-        <!-- Баннер рекламы -->
+        <!-- Верхний баннер -->
         <div class="ad-banner">
-            <span>📢 Рекламный блок (728x90)</span>
+            <span>📢 Рекламный блок (728x90) — Зарабатывай на рекламе</span>
         </div>
 
-        <div class="panel">
-            <div class="section-title">1. Выберите класс:</div>
-            <div class="class-grid">
-                <button class="class-btn active" onclick="setClass(5, this)">5 класс</button>
-                <button class="class-btn" onclick="setClass(6, this)">6 класс</button>
-                <button class="class-btn" onclick="setClass(7, this)">7 класс</button>
-                <button class="class-btn" onclick="setClass(8, this)">8 класс</button>
-                <button class="class-btn" onclick="setClass(9, this)">9 класс</button>
-                <button class="class-btn" onclick="setClass(10, this)">10 класс</button>
-                <button class="class-btn" onclick="setClass(11, this)">11 класс</button>
+        <!-- ГЛАВНАЯ СТРАНИЦА -->
+        <div id="homeTab">
+            <div class="panel">
+                <div class="section-title">1. Выберите ваш класс:</div>
+                <div class="class-grid">
+                    <button class="class-btn active" onclick="setClass(5, this)">5 класс</button>
+                    <button class="class-btn" onclick="setClass(6, this)">6 класс</button>
+                    <button class="class-btn" onclick="setClass(7, this)">7 класс</button>
+                    <button class="class-btn" onclick="setClass(8, this)">8 класс</button>
+                    <button class="class-btn" onclick="setClass(9, this)">9 класс</button>
+                    <button class="class-btn" onclick="setClass(10, this)">10 класс</button>
+                    <button class="class-btn" onclick="setClass(11, this)">11 класс</button>
+                </div>
+
+                <div class="section-title">2. Выберите предмет для быстрого списывания (Готовые ответы 50 баллов):</div>
+                <div class="subject-grid">
+                    <button class="subject-btn" onclick="openSubjectAnswers('Математика')">📐 Математика</button>
+                    <button class="subject-btn" onclick="openSubjectAnswers('Информатика')">💻 Информатика</button>
+                    <button class="subject-btn" onclick="openSubjectAnswers('Русский язык')">📖 Русский язык</button>
+                    <button class="subject-btn" onclick="openSubjectAnswers('Физика')">⚡ Физика</button>
+                    <button class="subject-btn" onclick="openSubjectAnswers('История')">🏛️ История</button>
+                    <button class="subject-btn" onclick="openSubjectAnswers('Английский язык')">🇬🇧 Английский язык</button>
+                </div>
+
+                <div class="section-title" style="margin-top: 25px;">3. Или загрузите фото / сделайте снимок задачи для ИИ:</div>
+                
+                <div class="photo-action-box">
+                    <button class="action-btn" onclick="document.getElementById('cameraInput').click()">📸 Сделать снимок</button>
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;" onchange="handleFile(this)">
+
+                    <button class="action-btn" onclick="document.getElementById('fileInput').click()">📁 Прикрепить из галереи</button>
+                    <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFile(this)">
+                </div>
+
+                <img id="imgPreview" class="preview-img" alt="Предпросмотр фото">
+
+                <textarea id="taskText" placeholder="Или напишите условие задачи текстом здесь..."></textarea>
+
+                <button class="solve-btn" onclick="getAISolution()">✨ Получить точный ответ от ИИ</button>
             </div>
 
-            <div class="section-title">2. Загрузите фото задания или введите текст:</div>
-            
-            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
-                📷 <b>Нажмите, чтобы загрузить фото задачи / ВПР</b>
-                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFile(this)">
-                <br>
-                <img id="imgPreview" class="preview-img" alt="Предпросмотр">
+            <!-- Блок результатов ИИ -->
+            <div class="panel" id="resultBox" style="display: none;">
+                <h3 style="margin-top:0; color:#a78bfa;">Решение и ответ от ИИ:</h3>
+                <div id="solutionText" style="line-height: 1.6;">Загрузка...</div>
             </div>
-
-            <textarea id="taskText" placeholder="Напишите текст задачи или вопрос к ИИ..."></textarea>
-
-            <button class="solve-btn" onclick="getSolution()">✨ Получить ответ и решение от ИИ</button>
         </div>
 
-        <div class="panel result-box" id="resultBox">
-            <h3 style="margin-top:0; color:#38bdf8;">Решение ИИ:</h3>
-            <div id="solutionText">Загрузка решения...</div>
+        <!-- СТРАНИЦА ОТВЕТОВ ПО ПРЕДМЕТАМ -->
+        <div id="answersTab" style="display: none;">
+            <div class="panel">
+                <button class="back-btn" onclick="switchTab('home')">← Назад к выбору предметов</button>
+                <h2 id="answersSubjectTitle" style="color: #a78bfa; margin-top: 0;">Готовые ответы</h2>
+                <p style="color: var(--text-sub); font-size: 13px;">Ключи ответов на 50 вопросов (Вариант 1)</p>
+                
+                <table class="answers-table">
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>Ответ</th>
+                            <th>№</th>
+                            <th>Ответ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="answersTableBody"></tbody>
+                </table>
+            </div>
         </div>
 
-        <!-- Баннер рекламы снизу -->
-        <div class="ad-banner">
-            <span>📺 Рекламный баннер под ответом</span>
+        <!-- СТРАНИЦА ДТМ / ГЦТ ТЕСТОВ -->
+        <div id="dtmTab" style="display: none;">
+            <div class="panel">
+                <h2 style="color: #a78bfa; margin-top:0;">🎯 Подготовка к ДТМ / ГЦТ (TestUz Pro)</h2>
+                <p style="color: var(--text-sub);">Тестирование по официальным стандартам Государственного центра тестирования (ГЦТ). Проверь свои силы перед экзаменом в вуз!</p>
+                <button class="solve-btn" style="margin-top: 15px;" onclick="alert('Тесты ДТМ загружаются! Выберите предмет на главной.')">Начать пробный тест ДТМ</button>
+            </div>
+        </div>
+
+        <!-- СТРАНИЦА ОНЛАЙН-КУРСОВ СО СКИДКОЙ -->
+        <div id="coursesTab" style="display: none;">
+            <div class="panel">
+                <h2 style="color: #a78bfa; margin-top:0;">🔥 Онлайн-курсы со скидкой до 30%</h2>
+                <div class="promo-card">
+                    <div class="promo-title">🚀 Математика и Физика для поступления <span class="discount-badge">-30%</span></div>
+                    <p style="color: var(--text-sub); font-size: 14px;">Подготовка с нуля до поступления в университет с лучшими преподавателями Узбекистана.</p>
+                    <button class="solve-btn" style="padding: 10px 20px; font-size: 14px; width: auto;" onclick="alert('Переход на страницу оплаты курса!')">Записаться со скидкой</button>
+                </div>
+                <div class="promo-card">
+                    <div class="promo-title">💻 Программирование и ИТ для школьников <span class="discount-badge">-25%</span></div>
+                    <p style="color: var(--text-sub); font-size: 14px;">Создай свой первый сайт или игру на Python и JavaScript!</p>
+                    <button class="solve-btn" style="padding: 10px 20px; font-size: 14px; width: auto;" onclick="alert('Переход на страницу оплаты курса!')">Записаться со скидкой</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- СТРАНИЦА ОНЛАЙН-РЕПЕТИТОРОВ И ВЫСТУПЛЕНИЙ -->
+        <div id="tutorsTab" style="display: none;">
+            <div class="panel">
+                <h2 style="color: #a78bfa; margin-top:0;">👨‍🏫 Онлайн-репетиторы и подготовка к выступлениям</h2>
+                <p style="color: var(--text-sub); line-height: 1.6;">
+                    Нужна помощь с домашним заданием или подготовка к школьным выступлениям / олимпиадам?<br>
+                    Наши эксперты проведут индивидуальный урок онлайн в удобное для вас время.
+                </p>
+                <div class="promo-card" style="margin-top: 20px;">
+                    <div class="promo-title">🎙️ Подготовка к презентациям и публичным выступлениям</div>
+                    <p style="color: var(--text-sub); font-size: 14px;">Научим уверенно держаться перед классом и защищать проекты.</p>
+                    <button class="solve-btn" style="padding: 10px 20px; font-size: 14px; width: auto;" onclick="alert('Заявка на консультацию принята! Мы свяжемся с вами.')">Записаться к репетитору</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижний рекламный баннер -->
+        <div class="ad-banner" style="margin-top: 20px; margin-bottom: 0;">
+            <span>📺 Рекламный баннер под контентом</span>
         </div>
     </div>
 
@@ -223,6 +425,45 @@
             currentClass = num;
             document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+        }
+
+        function switchTab(tabId) {
+            document.getElementById('homeTab').style.display = 'none';
+            document.getElementById('answersTab').style.display = 'none';
+            document.getElementById('dtmTab').style.display = 'none';
+            document.getElementById('coursesTab').style.display = 'none';
+            document.getElementById('tutorsTab').style.display = 'none';
+
+            if (tabId === 'home') document.getElementById('homeTab').style.display = 'block';
+            if (tabId === 'dtm') document.getElementById('dtmTab').style.display = 'block';
+            if (tabId === 'courses') document.getElementById('coursesTab').style.display = 'block';
+            if (tabId === 'tutors') document.getElementById('tutorsTab').style.display = 'block';
+        }
+
+        function openSubjectAnswers(subject) {
+            document.getElementById('homeTab').style.display = 'none';
+            document.getElementById('answersTab').style.display = 'block';
+            document.getElementById('answersSubjectTitle').innerText = `${subject} — ${currentClass} класс (Готовые ответы)`;
+
+            const tbody = document.getElementById('answersTableBody');
+            tbody.innerHTML = '';
+
+            const sampleAnswers = ['A', 'B', 'C', 'D', '15', '48', 'True', '2.5', 'X', '100'];
+            for (let i = 0; i < 25; i++) {
+                const q1 = i + 1;
+                const a1 = sampleAnswers[i % sampleAnswers.length];
+                const q2 = i + 26;
+                const a2 = sampleAnswers[(i + 3) % sampleAnswers.length];
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>Вопрос ${q1}</b></td>
+                        <td class="ans">${a1}</td>
+                        <td><b>Вопрос ${q2}</b></td>
+                        <td class="ans">${a2}</td>
+                    </tr>
+                `;
+            }
         }
 
         function handleFile(input) {
@@ -237,25 +478,25 @@
             }
         }
 
-        function getSolution() {
+        function getAISolution() {
             const text = document.getElementById('taskText').value.trim();
             const resultBox = document.getElementById('resultBox');
             const solutionText = document.getElementById('solutionText');
 
             resultBox.style.display = 'block';
-            solutionText.innerHTML = "⏳ ИИ анализирует задачу для " + currentClass + " класса, подождите...";
+            solutionText.innerHTML = "⏳ ИИ анализирует задачу для " + currentClass + " класса, подготавливает пошаговое решение...";
 
             setTimeout(() => {
                 solutionText.innerHTML = `
-                    <b>Ответ для ${currentClass} класса:</b><br><br>
-                    1. <b>Краткий ответ:</b> Вариант А / x = 15<br>
-                    2. <b>Пошаговое решение:</b><br>
-                    • Шаг 1: Разберем условие задания.<br>
-                    • Шаг 2: Применим формулу и выполним вычисления.<br>
-                    • Шаг 3: Получаем итоговый результат.<br><br>
-                    <i>💡 Сохраните ответ, чтобы использовать при проверке!</i>
+                    <b>✅ Ответ успешно найден (${currentClass} класс):</b><br><br>
+                    1. <b>Результат:</b> x = 25 (или вариант правильного ответа)<br>
+                    2. <b>Разбор и пояснение:</b><br>
+                    • Шаг 1: Используем формулу школьной программы.<br>
+                    • Шаг 2: Подставляем известные значения и производим расчет.<br>
+                    • Шаг 3: Получаем финальный ответ.<br><br>
+                    <i>💡 Вы можете использовать этот ответ для проверки своей домашней работы или подготовки к ВПР.</i>
                 `;
-            }, 1500);
+            }, 1200);
         }
     </script>
 </body>
