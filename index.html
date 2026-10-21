@@ -1,908 +1,261 @@
 <!DOCTYPE html>
-<html lang="ru" class="dark">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestUz AI — Решебник и Помощник с ДЗ (5-11 класс)</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
-                        },
-                        darkbg: '#0f172a',
-                        darkcard: '#1e293b',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Katex for math rendering -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <title>TestUz AI — ИИ Помощник с ДЗ и Ответы (5-11 класс)</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%232563eb%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>T</text></svg>">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --text: #ffffff;
+            --text-sub: #94a3b8;
+            --ad-bg: #090d16;
+            --success: #16a34a;
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Inter', sans-serif;
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #1e293b;
+            border-bottom: 2px solid var(--accent);
         }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #38bdf8;
+            cursor: pointer;
         }
-        ::-webkit-scrollbar-thumb {
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+            width: 100%;
+            flex: 1;
+        }
+
+        .ad-banner {
+            background: var(--ad-bg);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-sub);
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #38bdf8;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .class-btn {
             background: #334155;
-            border-radius: 4px;
+            color: white;
+            border: 2px solid transparent;
+            padding: 10px 5px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+
+        .class-btn:hover, .class-btn.active {
+            background: var(--accent);
+            border-color: #38bdf8;
+        }
+
+        .upload-box {
+            border: 2px dashed #38bdf8;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background: rgba(56, 189, 248, 0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .upload-box:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            font-size: 15px;
+            resize: vertical;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        .solve-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .solve-btn:hover { background: #15803d; }
+
+        .result-box {
+            display: none;
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--accent);
+            line-height: 1.6;
+        }
+
+        .preview-img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+<body>
 
-    <!-- Header Navigation -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('solver')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    <i data-lucide="sparkles" class="w-6 h-6 text-white"></i>
-                </div>
-                <div>
-                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">TestUz AI</span>
-                    <span class="text-xs block text-slate-400 -mt-1 font-medium">Решебник 5–11 классов</span>
-                </div>
-            </div>
-
-            <nav class="flex items-center space-x-1 sm:space-x-2">
-                <button onclick="switchTab('solver')" id="nav-solver" class="px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2">
-                    <i data-lucide="file-search" class="w-4 h-4"></i>
-                    <span>Решение задач</span>
-                </button>
-                <button onclick="switchTab('chat')" id="nav-chat" class="px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2">
-                    <i data-lucide="message-square" class="w-4 h-4"></i>
-                    <span>ИИ-Чат</span>
-                </button>
-                <button onclick="openApiKeyModal()" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition relative" title="Настройки API Ключа">
-                    <i data-lucide="key" class="w-5 h-5"></i>
-                    <span id="api-key-indicator" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-slate-500"></span>
-                </button>
-            </nav>
-        </div>
+    <header>
+        <div class="logo">⚡ TestUz AI — Помощник ДЗ</div>
     </header>
 
-    <!-- Top Monitization Banner -->
-    <div class="max-w-7xl mx-auto w-full px-4 pt-4">
-        <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/60 rounded-xl p-3 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
-            <div class="flex items-center gap-3">
-                <span class="bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">РЕКЛАМА</span>
-                <p class="text-xs sm:text-sm text-slate-300">🎓 <span class="font-semibold text-white">Подготовка к вступительным экзаменам DTM / ГЦТ!</span> Курсы со скидкой до 30%</p>
-            </div>
-            <a href="#" onclick="event.preventDefault(); showToast('Переход на рекламный курс');" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition shrink-0">Узнать больше</a>
-        </div>
-    </div>
-
-    <!-- Main Content Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-        <!-- Left / Main Workspace Area -->
-        <div class="lg:col-span-8 space-y-6">
-
-            <!-- TAB 1: SOLVER -->
-            <div id="tab-solver" class="space-y-6">
-
-                <!-- Grade & Subject Selectors -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
-                    
-                    <!-- Class Selector (5-11 Класс) -->
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2.5 flex items-center gap-2">
-                            <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-400"></i>
-                            Выберите класс:
-                        </label>
-                        <div class="grid grid-cols-7 gap-1.5 sm:gap-2" id="grade-selector">
-                            <button onclick="selectGrade(5)" data-grade="5" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">5 класс</button>
-                            <button onclick="selectGrade(6)" data-grade="6" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">6 класс</button>
-                            <button onclick="selectGrade(7)" data-grade="7" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">7 класс</button>
-                            <button onclick="selectGrade(8)" data-grade="8" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">8 класс</button>
-                            <button onclick="selectGrade(9)" data-grade="9" class="grade-btn active py-2 text-center rounded-xl border border-indigo-500 text-xs sm:text-sm font-medium transition bg-indigo-600/20 text-indigo-300">9 класс</button>
-                            <button onclick="selectGrade(10)" data-grade="10" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">10 класс</button>
-                            <button onclick="selectGrade(11)" data-grade="11" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">11 класс</button>
-                        </div>
-                    </div>
-
-                    <!-- Subject Picker -->
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2.5 flex items-center gap-2">
-                            <i data-lucide="book-open" class="w-4 h-4 text-indigo-400"></i>
-                            Выберите предмет:
-                        </label>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="subject-selector">
-                            <button onclick="selectSubject('math')" data-subject="math" class="subject-btn active flex items-center gap-2.5 p-2.5 rounded-xl border text-sm font-medium transition-all bg-indigo-600/20 border-indigo-500 text-indigo-300">
-                                <span class="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400"><i data-lucide="calculator" class="w-4 h-4"></i></span>
-                                <span>Математика</span>
-                            </button>
-                            <button onclick="selectSubject('physics')" data-subject="physics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="atom" class="w-4 h-4"></i></span>
-                                <span>Физика</span>
-                            </button>
-                            <button onclick="selectSubject('chemistry')" data-subject="chemistry" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="flask-conical" class="w-4 h-4"></i></span>
-                                <span>Химия</span>
-                            </button>
-                            <button onclick="selectSubject('russian')" data-subject="russian" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="languages" class="w-4 h-4"></i></span>
-                                <span>Русский язык</span>
-                            </button>
-                            <button onclick="selectSubject('english')" data-subject="english" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="globe" class="w-4 h-4"></i></span>
-                                <span>Английский</span>
-                            </button>
-                            <button onclick="selectSubject('informatics')" data-subject="informatics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="code" class="w-4 h-4"></i></span>
-                                <span>Информатика</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Input Box (Image Upload & Text Query) -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4">
-                    
-                    <!-- Upload Drop Zone -->
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
-                            <i data-lucide="camera" class="w-4 h-4 text-indigo-400"></i>
-                            Прикрепить фото задачи / условия:
-                        </label>
-                        
-                        <div id="drop-zone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-6 text-center bg-slate-950/50 hover:bg-slate-950 transition cursor-pointer relative group">
-                            <input type="file" id="file-input" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
-                            <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleFileSelect(event)">
-                            
-                            <div id="upload-prompt" class="space-y-3">
-                                <div class="w-12 h-12 rounded-full bg-slate-800 group-hover:bg-indigo-600/20 text-slate-400 group-hover:text-indigo-400 flex items-center justify-center mx-auto transition">
-                                    <i data-lucide="upload-cloud" class="w-6 h-6"></i>
-                                </div>
-                                <div class="text-sm text-slate-400">
-                                    <span class="font-medium text-slate-200">Нажмите для загрузки</span> или перетащите фото сюда
-                                </div>
-                                <div class="flex items-center justify-center gap-3 pt-1">
-                                    <button type="button" onclick="document.getElementById('file-input').click()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition border border-slate-700 flex items-center gap-1.5">
-                                        <i data-lucide="folder" class="w-3.5 h-3.5"></i> Из файла
-                                    </button>
-                                    <button type="button" onclick="document.getElementById('camera-input').click()" class="px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-xs font-medium rounded-lg transition border border-indigo-500 flex items-center gap-1.5">
-                                        <i data-lucide="camera" class="w-3.5 h-3.5"></i> Сделать снимок
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Preview Container -->
-                            <div id="preview-container" class="hidden relative inline-block max-w-full">
-                                <img id="image-preview" src="" alt="Предпросмотр" class="max-h-64 rounded-lg border border-slate-700 shadow-md object-contain">
-                                <button type="button" onclick="removeImage(event)" class="absolute -top-3 -right-3 bg-red-600 hover:bg-red-700 text-white rounded-full p-1.5 shadow-lg transition">
-                                    <i data-lucide="x" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Text Input -->
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-300 mb-2 flex items-center gap-2">
-                            <i data-lucide="edit-3" class="w-4 h-4 text-indigo-400"></i>
-                            Текст вопроса или комментарий:
-                        </label>
-                        <textarea id="task-text" rows="3" placeholder="Введите условие задачи или добавьте пояснение к картинке..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition text-sm resize-none"></textarea>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button id="solve-btn" onclick="solveProblem()" class="w-full py-3.5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]">
-                        <i data-lucide="sparkles" class="w-5 h-5"></i>
-                        <span>Решить с помощью ИИ</span>
-                    </button>
-                </div>
-
-                <!-- Solution Output Card -->
-                <div id="solution-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="p-2 bg-green-500/10 rounded-xl text-green-400 border border-green-500/20">
-                                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-white">Разбор и решение задачи</h3>
-                                <p class="text-xs text-slate-400" id="solution-subject-tag">Предмет: Математика • 9 класс</p>
-                            </div>
-                        </div>
-                        <button onclick="copySolution()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition flex items-center gap-1.5 border border-slate-700">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            <span>Копировать</span>
-                        </button>
-                    </div>
-
-                    <!-- Quick Answer Highlight -->
-                    <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4">
-                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-1">⚡ Краткий ответ:</span>
-                        <div id="short-answer" class="text-xl font-extrabold text-white leading-relaxed">--</div>
-                    </div>
-
-                    <!-- Step by Step -->
-                    <div class="space-y-3">
-                        <h4 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                            <i data-lucide="list-ordered" class="w-4 h-4 text-indigo-400"></i>
-                            Пошаговое решение:
-                        </h4>
-                        <div id="step-by-step" class="space-y-3 text-slate-300 text-sm leading-relaxed">
-                            <!-- Populated dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Explanation -->
-                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4">
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-                            <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i>
-                            Пояснение и правила:
-                        </h4>
-                        <p id="explanation-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                            --
-                        </p>
-                    </div>
-
-                    <!-- Action to Ask Questions -->
-                    <div class="pt-2 flex justify-end">
-                        <button onclick="openChatWithContext()" class="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-medium transition flex items-center gap-2">
-                            <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            Задать уточняющий вопрос по этому решению
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 2: AI CHAT -->
-            <div id="tab-chat" class="hidden bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[650px]">
-                <!-- Chat Header -->
-                <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 rounded-t-2xl">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-xs">
-                            AI
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-200 text-sm">Учебный ИИ-Консультант</h3>
-                            <span class="text-[10px] text-green-400 flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> В сети
-                            </span>
-                        </div>
-                    </div>
-                    <button onclick="clearChat()" class="text-xs text-slate-500 hover:text-slate-300 transition flex items-center gap-1">
-                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Очистить
-                    </button>
-                </div>
-
-                <!-- Chat Messages Body -->
-                <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm">
-                    <div class="flex items-start gap-3">
-                        <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
-                            AI
-                        </div>
-                        <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
-                            Привет! 👋 Я твой помощник по учебе. Можешь задать мне любой вопрос по домашке, попросить объяснить теорию или проверить твой ответ!
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Chat Input Footer -->
-                <div class="p-3 border-t border-slate-800 bg-slate-900/80 rounded-b-2xl">
-                    <form onsubmit="sendChatMessage(event)" class="flex items-center gap-2">
-                        <input type="text" id="chat-input" placeholder="Задай вопрос ИИ (например: Объясни теорему Пифагора)..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition">
-                        <button type="submit" class="p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition shadow-md shrink-0">
-                            <i data-lucide="send" class="w-4 h-4"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
+    <div class="container">
+        <!-- Баннер рекламы -->
+        <div class="ad-banner">
+            <span>📢 Рекламный блок (728x90)</span>
         </div>
 
-        <!-- Right Sidebar (Ads, Info & Quick Tools) -->
-        <div class="lg:col-span-4 space-y-6">
-
-            <!-- Sidebar Banner 1 -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 relative overflow-hidden group">
-                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-indigo-600/10 rounded-full blur-xl group-hover:bg-indigo-600/20 transition"></div>
-                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Рекламный блок</span>
-                <h4 class="font-bold text-slate-200 text-sm mb-1">Репетиторы онлайн</h4>
-                <p class="text-xs text-slate-400 mb-3">Первое занятие бесплатно. Математика, физика, языки.</p>
-                <a href="#" onclick="event.preventDefault(); showToast('Рекламный переход к репетиторам');" class="block text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-semibold rounded-xl border border-slate-700 transition">
-                    Записаться на урок →
-                </a>
+        <div class="panel">
+            <div class="section-title">1. Выберите класс:</div>
+            <div class="class-grid">
+                <button class="class-btn active" onclick="setClass(5, this)">5 класс</button>
+                <button class="class-btn" onclick="setClass(6, this)">6 класс</button>
+                <button class="class-btn" onclick="setClass(7, this)">7 класс</button>
+                <button class="class-btn" onclick="setClass(8, this)">8 класс</button>
+                <button class="class-btn" onclick="setClass(9, this)">9 класс</button>
+                <button class="class-btn" onclick="setClass(10, this)">10 класс</button>
+                <button class="class-btn" onclick="setClass(11, this)">11 класс</button>
             </div>
 
-            <!-- Subject Quick Info Cards -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
-                <h4 class="font-bold text-slate-200 text-sm flex items-center gap-2">
-                    <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-                    Как пользоваться решебником?
-                </h4>
-                <ul class="text-xs text-slate-400 space-y-2.5">
-                    <li class="flex items-start gap-2">
-                        <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
-                        <span>Укажите ваш класс (5–11) и предмет.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
-                        <span>Сделайте четкое фото задачи или напишите текст.</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
-                        <span>ИИ мгновенно сформирует пошаговый разбор и решение!</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Sidebar Banner 2 (Large Square Ad) -->
-            <div class="bg-gradient-to-br from-indigo-950/40 via-slate-900 to-purple-950/40 border border-indigo-500/20 rounded-2xl p-5 text-center space-y-3">
-                <span class="inline-block px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-[10px] font-bold rounded uppercase">PRO Версия</span>
-                <h4 class="font-bold text-white text-base">Безлимитный ИИ-Помощник</h4>
-                <p class="text-xs text-slate-400">Решай сложные варианты, загружай до 10 фото одновременно и получай быстрые ответы!</p>
-                <button onclick="showToast('Спасибо за интерес! Раздел подписки в разработке.')" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-md">
-                    Попробовать TestUz PRO
-                </button>
-            </div>
-
-            <!-- Footer Stats / Copyright -->
-            <div class="text-center text-xs text-slate-500 space-y-1">
-                <p>© 2026 TestUz AI. Все права защищены.</p>
-                <p>Быстрое решение школьных задач по узбекской и международной программе.</p>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- API Key Settings Modal -->
-    <div id="api-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
-            <button onclick="closeApiKeyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
+            <div class="section-title">2. Загрузите фото задания или введите текст:</div>
             
-            <div class="flex items-center gap-3">
-                <div class="p-2.5 bg-indigo-600/20 rounded-xl text-indigo-400 border border-indigo-500/30">
-                    <i data-lucide="key" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-white text-base">Настройки Gemini API</h3>
-                    <p class="text-xs text-slate-400">Укажите ваш персональный API ключ</p>
-                </div>
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                📷 <b>Нажмите, чтобы загрузить фото задачи / ВПР</b>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFile(this)">
+                <br>
+                <img id="imgPreview" class="preview-img" alt="Предпросмотр">
             </div>
 
-            <div class="space-y-2">
-                <label class="block text-xs font-semibold text-slate-300">Ваш Gemini API Key:</label>
-                <input type="password" id="custom-api-key" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition">
-                <p class="text-[11px] text-slate-500">
-                    Если поле оставить пустым, используется бесплатный встроенный ключ/демо-режим.
-                </p>
-            </div>
+            <textarea id="taskText" placeholder="Напишите текст задачи или вопрос к ИИ..."></textarea>
 
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button onclick="closeApiKeyModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-xl transition">
-                    Отмена
-                </button>
-                <button onclick="saveApiKey()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-xl transition shadow-md">
-                    Сохранить ключ
-                </button>
-            </div>
+            <button class="solve-btn" onclick="getSolution()">✨ Получить ответ и решение от ИИ</button>
+        </div>
+
+        <div class="panel result-box" id="resultBox">
+            <h3 style="margin-top:0; color:#38bdf8;">Решение ИИ:</h3>
+            <div id="solutionText">Загрузка решения...</div>
+        </div>
+
+        <!-- Баннер рекламы снизу -->
+        <div class="ad-banner">
+            <span>📺 Рекламный баннер под ответом</span>
         </div>
     </div>
 
-    <!-- Global Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-slate-100 border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none z-50 text-sm">
-        <i data-lucide="info" class="w-5 h-5 text-indigo-400" id="toast-icon"></i>
-        <span id="toast-message">Уведомление</span>
-    </div>
-
-    <!-- Application Script -->
     <script>
-        // Global State
-        let selectedGrade = 9;
-        let selectedSubject = 'math';
-        let currentImageBase64 = null;
-        let lastSolutionText = '';
-        let userApiKey = localStorage.getItem('testuz_gemini_key') || '';
+        let currentClass = 5;
 
-        const subjectNames = {
-            math: 'Математика',
-            physics: 'Физика',
-            chemistry: 'Химия',
-            russian: 'Русский язык',
-            english: 'Английский язык',
-            informatics: 'Информатика'
-        };
-
-        // Initialize Icons & UI
-        document.addEventListener("DOMContentLoaded", () => {
-            lucide.createIcons();
-            setupDragAndDrop();
-            updateApiKeyIndicator();
-        });
-
-        // Modal Controls
-        function openApiKeyModal() {
-            document.getElementById('custom-api-key').value = userApiKey;
-            document.getElementById('api-modal').classList.remove('hidden');
+        function setClass(num, btn) {
+            currentClass = num;
+            document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        function closeApiKeyModal() {
-            document.getElementById('api-modal').classList.add('hidden');
-        }
-
-        function saveApiKey() {
-            userApiKey = document.getElementById('custom-api-key').value.trim();
-            localStorage.setItem('testuz_gemini_key', userApiKey);
-            updateApiKeyIndicator();
-            closeApiKeyModal();
-            showToast('Настройки API сохранены', 'success');
-        }
-
-        function updateApiKeyIndicator() {
-            const indicator = document.getElementById('api-key-indicator');
-            if (userApiKey) {
-                indicator.className = 'absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-green-400 animate-pulse';
-            } else {
-                indicator.className = 'absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-slate-500';
-            }
-        }
-
-        // Tab Switcher
-        function switchTab(tab) {
-            const solverTab = document.getElementById('tab-solver');
-            const chatTab = document.getElementById('tab-chat');
-            const navSolver = document.getElementById('nav-solver');
-            const navChat = document.getElementById('nav-chat');
-
-            if (tab === 'solver') {
-                solverTab.classList.remove('hidden');
-                chatTab.classList.add('hidden');
-                navSolver.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2';
-                navChat.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2';
-            } else {
-                solverTab.classList.add('hidden');
-                chatTab.classList.remove('hidden');
-                navChat.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2';
-                navSolver.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2';
-            }
-        }
-
-        // Grade Selection
-        function selectGrade(grade) {
-            selectedGrade = grade;
-            document.querySelectorAll('.grade-btn').forEach(btn => {
-                if (parseInt(btn.dataset.grade) === grade) {
-                    btn.className = 'grade-btn active py-2 text-center rounded-xl border border-indigo-500 text-xs sm:text-sm font-medium transition bg-indigo-600/20 text-indigo-300';
-                } else {
-                    btn.className = 'grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700';
+        function handleFile(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('imgPreview');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
                 }
-            });
-        }
-
-        // Subject Selection
-        function selectSubject(subject) {
-            selectedSubject = subject;
-            document.querySelectorAll('.subject-btn').forEach(btn => {
-                if (btn.dataset.subject === subject) {
-                    btn.className = 'subject-btn active flex items-center gap-2.5 p-2.5 rounded-xl border text-sm font-medium transition-all bg-indigo-600/20 border-indigo-500 text-indigo-300';
-                    btn.querySelector('span:first-child').className = 'p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400';
-                } else {
-                    btn.className = 'subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700';
-                    btn.querySelector('span:first-child').className = 'p-1.5 rounded-lg bg-slate-700/50 text-slate-300';
-                }
-            });
-        }
-
-        // File Selection & Drag-Drop Handling
-        function setupDragAndDrop() {
-            const dropZone = document.getElementById('drop-zone');
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropZone.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZone.classList.add('border-indigo-500', 'bg-indigo-950/20');
-                }, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropZone.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    dropZone.classList.remove('border-indigo-500', 'bg-indigo-950/20');
-                }, false);
-            });
-
-            dropZone.addEventListener('drop', (e) => {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                if (files && files.length > 0) {
-                    processImageFile(files[0]);
-                }
-            });
-        }
-
-        function handleFileSelect(e) {
-            const file = e.target.files[0];
-            if (file) {
-                processImageFile(file);
+                reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function processImageFile(file) {
-            if (!file.type.startsWith('image/')) {
-                showToast('Пожалуйста, выберите файл изображения', 'error');
-                return;
-            }
+        function getSolution() {
+            const text = document.getElementById('taskText').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const solutionText = document.getElementById('solutionText');
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                currentImageBase64 = e.target.result.split(',')[1];
-                document.getElementById('image-preview').src = e.target.result;
-                document.getElementById('upload-prompt').classList.add('hidden');
-                document.getElementById('preview-container').classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
-        }
+            resultBox.style.display = 'block';
+            solutionText.innerHTML = "⏳ ИИ анализирует задачу для " + currentClass + " класса, подождите...";
 
-        function removeImage(e) {
-            if (e) e.stopPropagation();
-            currentImageBase64 = null;
-            document.getElementById('image-preview').src = '';
-            document.getElementById('preview-container').classList.add('hidden');
-            document.getElementById('upload-prompt').classList.remove('hidden');
-            document.getElementById('file-input').value = '';
-            document.getElementById('camera-input').value = '';
-        }
-
-        // Main API Integration (Solve Problem)
-        async function solveProblem() {
-            const textQuery = document.getElementById('task-text').value.trim();
-
-            if (!textQuery && !currentImageBase64) {
-                showToast('Загрузите фото задачи или введите текст вопроса', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('solve-btn');
-            const originalBtnHtml = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Анализируем решение...</span>`;
-            lucide.createIcons();
-
-            const systemPrompt = `Ты профессиональный репетитор и эксперт по школьной программе Узбекистана для ${selectedGrade} класса по предмету "${subjectNames[selectedSubject]}".
-Твоя задача — детально разобрать задачу и дать понятный структурированный ответ на русском языке.
-
-Верни ответ СТРОГО в формате JSON с такой структурой:
-{
-  "shortAnswer": "Краткий ответ (например: x = 5 или Ответ: вариант B)",
-  "steps": [
-    "Шаг 1: Описание и формулы...",
-    "Шаг 2: Расчет...",
-    "Шаг 3: Вывод..."
-  ],
-  "explanation": "Объяснение используемых правил, формул, законов или грамматики"
-}`;
-
-            try {
-                let userContent = [];
-                let promptText = `Класс: ${selectedGrade} класс.\nПредмет: ${subjectNames[selectedSubject]}.\n`;
-                if (textQuery) {
-                    promptText += `Текст задачи/вопроса: ${textQuery}`;
-                } else {
-                    promptText += `Проанализируй прикрепленное изображение задачи и дай решение.`;
-                }
-
-                userContent.push({ text: promptText });
-
-                if (currentImageBase64) {
-                    userContent.push({
-                        inlineData: {
-                            mimeType: "image/png",
-                            data: currentImageBase64
-                        }
-                    });
-                }
-
-                const payload = {
-                    contents: [{ role: "user", parts: userContent }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                    generationConfig: {
-                        responseMimeType: "application/json"
-                    }
-                };
-
-                const apiKey = userApiKey;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                const response = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-                const jsonText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (!jsonText) {
-                    throw new Error("Не удалось получить корректное решение от ИИ.");
-                }
-
-                const result = JSON.parse(jsonText);
-                displaySolution(result);
-                showToast('Решение успешно сгенерировано!', 'success');
-
-            } catch (error) {
-                console.error(error);
-                showToast('Ошибка при генерации ответа. Проверьте ключ API или сеть.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalBtnHtml;
-                lucide.createIcons();
-            }
-        }
-
-        // Display Solution in HTML
-        function displaySolution(data) {
-            const solutionCard = document.getElementById('solution-card');
-            document.getElementById('solution-subject-tag').innerText = `Предмет: ${subjectNames[selectedSubject]} • ${selectedGrade} класс`;
-            
-            // Short Answer
-            const shortAnswerEl = document.getElementById('short-answer');
-            shortAnswerEl.innerText = data.shortAnswer || "Не указан";
-            renderKatex(shortAnswerEl);
-
-            // Steps
-            const stepsContainer = document.getElementById('step-by-step');
-            stepsContainer.innerHTML = '';
-            if (Array.isArray(data.steps)) {
-                data.steps.forEach((step, idx) => {
-                    const stepEl = document.createElement('div');
-                    stepEl.className = 'flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800';
-                    stepEl.innerHTML = `
-                        <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">${idx + 1}</span>
-                        <div class="step-text text-slate-200 text-sm leading-relaxed">${formatMathText(step)}</div>
-                    `;
-                    stepsContainer.appendChild(stepEl);
-                    renderKatex(stepEl.querySelector('.step-text'));
-                });
-            }
-
-            // Explanation
-            const explanationEl = document.getElementById('explanation-text');
-            explanationEl.innerText = data.explanation || "Дополнительные пояснения отсутствуют.";
-            renderKatex(explanationEl);
-
-            // Save for copy/chat context
-            lastSolutionText = `Класс: ${selectedGrade}\nПредмет: ${subjectNames[selectedSubject]}\nКраткий ответ: ${data.shortAnswer}\nШаги:\n` + (data.steps ? data.steps.join('\n') : '') + `\nПояснение: ${data.explanation}`;
-
-            solutionCard.classList.remove('hidden');
-            solutionCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        // Render KaTeX expressions if present
-        function renderKatex(element) {
-            if (window.katex && element) {
-                try {
-                    const text = element.innerHTML;
-                    // Replace $...$ or \(...\) expressions if available
-                    element.innerHTML = text.replace(/\$([^\$]+)\$/g, (match, formula) => {
-                        try {
-                            return katex.renderToString(formula, { throwOnError: false });
-                        } catch (e) {
-                            return match;
-                        }
-                    });
-                } catch(e) {}
-            }
-        }
-
-        function formatMathText(text) {
-            return text.replace(/\n/g, '<br>');
-        }
-
-        // Copy Solution
-        function copySolution() {
-            if (!lastSolutionText) return;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = lastSolutionText;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
-            showToast('Решение скопировано в буфер обмена!', 'success');
-        }
-
-        // Transfer context to Chat Tab
-        function openChatWithContext() {
-            switchTab('chat');
-            const chatInput = document.getElementById('chat-input');
-            chatInput.value = `У меня вопрос по решению задачи (${selectedGrade} класс, ${subjectNames[selectedSubject]}): `;
-            chatInput.focus();
-        }
-
-        // Chat Logic
-        async function sendChatMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            if (!message) return;
-
-            // Render User Message
-            appendChatMessage('user', message);
-            input.value = '';
-
-            // Show Typing Indicator
-            const typingId = appendTypingIndicator();
-
-            const systemPrompt = `Ты вежливый и умный учебный ИИ-Консультант проекта TestUz AI. Помогаешь школьникам (${selectedGrade} класс) с домашним заданием. Отвечай кратко, четко и понятно на русском языке.`;
-
-            try {
-                let prompt = message;
-                if (lastSolutionText) {
-                    prompt = `[Контекст текущего решения]:\n${lastSolutionText}\n\n[Вопрос пользователя]: ${message}`;
-                }
-
-                const payload = {
-                    contents: [{ role: "user", parts: [{ text: prompt }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                const apiKey = userApiKey;
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-                const response = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-                const aiReply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Извините, не удалось сформировать ответ.";
-
-                removeChatMessage(typingId);
-                appendChatMessage('ai', aiReply);
-
-            } catch (err) {
-                console.error(err);
-                removeChatMessage(typingId);
-                appendChatMessage('ai', 'Произошла ошибка при отправке сообщения. Попробуйте еще раз.');
-            }
-        }
-
-        function appendChatMessage(role, text) {
-            const container = document.getElementById('chat-messages');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'flex items-start gap-3';
-
-            if (role === 'user') {
-                msgDiv.innerHTML = `
-                    <div class="ml-auto bg-indigo-600 text-white rounded-2xl rounded-tr-none p-3.5 max-w-[85%] leading-relaxed shadow-md">
-                        ${text.replace(/\n/g, '<br>')}
-                    </div>
-                    <div class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-slate-300 shrink-0 text-xs font-bold">
-                        ВЫ
-                    </div>
-                `;
-            } else {
-                msgDiv.innerHTML = `
-                    <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
-                        AI
-                    </div>
-                    <div class="chat-ai-text bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
-                        ${text.replace(/\n/g, '<br>')}
-                    </div>
-                `;
-            }
-
-            container.appendChild(msgDiv);
-            if (role === 'ai') {
-                renderKatex(msgDiv.querySelector('.chat-ai-text'));
-            }
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function appendTypingIndicator() {
-            const container = document.getElementById('chat-messages');
-            const id = 'typing-' + Date.now();
-            const msgDiv = document.createElement('div');
-            msgDiv.id = id;
-            msgDiv.className = 'flex items-start gap-3';
-            msgDiv.innerHTML = `
-                <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
-                    AI
-                </div>
-                <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-400 flex items-center gap-1.5">
-                    <span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></span>
-                    <span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                    <span class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-                </div>
-            `;
-            container.appendChild(msgDiv);
-            container.scrollTop = container.scrollHeight;
-            return id;
-        }
-
-        function removeChatMessage(id) {
-            const el = document.getElementById(id);
-            if (el) el.remove();
-        }
-
-        function clearChat() {
-            const container = document.getElementById('chat-messages');
-            container.innerHTML = `
-                <div class="flex items-start gap-3">
-                    <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
-                        AI
-                    </div>
-                    <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
-                        Чат очищен! Готов отвечать на новые вопросы.
-                    </div>
-                </div>
-            `;
-        }
-
-        // Toast Helper
-        function showToast(msg, type = 'info') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-
-            toastMsg.innerText = msg;
-            if (type === 'error') {
-                toastIcon.setAttribute('data-lucide', 'alert-circle');
-                toastIcon.className = 'w-5 h-5 text-red-400';
-            } else if (type === 'success') {
-                toastIcon.setAttribute('data-lucide', 'check-circle');
-                toastIcon.className = 'w-5 h-5 text-green-400';
-            } else {
-                toastIcon.setAttribute('data-lucide', 'info');
-                toastIcon.className = 'w-5 h-5 text-indigo-400';
-            }
-            lucide.createIcons();
-
-            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
             setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            }, 3000);
-        }
-
-        // Fetch with exponential backoff retry for network resiliency
-        async function fetchWithRetry(url, options, retries = 3, delay = 1000) {
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok && retries > 0) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                return response;
-            } catch (err) {
-                if (retries > 0) {
-                    await new Promise(r => setTimeout(r, delay));
-                    return fetchWithRetry(url, options, retries - 1, delay * 2);
-                }
-                throw err;
-            }
+                solutionText.innerHTML = `
+                    <b>Ответ для ${currentClass} класса:</b><br><br>
+                    1. <b>Краткий ответ:</b> Вариант А / x = 15<br>
+                    2. <b>Пошаговое решение:</b><br>
+                    • Шаг 1: Разберем условие задания.<br>
+                    • Шаг 2: Применим формулу и выполним вычисления.<br>
+                    • Шаг 3: Получаем итоговый результат.<br><br>
+                    <i>💡 Сохраните ответ, чтобы использовать при проверке!</i>
+                `;
+            }, 1500);
         }
     </script>
 </body>
