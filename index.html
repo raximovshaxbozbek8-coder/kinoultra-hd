@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestUz AI — Решебник и Помощник с ДЗ</title>
+    <title>TestUz AI — Решебник и Помощник с ДЗ (5-11 класс)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,7 +37,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -65,7 +64,7 @@
                 </div>
                 <div>
                     <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">TestUz AI</span>
-                    <span class="text-xs block text-slate-400 -mt-1 font-medium">Решебник 24/7</span>
+                    <span class="text-xs block text-slate-400 -mt-1 font-medium">Решебник 5–11 классов</span>
                 </div>
             </div>
 
@@ -78,6 +77,10 @@
                     <i data-lucide="message-square" class="w-4 h-4"></i>
                     <span>ИИ-Чат</span>
                 </button>
+                <button onclick="openApiKeyModal()" class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition relative" title="Настройки API Ключа">
+                    <i data-lucide="key" class="w-5 h-5"></i>
+                    <span id="api-key-indicator" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-slate-500"></span>
+                </button>
             </nav>
         </div>
     </header>
@@ -89,7 +92,7 @@
                 <span class="bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-1 rounded border border-amber-500/30">РЕКЛАМА</span>
                 <p class="text-xs sm:text-sm text-slate-300">🎓 <span class="font-semibold text-white">Подготовка к вступительным экзаменам DTM / ГЦТ!</span> Курсы со скидкой до 30%</p>
             </div>
-            <a href="#" onclick="event.preventDefault(); alert('Рекламная ссылка: Переход на курс');" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition shrink-0">Узнать больше</a>
+            <a href="#" onclick="event.preventDefault(); showToast('Переход на рекламный курс');" class="text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition shrink-0">Узнать больше</a>
         </div>
     </div>
 
@@ -97,41 +100,63 @@
     <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         <!-- Left / Main Workspace Area -->
-        <div class="lg:col-col-span-12 lg:col-span-8 space-y-6">
+        <div class="lg:col-span-8 space-y-6">
 
             <!-- TAB 1: SOLVER -->
             <div id="tab-solver" class="space-y-6">
-                <!-- Subject Picker -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
-                    <label class="block text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-                        <i data-lucide="book-open" class="w-4 h-4 text-indigo-400"></i>
-                        Выберите предмет:
-                    </label>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="subject-selector">
-                        <button onclick="selectSubject('math')" data-subject="math" class="subject-btn active flex items-center gap-2.5 p-2.5 rounded-xl border text-sm font-medium transition-all bg-indigo-600/20 border-indigo-500 text-indigo-300">
-                            <span class="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400"><i data-lucide="calculator" class="w-4 h-4"></i></span>
-                            <span>Математика</span>
-                        </button>
-                        <button onclick="selectSubject('physics')" data-subject="physics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="atom" class="w-4 h-4"></i></span>
-                            <span>Физика</span>
-                        </button>
-                        <button onclick="selectSubject('chemistry')" data-subject="chemistry" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="flask-conical" class="w-4 h-4"></i></span>
-                            <span>Химия</span>
-                        </button>
-                        <button onclick="selectSubject('russian')" data-subject="russian" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="languages" class="w-4 h-4"></i></span>
-                            <span>Русский язык</span>
-                        </button>
-                        <button onclick="selectSubject('english')" data-subject="english" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="globe" class="w-4 h-4"></i></span>
-                            <span>Английский</span>
-                        </button>
-                        <button onclick="selectSubject('informatics')" data-subject="informatics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
-                            <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="code" class="w-4 h-4"></i></span>
-                            <span>Информатика</span>
-                        </button>
+
+                <!-- Grade & Subject Selectors -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+                    
+                    <!-- Class Selector (5-11 Класс) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2.5 flex items-center gap-2">
+                            <i data-lucide="graduation-cap" class="w-4 h-4 text-indigo-400"></i>
+                            Выберите класс:
+                        </label>
+                        <div class="grid grid-cols-7 gap-1.5 sm:gap-2" id="grade-selector">
+                            <button onclick="selectGrade(5)" data-grade="5" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">5 класс</button>
+                            <button onclick="selectGrade(6)" data-grade="6" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">6 класс</button>
+                            <button onclick="selectGrade(7)" data-grade="7" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">7 класс</button>
+                            <button onclick="selectGrade(8)" data-grade="8" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">8 класс</button>
+                            <button onclick="selectGrade(9)" data-grade="9" class="grade-btn active py-2 text-center rounded-xl border border-indigo-500 text-xs sm:text-sm font-medium transition bg-indigo-600/20 text-indigo-300">9 класс</button>
+                            <button onclick="selectGrade(10)" data-grade="10" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">10 класс</button>
+                            <button onclick="selectGrade(11)" data-grade="11" class="grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700">11 класс</button>
+                        </div>
+                    </div>
+
+                    <!-- Subject Picker -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-300 mb-2.5 flex items-center gap-2">
+                            <i data-lucide="book-open" class="w-4 h-4 text-indigo-400"></i>
+                            Выберите предмет:
+                        </label>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="subject-selector">
+                            <button onclick="selectSubject('math')" data-subject="math" class="subject-btn active flex items-center gap-2.5 p-2.5 rounded-xl border text-sm font-medium transition-all bg-indigo-600/20 border-indigo-500 text-indigo-300">
+                                <span class="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400"><i data-lucide="calculator" class="w-4 h-4"></i></span>
+                                <span>Математика</span>
+                            </button>
+                            <button onclick="selectSubject('physics')" data-subject="physics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="atom" class="w-4 h-4"></i></span>
+                                <span>Физика</span>
+                            </button>
+                            <button onclick="selectSubject('chemistry')" data-subject="chemistry" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="flask-conical" class="w-4 h-4"></i></span>
+                                <span>Химия</span>
+                            </button>
+                            <button onclick="selectSubject('russian')" data-subject="russian" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="languages" class="w-4 h-4"></i></span>
+                                <span>Русский язык</span>
+                            </button>
+                            <button onclick="selectSubject('english')" data-subject="english" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="globe" class="w-4 h-4"></i></span>
+                                <span>Английский</span>
+                            </button>
+                            <button onclick="selectSubject('informatics')" data-subject="informatics" class="subject-btn flex items-center gap-2.5 p-2.5 rounded-xl border border-slate-800 text-sm font-medium transition-all bg-slate-800/40 text-slate-400 hover:border-slate-700">
+                                <span class="p-1.5 rounded-lg bg-slate-700/50 text-slate-300"><i data-lucide="code" class="w-4 h-4"></i></span>
+                                <span>Информатика</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -157,11 +182,11 @@
                                     <span class="font-medium text-slate-200">Нажмите для загрузки</span> или перетащите фото сюда
                                 </div>
                                 <div class="flex items-center justify-center gap-3 pt-1">
-                                    <button type="button" onclick="document.getElementById('file-input').click()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition border border-slate-700">
-                                        📁 Из файла
+                                    <button type="button" onclick="document.getElementById('file-input').click()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition border border-slate-700 flex items-center gap-1.5">
+                                        <i data-lucide="folder" class="w-3.5 h-3.5"></i> Из файла
                                     </button>
-                                    <button type="button" onclick="document.getElementById('camera-input').click()" class="px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-xs font-medium rounded-lg transition border border-indigo-500">
-                                        📷 Сделать снимки
+                                    <button type="button" onclick="document.getElementById('camera-input').click()" class="px-3 py-1.5 bg-indigo-600/80 hover:bg-indigo-600 text-white text-xs font-medium rounded-lg transition border border-indigo-500 flex items-center gap-1.5">
+                                        <i data-lucide="camera" class="w-3.5 h-3.5"></i> Сделать снимок
                                     </button>
                                 </div>
                             </div>
@@ -201,7 +226,7 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-bold text-white">Разбор и решение задачи</h3>
-                                <p class="text-xs text-slate-400" id="solution-subject-tag">Предмет: Математика</p>
+                                <p class="text-xs text-slate-400" id="solution-subject-tag">Предмет: Математика • 9 класс</p>
                             </div>
                         </div>
                         <button onclick="copySolution()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition flex items-center gap-1.5 border border-slate-700">
@@ -213,7 +238,7 @@
                     <!-- Quick Answer Highlight -->
                     <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-xl p-4">
                         <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block mb-1">⚡ Краткий ответ:</span>
-                        <div id="short-answer" class="text-xl font-extrabold text-white">--</div>
+                        <div id="short-answer" class="text-xl font-extrabold text-white leading-relaxed">--</div>
                     </div>
 
                     <!-- Step by Step -->
@@ -222,7 +247,7 @@
                             <i data-lucide="list-ordered" class="w-4 h-4 text-indigo-400"></i>
                             Пошаговое решение:
                         </h4>
-                        <div id="step-by-step" class="prose prose-invert max-w-none text-slate-300 text-sm space-y-3 leading-relaxed">
+                        <div id="step-by-step" class="space-y-3 text-slate-300 text-sm leading-relaxed">
                             <!-- Populated dynamically -->
                         </div>
                     </div>
@@ -242,7 +267,7 @@
                     <div class="pt-2 flex justify-end">
                         <button onclick="openChatWithContext()" class="px-4 py-2 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-xl text-xs font-medium transition flex items-center gap-2">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            Задать утоняющий вопрос по этому решению
+                            Задать уточняющий вопрос по этому решению
                         </button>
                     </div>
                 </div>
@@ -302,7 +327,7 @@
                 <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2">Рекламный блок</span>
                 <h4 class="font-bold text-slate-200 text-sm mb-1">Репетиторы онлайн</h4>
                 <p class="text-xs text-slate-400 mb-3">Первое занятие бесплатно. Математика, физика, языки.</p>
-                <a href="#" onclick="event.preventDefault(); alert('Рекламный переход к репетиторам');" class="block text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-semibold rounded-xl border border-slate-700 transition">
+                <a href="#" onclick="event.preventDefault(); showToast('Рекламный переход к репетиторам');" class="block text-center py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 text-xs font-semibold rounded-xl border border-slate-700 transition">
                     Записаться на урок →
                 </a>
             </div>
@@ -316,15 +341,15 @@
                 <ul class="text-xs text-slate-400 space-y-2.5">
                     <li class="flex items-start gap-2">
                         <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
-                        <span>Выбери точный предмет для лучшего распознавания.</span>
+                        <span>Укажите ваш класс (5–11) и предмет.</span>
                     </li>
                     <li class="flex items-start gap-2">
                         <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
-                        <span>Сделай четкое фото задачи или загрузите файл.</span>
+                        <span>Сделайте четкое фото задачи или напишите текст.</span>
                     </li>
                     <li class="flex items-start gap-2">
                         <span class="w-4 h-4 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
-                        <span>ИИ проанализирует картинку и выдаст развернутое решение!</span>
+                        <span>ИИ мгновенно сформирует пошаговый разбор и решение!</span>
                     </li>
                 </ul>
             </div>
@@ -334,7 +359,7 @@
                 <span class="inline-block px-2 py-0.5 bg-indigo-500/20 text-indigo-300 text-[10px] font-bold rounded uppercase">PRO Версия</span>
                 <h4 class="font-bold text-white text-base">Безлимитный ИИ-Помощник</h4>
                 <p class="text-xs text-slate-400">Решай сложные варианты, загружай до 10 фото одновременно и получай быстрые ответы!</p>
-                <button onclick="alert('Спасибо за интерес! Раздел подписки в разработке.')" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-md">
+                <button onclick="showToast('Спасибо за интерес! Раздел подписки в разработке.')" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl text-xs transition shadow-md">
                     Попробовать TestUz PRO
                 </button>
             </div>
@@ -349,6 +374,42 @@
 
     </main>
 
+    <!-- API Key Settings Modal -->
+    <div id="api-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl relative">
+            <button onclick="closeApiKeyModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-indigo-600/20 rounded-xl text-indigo-400 border border-indigo-500/30">
+                    <i data-lucide="key" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white text-base">Настройки Gemini API</h3>
+                    <p class="text-xs text-slate-400">Укажите ваш персональный API ключ</p>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-300">Ваш Gemini API Key:</label>
+                <input type="password" id="custom-api-key" placeholder="AIzaSy..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition">
+                <p class="text-[11px] text-slate-500">
+                    Если поле оставить пустым, используется бесплатный встроенный ключ/демо-режим.
+                </p>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button onclick="closeApiKeyModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-xl transition">
+                    Отмена
+                </button>
+                <button onclick="saveApiKey()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-xl transition shadow-md">
+                    Сохранить ключ
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Global Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-slate-100 border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none z-50 text-sm">
         <i data-lucide="info" class="w-5 h-5 text-indigo-400" id="toast-icon"></i>
@@ -358,9 +419,11 @@
     <!-- Application Script -->
     <script>
         // Global State
+        let selectedGrade = 9;
         let selectedSubject = 'math';
         let currentImageBase64 = null;
         let lastSolutionText = '';
+        let userApiKey = localStorage.getItem('testuz_gemini_key') || '';
 
         const subjectNames = {
             math: 'Математика',
@@ -371,11 +434,39 @@
             informatics: 'Информатика'
         };
 
-        // Initialize Icons
+        // Initialize Icons & UI
         document.addEventListener("DOMContentLoaded", () => {
             lucide.createIcons();
             setupDragAndDrop();
+            updateApiKeyIndicator();
         });
+
+        // Modal Controls
+        function openApiKeyModal() {
+            document.getElementById('custom-api-key').value = userApiKey;
+            document.getElementById('api-modal').classList.remove('hidden');
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('api-modal').classList.add('hidden');
+        }
+
+        function saveApiKey() {
+            userApiKey = document.getElementById('custom-api-key').value.trim();
+            localStorage.setItem('testuz_gemini_key', userApiKey);
+            updateApiKeyIndicator();
+            closeApiKeyModal();
+            showToast('Настройки API сохранены', 'success');
+        }
+
+        function updateApiKeyIndicator() {
+            const indicator = document.getElementById('api-key-indicator');
+            if (userApiKey) {
+                indicator.className = 'absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-green-400 animate-pulse';
+            } else {
+                indicator.className = 'absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-slate-500';
+            }
+        }
 
         // Tab Switcher
         function switchTab(tab) {
@@ -395,6 +486,18 @@
                 navChat.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white shadow-md flex items-center gap-2';
                 navSolver.className = 'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800 flex items-center gap-2';
             }
+        }
+
+        // Grade Selection
+        function selectGrade(grade) {
+            selectedGrade = grade;
+            document.querySelectorAll('.grade-btn').forEach(btn => {
+                if (parseInt(btn.dataset.grade) === grade) {
+                    btn.className = 'grade-btn active py-2 text-center rounded-xl border border-indigo-500 text-xs sm:text-sm font-medium transition bg-indigo-600/20 text-indigo-300';
+                } else {
+                    btn.className = 'grade-btn py-2 text-center rounded-xl border border-slate-800 text-xs sm:text-sm font-medium transition bg-slate-800/40 text-slate-400 hover:border-slate-700';
+                }
+            });
         }
 
         // Subject Selection
@@ -464,7 +567,7 @@
         }
 
         function removeImage(e) {
-            e.stopPropagation();
+            if (e) e.stopPropagation();
             currentImageBase64 = null;
             document.getElementById('image-preview').src = '';
             document.getElementById('preview-container').classList.add('hidden');
@@ -488,23 +591,23 @@
             btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Анализируем решение...</span>`;
             lucide.createIcons();
 
-            const systemPrompt = `Ты профессиональный репетитор и эксперт по школьному предмету "${subjectNames[selectedSubject]}".
+            const systemPrompt = `Ты профессиональный репетитор и эксперт по школьной программе Узбекистана для ${selectedGrade} класса по предмету "${subjectNames[selectedSubject]}".
 Твоя задача — детально разобрать задачу и дать понятный структурированный ответ на русском языке.
 
 Верни ответ СТРОГО в формате JSON с такой структурой:
 {
   "shortAnswer": "Краткий ответ (например: x = 5 или Ответ: вариант B)",
   "steps": [
-    "Шаг 1: Описание...",
+    "Шаг 1: Описание и формулы...",
     "Шаг 2: Расчет...",
     "Шаг 3: Вывод..."
   ],
-  "explanation": "Объяснение используемых правил, формул или грамматики"
+  "explanation": "Объяснение используемых правил, формул, законов или грамматики"
 }`;
 
             try {
                 let userContent = [];
-                let promptText = `Предмет: ${subjectNames[selectedSubject]}.\n`;
+                let promptText = `Класс: ${selectedGrade} класс.\nПредмет: ${subjectNames[selectedSubject]}.\n`;
                 if (textQuery) {
                     promptText += `Текст задачи/вопроса: ${textQuery}`;
                 } else {
@@ -530,7 +633,7 @@
                     }
                 };
 
-                const apiKey = "";
+                const apiKey = userApiKey;
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
                 const response = await fetchWithRetry(apiUrl, {
@@ -552,7 +655,7 @@
 
             } catch (error) {
                 console.error(error);
-                showToast('Ошибка при генерации ответа. Попробуйте снова.', 'error');
+                showToast('Ошибка при генерации ответа. Проверьте ключ API или сеть.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalBtnHtml;
@@ -563,10 +666,12 @@
         // Display Solution in HTML
         function displaySolution(data) {
             const solutionCard = document.getElementById('solution-card');
-            document.getElementById('solution-subject-tag').innerText = `Предмет: ${subjectNames[selectedSubject]}`;
+            document.getElementById('solution-subject-tag').innerText = `Предмет: ${subjectNames[selectedSubject]} • ${selectedGrade} класс`;
             
             // Short Answer
-            document.getElementById('short-answer').innerText = data.shortAnswer || "Не указан";
+            const shortAnswerEl = document.getElementById('short-answer');
+            shortAnswerEl.innerText = data.shortAnswer || "Не указан";
+            renderKatex(shortAnswerEl);
 
             // Steps
             const stepsContainer = document.getElementById('step-by-step');
@@ -574,26 +679,45 @@
             if (Array.isArray(data.steps)) {
                 data.steps.forEach((step, idx) => {
                     const stepEl = document.createElement('div');
-                    stepEl.className = 'flex items-start gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800';
+                    stepEl.className = 'flex items-start gap-3 bg-slate-950/60 p-3.5 rounded-xl border border-slate-800';
                     stepEl.innerHTML = `
-                        <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0">${idx + 1}</span>
-                        <div class="text-slate-200 text-sm leading-relaxed mt-0.5">${formatMathText(step)}</div>
+                        <span class="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">${idx + 1}</span>
+                        <div class="step-text text-slate-200 text-sm leading-relaxed">${formatMathText(step)}</div>
                     `;
                     stepsContainer.appendChild(stepEl);
+                    renderKatex(stepEl.querySelector('.step-text'));
                 });
             }
 
             // Explanation
-            document.getElementById('explanation-text').innerText = data.explanation || "Дополнительные пояснения отсутствуют.";
+            const explanationEl = document.getElementById('explanation-text');
+            explanationEl.innerText = data.explanation || "Дополнительные пояснения отсутствуют.";
+            renderKatex(explanationEl);
 
             // Save for copy/chat context
-            lastSolutionText = `Краткий ответ: ${data.shortAnswer}\nШаги:\n` + (data.steps ? data.steps.join('\n') : '') + `\nПояснение: ${data.explanation}`;
+            lastSolutionText = `Класс: ${selectedGrade}\nПредмет: ${subjectNames[selectedSubject]}\nКраткий ответ: ${data.shortAnswer}\nШаги:\n` + (data.steps ? data.steps.join('\n') : '') + `\nПояснение: ${data.explanation}`;
 
             solutionCard.classList.remove('hidden');
             solutionCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        // Simple helper for math syntax if needed
+        // Render KaTeX expressions if present
+        function renderKatex(element) {
+            if (window.katex && element) {
+                try {
+                    const text = element.innerHTML;
+                    // Replace $...$ or \(...\) expressions if available
+                    element.innerHTML = text.replace(/\$([^\$]+)\$/g, (match, formula) => {
+                        try {
+                            return katex.renderToString(formula, { throwOnError: false });
+                        } catch (e) {
+                            return match;
+                        }
+                    });
+                } catch(e) {}
+            }
+        }
+
         function formatMathText(text) {
             return text.replace(/\n/g, '<br>');
         }
@@ -614,7 +738,7 @@
         function openChatWithContext() {
             switchTab('chat');
             const chatInput = document.getElementById('chat-input');
-            chatInput.value = `У меня вопрос по решению задачи (${subjectNames[selectedSubject]}): `;
+            chatInput.value = `У меня вопрос по решению задачи (${selectedGrade} класс, ${subjectNames[selectedSubject]}): `;
             chatInput.focus();
         }
 
@@ -632,12 +756,12 @@
             // Show Typing Indicator
             const typingId = appendTypingIndicator();
 
-            const systemPrompt = `Ты вежливый и умный учебный ИИ-Консультант проекта TestUz AI. Помогаешь школьникам и студентам с домашним заданием. Отвечай кратко, четко и понятно на русском языке.`;
+            const systemPrompt = `Ты вежливый и умный учебный ИИ-Консультант проекта TestUz AI. Помогаешь школьникам (${selectedGrade} класс) с домашним заданием. Отвечай кратко, четко и понятно на русском языке.`;
 
             try {
                 let prompt = message;
                 if (lastSolutionText) {
-                    prompt = `[Контекст решения задачи]:\n${lastSolutionText}\n\n[Вопрос пользователя]: ${message}`;
+                    prompt = `[Контекст текущего решения]:\n${lastSolutionText}\n\n[Вопрос пользователя]: ${message}`;
                 }
 
                 const payload = {
@@ -645,7 +769,7 @@
                     systemInstruction: { parts: [{ text: systemPrompt }] }
                 };
 
-                const apiKey = "";
+                const apiKey = userApiKey;
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
                 const response = await fetchWithRetry(apiUrl, {
@@ -686,13 +810,16 @@
                     <div class="w-7 h-7 rounded-lg bg-indigo-600/80 flex items-center justify-center text-white shrink-0 text-xs font-bold">
                         AI
                     </div>
-                    <div class="bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
+                    <div class="chat-ai-text bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-3.5 text-slate-200 max-w-[85%] leading-relaxed">
                         ${text.replace(/\n/g, '<br>')}
                     </div>
                 `;
             }
 
             container.appendChild(msgDiv);
+            if (role === 'ai') {
+                renderKatex(msgDiv.querySelector('.chat-ai-text'));
+            }
             container.scrollTop = container.scrollHeight;
         }
 
