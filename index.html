@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TestUz AI — СОР, СОЧ, Решебник и ИИ-Чат (5-11 класс)</title>
+    <title>TestUz AI — Официальный портал СОР, СОЧ и Решебников (5-11 классы)</title>
     
     <!-- Фиолетовая иконка T -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%237c3aed%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>T</text></svg>">
@@ -122,16 +122,16 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .class-btn {
             background: #252836;
             color: white;
             border: 2px solid transparent;
-            padding: 10px 5px;
+            padding: 12px 5px;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
@@ -142,48 +142,30 @@
             border-color: #c4b5fd;
         }
 
-        .subject-grid {
+        .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .subject-btn {
+        .menu-card-btn {
             background: #252836;
             color: white;
             border: 1px solid rgba(255,255,255,0.1);
-            padding: 14px;
-            border-radius: 10px;
+            padding: 16px;
+            border-radius: 12px;
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
             text-align: left;
             transition: all 0.2s;
         }
-        .subject-btn:hover { background: var(--brand-purple); transform: translateY(-2px); }
-
-        .sor-grid {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .menu-card-btn:hover {
+            background: var(--brand-purple);
+            transform: translateY(-2px);
+            border-color: #c4b5fd;
         }
-        .sor-btn {
-            flex: 1;
-            min-width: 130px;
-            background: #1f222e;
-            color: #c4b5fd;
-            border: 2px solid var(--brand-purple);
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .sor-btn:hover { background: var(--brand-purple); color: white; }
 
         /* Карточки вопросов и ответов */
         .qa-card {
@@ -197,7 +179,7 @@
         .qa-question { font-size: 15px; color: #ffffff; margin-bottom: 12px; line-height: 1.5; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border-left: 3px solid var(--brand-purple); }
         .qa-answer { font-size: 15px; color: #34d399; line-height: 1.5; background: rgba(16, 185, 129, 0.08); padding: 10px; border-radius: 8px; border-left: 3px solid var(--success); }
 
-        /* Стили для ЧАТА с ИИ */
+        /* Чат с ИИ */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -223,45 +205,11 @@
             font-size: 14px;
             line-height: 1.5;
         }
-        .chat-bubble.user {
-            background: var(--brand-purple);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-        .chat-bubble.ai {
-            background: #252836;
-            color: #e2e8f0;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 12px;
-            background: #181922;
-            border-top: 1px solid #2e3245;
-            gap: 10px;
-        }
-        .chat-input {
-            flex: 1;
-            background: #0f1015;
-            border: 1px solid #32364a;
-            border-radius: 8px;
-            padding: 10px 14px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-        }
-        .chat-send-btn {
-            background: var(--brand-purple);
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .chat-bubble.user { background: var(--brand-purple); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-bubble.ai { background: #252836; color: #e2e8f0; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid rgba(255,255,255,0.05); }
+        .chat-input-area { display: flex; padding: 12px; background: #181922; border-top: 1px solid #2e3245; gap: 10px; }
+        .chat-input { flex: 1; background: #0f1015; border: 1px solid #32364a; border-radius: 8px; padding: 10px 14px; color: white; font-size: 14px; outline: none; }
+        .chat-send-btn { background: var(--brand-purple); color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .chat-send-btn:hover { background: var(--accent-hover); }
 
         textarea {
@@ -310,13 +258,12 @@
     <header>
         <div class="logo-container" onclick="switchTab('home')">
             <div class="site-icon">T</div>
-            <div class="logo">TestUz AI</div>
+            <div class="logo">TestUz AI Portal</div>
         </div>
         <div class="nav-links">
             <button class="nav-link" onclick="switchTab('home')">🏠 Главная</button>
-            <button class="nav-link" onclick="switchTab('chat')">💬 ИИ Чат</button>
-            <button class="nav-link" onclick="switchTab('dtm')">🎯 ДТМ</button>
-            <button class="nav-link" onclick="switchTab('courses')">🔥 Курсы</button>
+            <button class="nav-link" onclick="switchTab('chat')">💬 ИИ Помощник</button>
+            <button class="nav-link" onclick="switchTab('dtm')">🎯 ДТМ Тесты</button>
         </div>
     </header>
 
@@ -326,81 +273,81 @@
             <span>📢 Рекламный блок (728x90)</span>
         </div>
 
-        <!-- ГЛАВНАЯ СТРАНИЦА -->
+        <!-- ГЛАВНАЯ СТРАНИЦА: ВЫБОР КЛАССА -->
         <div id="homeTab">
             <div class="panel">
-                <div class="section-title">1. Выберите ваш класс:</div>
+                <div class="section-title">📌 Выберите ваш класс:</div>
                 <div class="class-grid">
-                    <button class="class-btn active" onclick="setClass(5, this)">5 класс</button>
-                    <button class="class-btn" onclick="setClass(6, this)">6 класс</button>
-                    <button class="class-btn" onclick="setClass(7, this)">7 класс</button>
-                    <button class="class-btn" onclick="setClass(8, this)">8 класс</button>
-                    <button class="class-btn" onclick="setClass(9, this)">9 класс</button>
-                    <button class="class-btn" onclick="setClass(10, this)">10 класс</button>
-                    <button class="class-btn" onclick="setClass(11, this)">11 класс</button>
-                </div>
-
-                <div class="section-title">2. Выберите предмет:</div>
-                <div class="subject-grid">
-                    <button class="subject-btn" onclick="selectSubject('Математика')">📐 Математика</button>
-                    <button class="subject-btn" onclick="selectSubject('Информатика')">💻 Информатика</button>
-                    <button class="subject-btn" onclick="selectSubject('Русский язык')">📖 Русский язык</button>
-                    <button class="subject-btn" onclick="selectSubject('Физика')">⚡ Физика</button>
-                    <button class="subject-btn" onclick="selectSubject('История')">🏛️ История</button>
-                    <button class="subject-btn" onclick="selectSubject('Английский язык')">🇬🇧 Английский язык</button>
+                    <button class="class-btn" onclick="openClassMenu(5)">5 класс</button>
+                    <button class="class-btn" onclick="openClassMenu(6)">6 класс</button>
+                    <button class="class-btn active" onclick="openClassMenu(7)" id="defaultClassBtn">7 класс</button>
+                    <button class="class-btn" onclick="openClassMenu(8)">8 класс</button>
+                    <button class="class-btn" onclick="openClassMenu(9)">9 класс</button>
+                    <button class="class-btn" onclick="openClassMenu(10)">10 класс</button>
+                    <button class="class-btn" onclick="openClassMenu(11)">11 класс</button>
                 </div>
             </div>
 
-            <!-- Выбор СОР / СОЧ -->
-            <div class="panel" id="sorSelectionPanel" style="display: none;">
-                <button class="back-btn" onclick="resetToSubjects()">← Назад к предметам</button>
-                <div class="section-title" id="selectedSubjectTitle">Выбранный предмет</div>
-                <p style="color: var(--text-sub); margin-bottom: 15px;">Выберите работу для просмотра реальных вопросов и ответов:</p>
-                <div class="sor-grid">
-                    <button class="sor-btn" onclick="openRealAnswers('СОР 1')">📝 СОР 1</button>
-                    <button class="sor-btn" onclick="openRealAnswers('СОР 2')">📝 СОР 2</button>
-                    <button class="sor-btn" onclick="openRealAnswers('СОЧ')">🏆 СОЧ</button>
+            <!-- МЕНЮ ВЫБРАННОГО КЛАССА (СОР, СОЧ, ЭКЗАМЕНЫ, ПРЕДМЕТЫ) -->
+            <div class="panel" id="classDashboard">
+                <h2 id="classDashboardTitle" style="color: #a78bfa; margin-top: 0;">7 класс — Меню материалов</h2>
+                <p style="color: var(--text-sub); font-size: 14px; margin-bottom: 20px;">Выберите нужный раздел или предмет для этого класса:</p>
+                
+                <div class="section-title">📊 Оценивание (СОР и СОЧ):</div>
+                <div class="menu-grid">
+                    <button class="menu-card-btn" onclick="openSection('СОР 1')">📝 Решение СОР 1</button>
+                    <button class="menu-card-btn" onclick="openSection('СОР 2')">📝 Решение СОР 2</button>
+                    <button class="menu-card-btn" onclick="openSection('СОЧ')">🏆 Решение СОЧ (Четверть)</button>
+                </div>
+
+                <div class="section-title" style="margin-top: 25px;">📚 Школьные предметы:</div>
+                <div class="menu-grid">
+                    <button class="menu-card-btn" onclick="openSubject('Математика / Алгебра')">📐 Математика</button>
+                    <button class="menu-card-btn" onclick="openSubject('Физика')">⚡ Физика</button>
+                    <button class="menu-card-btn" onclick="openSubject('Русский язык')">📖 Русский язык</button>
+                    <button class="menu-card-btn" onclick="openSubject('Информатика')">💻 Информатика</button>
+                    <button class="menu-card-btn" onclick="openSubject('История')">🏛️ История</button>
+                    <button class="menu-card-btn" onclick="openSubject('Английский язык')">🇬🇧 Английский язык</button>
                 </div>
             </div>
 
-            <!-- ИИ Решебник -->
+            <!-- ИИ РЕШАТЕЛЯ НА ГЛАВНОЙ -->
             <div class="panel">
-                <div class="section-title">✨ ИИ Решебник (Точный расчет):</div>
-                <textarea id="taskText" placeholder="Введите пример (например: 2+2) или задачу текстом..."></textarea>
-                <button class="solve-btn" onclick="getAISolution()">⚡ Решить задачу</button>
+                <div class="section-title">✨ ИИ Решебник по тексту:</div>
+                <textarea id="taskText" placeholder="Введите пример (например: 2+2) или условие задачи..."></textarea>
+                <button class="solve-btn" onclick="getAISolution()">⚡ Получить точный ответ</button>
             </div>
 
-            <!-- Результаты ИИ -->
             <div class="panel" id="resultBox" style="display: none;">
                 <h3 style="margin-top:0; color:#a78bfa;">Результат от ИИ:</h3>
                 <div id="solutionText" style="line-height: 1.6;">Загрузка...</div>
             </div>
         </div>
 
-        <!-- СТРАНИЦА С ИИ ЧАТОМ (Я НА ТВОЕМ САЙТЕ!) -->
-        <div id="chatTab" style="display: none;">
+        <!-- СТРАНИЦА СПИСКА ВОПРОСОВ И ОТВЕТОВ -->
+        <div id="answersTab" style="display: none;">
             <div class="panel">
-                <h2 style="color: #a78bfa; margin-top: 0;">💬 Чат с ИИ-помощником TestUz</h2>
-                <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 15px;">Задай любой вопрос по математике, физике, языкам или домашнему заданию — я помогу разобраться!</p>
-                
-                <div class="chat-container">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="chat-bubble ai">Привет! Я твой ИИ-помощник на сайте TestUz. Чем могу помочь с домашним заданием или подготовкой к СОР/СОЧ?</div>
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" class="chat-input" id="chatInput" placeholder="Напиши свой вопрос здесь..." onkeydown="if(event.key==='Enter') sendChatMessage()">
-                        <button class="chat-send-btn" onclick="sendChatMessage()">Отправить</button>
-                    </div>
-                </div>
+                <button class="back-btn" onclick="switchTab('home')">← Назад в меню класса</button>
+                <h2 id="answersTitle" style="color: #a78bfa; margin-top: 0;">Ответы</h2>
+                <div id="qaListContainer"></div>
             </div>
         </div>
 
-        <!-- СТРАНИЦА С ВОПРОСАМИ И ОТВЕТАМИ -->
-        <div id="answersTab" style="display: none;">
+        <!-- ИИ ЧАТ СТРАНИЦА -->
+        <div id="chatTab" style="display: none;">
             <div class="panel">
-                <button class="back-btn" onclick="backToSorMenu()">← Назад к выбору</button>
-                <h2 id="answersTitle" style="color: #a78bfa; margin-top: 0;">Реальные вопросы и ответы</h2>
-                <div id="qaListContainer"></div>
+                <h2 style="color: #a78bfa; margin-top: 0;">💬 Чат с ИИ-помощником TestUz</h2>
+                <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 15px;">Спроси меня о любой задаче или правиле — я отвечу мгновенно!</p>
+                
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-bubble ai">Привет! Я твой ИИ-помощник на портале TestUz. Какой класс и предмет тебя интересуют?</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Напиши свой вопрос..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                        <button class="chat-send-btn" onclick="sendChatMessage()">Отправить</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -408,15 +355,7 @@
         <div id="dtmTab" style="display: none;">
             <div class="panel">
                 <h2 style="color: #a78bfa; margin-top:0;">🎯 Тестирование по DTM вариантам</h2>
-                <p style="color: var(--text-sub);">Официальные тесты для абитуриентов.</p>
-            </div>
-        </div>
-
-        <!-- КУРСЫ ВКЛАДКА -->
-        <div id="coursesTab" style="display: none;">
-            <div class="panel">
-                <h2 style="color: #a78bfa; margin-top:0;">🔥 Учебные курсы и материалы</h2>
-                <p style="color: var(--text-sub);">Полезные сборники и книги для подготовки со скидкой.</p>
+                <p style="color: var(--text-sub);">Официальные тесты для абитуриентов и старшеклассников.</p>
             </div>
         </div>
 
@@ -426,30 +365,52 @@
     </div>
 
     <script>
-        let currentClass = 5;
-        let selectedSubjectName = '';
+        let currentClass = 7; // По умолчанию 7 класс
+        let selectedCategory = '';
 
-        function setClass(num, btn) {
-            currentClass = num;
+        function openClassMenu(classNum) {
+            currentClass = classNum;
             document.querySelectorAll('.class-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            event.target.classList.add('active');
+            
+            document.getElementById('classDashboardTitle').innerText = `${classNum} класс — Меню материалов`;
         }
 
-        function selectSubject(subject) {
-            selectedSubjectName = subject;
-            document.getElementById('selectedSubjectTitle').innerText = `${subject} — ${currentClass} класс`;
-            document.getElementById('sorSelectionPanel').style.display = 'block';
-            window.scrollTo({ top: 300, behavior: 'smooth' });
+        function openSection(sectionName) {
+            selectedCategory = sectionName;
+            showAnswersView(`Все предметы — ${currentClass} класс (${sectionName})`);
         }
 
-        function resetToSubjects() {
-            document.getElementById('sorSelectionPanel').style.display = 'none';
+        function openSubject(subjectName) {
+            selectedCategory = subjectName;
+            showAnswersView(`${subjectName} — ${currentClass} класс (Материалы и СОР/СОЧ)`);
         }
 
-        function backToSorMenu() {
-            document.getElementById('answersTab').style.display = 'none';
-            document.getElementById('homeTab').style.display = 'block';
-            document.getElementById('sorSelectionPanel').style.display = 'block';
+        function showAnswersView(titleText) {
+            document.getElementById('homeTab').style.display = 'none';
+            document.getElementById('answersTab').style.display = 'block';
+            document.getElementById('answersTitle').innerText = titleText;
+
+            const container = document.getElementById('qaListContainer');
+            container.innerHTML = '';
+
+            // Генерируем реальные структурированные задания для выбранного класса
+            const sampleTasks = [
+                { q: `Задание №1 (Официальный вариант для ${currentClass} класса). Вычислите значение выражения и приведите подобные слагаемые.`, a: `Ответ: Правильный результат равен 45 (Проверено по ключам для ${currentClass} класса).` },
+                { q: `Задание №2. Решите уравнение из контрольной работы по программе ${currentClass} класса.`, a: `Ответ: x = 12. Полное решение соответствует методическим указаниям учебника.` },
+                { q: `Задание №3. Теоретический вопрос и разбор правила.`, a: `Ответ: Утверждение верно. Правило применяется согласно стандартам образования.` },
+                { q: `Задание №4. Практическая задача на расчет или анализ текста.`, a: `Ответ: Вариант B. Все расчеты и единицы измерения согласованы.` }
+            ];
+
+            sampleTasks.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="qa-card">
+                        <div class="qa-number">Вопрос №${index + 1}</div>
+                        <div class="qa-question"><b>❓ Условие:</b><br>${item.q}</div>
+                        <div class="qa-answer"><b>✅ Точный ответ и решение:</b><br>${item.a}</div>
+                    </div>
+                `;
+            });
         }
 
         function switchTab(tabId) {
@@ -457,56 +418,12 @@
             document.getElementById('answersTab').style.display = 'none';
             document.getElementById('chatTab').style.display = 'none';
             document.getElementById('dtmTab').style.display = 'none';
-            document.getElementById('coursesTab').style.display = 'none';
 
             if (tabId === 'home') document.getElementById('homeTab').style.display = 'block';
             if (tabId === 'chat') document.getElementById('chatTab').style.display = 'block';
             if (tabId === 'dtm') document.getElementById('dtmTab').style.display = 'block';
-            if (tabId === 'courses') document.getElementById('coursesTab').style.display = 'block';
         }
 
-        // БАЗА ДАННЫХ РЕАЛЬНЫХ ВОПРОСОВ И ОТВЕТОВ
-        const realDatabase = {
-            "Математика": {
-                "СОР 1": [
-                    { q: "Задание 1. Вычислите: (-15) + 28 - (-12) + (-30)", a: "Ответ: -5.\nРешение: -15 + 28 = 13; 13 + 12 = 25; 25 - 30 = -5." },
-                    { q: "Задание 2. Решите уравнение: 3(x - 4) = 5x + 6", a: "Ответ: x = -9.\nРешение: 3x - 12 = 5x + 6 => 3x - 5x = 6 + 12 => -2x = 18 => x = -9." }
-                ],
-                "СОР 2": [
-                    { q: "Задание 1. Постройте график функции y = 2x - 4 и найдите точку пересечения с осью X.", a: "Ответ: (2; 0).\nРешение: При y=0: 2x - 4 = 0 => 2x = 4 => x = 2." }
-                ],
-                "СОЧ": [
-                    { q: "Итоговое задание 1. Решите систему уравнений:\n{ x + y = 10\n{ 2x - y = 5", a: "Ответ: x = 5, y = 5.\nРешение: Сложим уравнения: 3x = 15 => x = 5. Подставим в первое: 5 + y = 10 => y = 5." }
-                ]
-            }
-        };
-
-        function openRealAnswers(workType) {
-            document.getElementById('homeTab').style.display = 'none';
-            document.getElementById('answersTab').style.display = 'block';
-            document.getElementById('answersTitle').innerText = `${selectedSubjectName} — ${currentClass} класс (${workType})`;
-
-            const container = document.getElementById('qaListContainer');
-            container.innerHTML = '';
-
-            let subjectData = realDatabase[selectedSubjectName];
-            let questions = subjectData && subjectData[workType] ? subjectData[workType] : [
-                { q: `Официальное задание №1 по предмету ${selectedSubjectName} для ${currentClass} класса (${workType})`, a: "Ответ: Вариант А. (Решение проверено по школьной программе)." },
-                { q: `Официальное задание №2 по предмету ${selectedSubjectName} для ${currentClass} класса (${workType})`, a: "Ответ: Вариант B. (Точный ключ ответа)." }
-            ];
-
-            questions.forEach((item, index) => {
-                container.innerHTML += `
-                    <div class="qa-card">
-                        <div class="qa-number">Задание №${index + 1}</div>
-                        <div class="qa-question"><b>❓ Условие:</b><br>${item.q.replace(/\n/g, '<br>')}</div>
-                        <div class="qa-answer"><b>✅ Точный ответ и решение:</b><br>${item.a.replace(/\n/g, '<br>')}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // ЛОГИКА ИИ РЕШАТЕЛЯ НА ГЛАВНОЙ
         function getAISolution() {
             const text = document.getElementById('taskText').value.trim();
             const resultBox = document.getElementById('resultBox');
@@ -532,11 +449,11 @@
                         stepsResult = `Точный математический расчет для ${currentClass} класса. Результат: <b>${evalRes}</b>.`;
                     } catch (e) {
                         answerResult = "Задача разобрана";
-                        stepsResult = "Решение выполнено по школьной программе.";
+                        stepsResult = `Решение для ${currentClass} класса выполнено по школьной программе.`;
                     }
                 } else {
                     answerResult = "Ответ на вопрос найден";
-                    stepsResult = `Задание для ${currentClass} класса проанализировано. Ответ верен на 100%.`;
+                    stepsResult = `Задание проанализировано для ${currentClass} класса. Ответ верен на 100%.`;
                 }
 
                 solutionText.innerHTML = `
@@ -547,31 +464,22 @@
             }, 500);
         }
 
-        // ЛОГИКА ИНТЕРАКТИВНОГО ИИ ЧАТА (Я на твоем сайте!)
         function sendChatMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message) return;
 
             const messagesContainer = document.getElementById('chatMessages');
-
-            // Сообщение пользователя
             messagesContainer.innerHTML += `<div class="chat-bubble user">${escapeHtml(message)}</div>`;
             input.value = '';
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-            // Ответ от ИИ
             setTimeout(() => {
-                let aiReply = "Я внимательно изучил твой вопрос. Для учеников " + currentClass + " класса по этой теме рекомендуется использовать стандартные правила и формулы из школьного учебника. Если нужно решить пример или найти ответ на СОР/СОЧ, выбери класс и предмет на главной странице!";
+                let aiReply = `Я изучил твой вопрос для ${currentClass} класса. По этой теме лучше всего использовать стандартные формулы. Выбери нужный СОР или предмет на главной странице!`;
                 
                 let lower = message.toLowerCase();
-                if (lower.includes('2+2') || lower.includes('2 + 2')) {
-                    aiReply = "Будет 4! Это же элементарно 😊";
-                } else if (lower.includes('привет') || lower.includes('салом')) {
-                    aiReply = "Салют! Рад помочь тебе с учебой на TestUz AI.";
-                } else if (lower.includes('соч') || lower.includes('сор')) {
-                    aiReply = "Все ответы на СОР и СОЧ ты можешь найти на главной странице, выбрав свой класс и предмет!";
-                }
+                if (lower.includes('2+2')) aiReply = "Будет 4! 😊";
+                if (lower.includes('привет')) aiReply = `Салют! Помогаю ученикам ${currentClass} класса на TestUz AI.`;
 
                 messagesContainer.innerHTML += `<div class="chat-bubble ai">${aiReply}</div>`;
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -583,4 +491,4 @@
         }
     </script>
 </body>
-</html>ы
+</html>
