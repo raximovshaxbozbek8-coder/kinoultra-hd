@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кино Ультра — Фильмы и Аниме онлайн</title>
+    <title>Кино Ультра — Премиум Кинобаза</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
         body {
-            background-color: #0b0c10;
+            background-color: #000000;
             color: #ffffff;
         }
         header {
-            background-color: #1f2833;
+            background-color: #0a0a0a;
             padding: 15px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #66fcf1;
+            border-bottom: 2px solid #e50914;
             flex-wrap: wrap;
             gap: 15px;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.15);
         }
         .logo-container {
             display: flex;
@@ -31,59 +32,66 @@
             gap: 12px;
         }
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: #66fcf1;
-            color: #0b0c10;
-            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            background: #e50914;
+            color: #ffffff;
+            border-radius: 6px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 900;
-            box-shadow: 0 0 10px rgba(102, 252, 241, 0.6);
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
         }
         .logo-text {
             font-size: 24px;
-            font-weight: bold;
-            color: #66fcf1;
+            font-weight: 800;
+            color: #e50914;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
+        }
+        .search-container {
+            flex-grow: 1;
+            max-width: 450px;
+            margin: 0 20px;
+        }
+        .search-input {
+            width: 100%;
+            background: #141414;
+            border: 1px solid #262626;
+            color: #fff;
+            padding: 11px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-input:focus {
+            border-color: #e50914;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
         }
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
         }
-        /* Стили кнопки копирования */
         .copy-btn {
-            background: #66fcf1;
-            color: #0b0c10;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            background: transparent;
+            color: #e50914;
+            border: 2px solid #e50914;
+            padding: 8px 18px;
+            border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-transform: uppercase;
         }
         .copy-btn:hover {
-            background: #45a29e;
+            background: #e50914;
             color: #ffffff;
-            box-shadow: 0 0 12px rgba(102, 252, 241, 0.5);
-        }
-        nav a {
-            color: #c5c6c7;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-        nav a:hover {
-            color: #66fcf1;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
         }
         .main-container {
             max-width: 1200px;
@@ -91,152 +99,109 @@
             padding: 0 20px;
         }
         .player-section {
-            background-color: #1f2833;
+            background-color: #0a0a0a;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            margin-bottom: 40px;
+            border-radius: 8px;
+            border: 1px solid #1f1f1f;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 50px;
         }
         .player-title {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #66fcf1;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
         }
         .player-subtitle {
-            font-size: 16px;
-            color: #c5c6c7;
+            font-size: 14px;
+            color: #999999;
             margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .video-wrapper {
             position: relative;
             background: #000;
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
             width: 100%;
             aspect-ratio: 16 / 9;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #262626;
         }
         video {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
-        .controls-wrapper {
-            background: #0b0c10;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #45a29e;
-            display: none;
-        }
-        .selector-title {
-            font-size: 14px;
-            color: #45a29e;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        .season-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        .btn-season {
-            background: #1f2833;
-            color: #fff;
-            border: 1px solid #45a29e;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .btn-season.active, .btn-season:hover {
-            background: #66fcf1;
-            color: #0b0c10;
-            border-color: #66fcf1;
-        }
-        .episodes-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-        }
-        .btn-episode {
-            background: #1f2833;
-            color: #c5c6c7;
-            border: 1px solid #2f3b4c;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 14px;
-        }
-        .btn-episode.active, .btn-episode:hover {
-            border-color: #66fcf1;
-            color: #66fcf1;
-            background: #243447;
+        .section-heading {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-left: 4px solid #e50914;
+            padding-left: 12px;
         }
         .movies-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
         }
         .movie-card {
-            background-color: #1f2833;
-            border-radius: 8px;
+            background-color: #0a0a0a;
+            border-radius: 6px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #45a29e;
+            transition: all 0.3s ease;
+            border: 1px solid #1f1f1f;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
         .movie-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(102, 252, 241, 0.3);
+            transform: scale(1.04);
+            border-color: #e50914;
+            box-shadow: 0 10px 20px rgba(229, 9, 20, 0.2);
         }
         .movie-poster {
             width: 100%;
             height: 280px;
-            background-color: #0b0c10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #66fcf1;
-            font-size: 64px;
+            background-size: cover;
+            background-position: center;
+            background-color: #141414;
+            border-bottom: 1px solid #1f1f1f;
         }
         .movie-info {
-            padding: 15px;
-            background: #1f2833;
+            padding: 12px;
+            background: #0a0a0a;
         }
         .movie-name {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
             color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .movie-genre {
-            font-size: 13px;
-            color: #45a29e;
+        .movie-date {
+            font-size: 12px;
+            color: #777777;
         }
-        .badge {
-            background: #ff4757;
-            color: #fff;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 5px;
+        .status-msg {
+            color: #888;
+            font-size: 16px;
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 0;
         }
         footer {
             text-align: center;
-            padding: 30px;
-            color: #c5c6c7;
-            font-size: 14px;
-            border-top: 1px solid #1f2833;
-            margin-top: 50px;
+            padding: 40px;
+            color: #555555;
+            font-size: 13px;
+            border-top: 1px solid #1f1f1f;
+            margin-top: 80px;
         }
     </style>
 </head>
@@ -248,80 +213,99 @@
             <div class="logo-text">Кино Ультра</div>
         </div>
 
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Введите название фильма (например: Человек-паук)..." oninput="debounceSearch()">
+        </div>
+
         <div class="header-actions">
-            <!-- Кнопка копирования кода -->
-            <button class="copy-btn" onclick="copySourceCode()" id="copyButton">
-                📋 Скопировать код
-            </button>
-            <nav>
-                <a href="#">Главная</a>
-                <a href="#">Фильмы</a>
-                <a href="#">Аниме</a>
-                <a href="#">Сериалы</a>
-            </nav>
+            <button class="copy-btn" onclick="copySourceCode()" id="copyButton">Скопировать код</button>
         </div>
     </header>
 
     <div class="main-container">
         <!-- Секция плеера -->
         <section class="player-section">
-            <h2 class="player-title" id="current-title">Выберите релиз ниже для начала просмотра</h2>
-            <div class="player-subtitle" id="current-episode-title">Русская озвучка / Высокое качество</div>
+            <h2 class="player-title" id="current-title">Найдите любой фильм через поиск выше</h2>
+            <div class="player-subtitle" id="current-movie-desc">Вся мировая база кино теперь доступна на вашем сайте.</div>
             
             <div class="video-wrapper">
-                <video id="video-player" controls>
+                <video id="video-player" controls poster="">
                     <source id="video-source" src="" type="video/mp4">
                     Ваш браузер не поддерживает встроенный плеер.
                 </video>
             </div>
-
-            <!-- Выбор Сезонов и Серий -->
-            <div class="controls-wrapper" id="series-controls">
-                <div class="selector-title">Выбор сезона:</div>
-                <div class="season-tabs" id="season-container"></div>
-                
-                <div class="selector-title">Выбор серии:</div>
-                <div class="episodes-list" id="episode-container"></div>
-            </div>
         </section>
 
         <!-- Каталог -->
-        <h2 style="margin-bottom: 20px; color: #c5c6c7;">Каталог Кино и Аниме</h2>
-        <section class="movies-grid" id="catalog-grid"></section>
+        <h2 class="section-heading" id="grid-title">Популярные фильмы сейчас</h2>
+        <section class="movies-grid" id="catalog-grid">
+            <div class="status-msg">Загрузка трендов из кинобазы...</div>
+        </section>
     </div>
 
     <footer>
-        &copy; 2026 Кино Ультра. Смотрите любимое аниме и кино онлайн без рекламы.
+        &copy; 2026 Кино Ультра. Поиск работает на базе технологий TMDb API.
     </footer>
 
     <script>
-        // Функция копирования исходного кода страницы
+        // ТВОЙ ЛИЧНЫЙ API-КЛЮЧ УСПЕШНО ИНТЕГРИРОВАН СЮДА:
+        const TMDB_API_KEY = "f13df4519e4be31e6c1c1c5973055a04"; 
+        
+        let searchTimeout;
+
         function copySourceCode() {
             const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             navigator.clipboard.writeText(fullHtml).then(() => {
                 const btn = document.getElementById('copyButton');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '✅ Скопировано!';
-                btn.style.background = '#2ed573';
+                btn.innerHTML = 'Код скопирован!';
+                btn.style.background = '#e50914';
                 btn.style.color = '#fff';
                 setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '#66fcf1';
-                    btn.style.color = '#0b0c10';
+                    btn.innerHTML = 'Скопировать код';
+                    btn.style.background = 'transparent';
+                    btn.style.color = '#e50914';
                 }, 2000);
-            }).catch(err => {
-                alert('Не удалось скопировать автоматически. Выделите код вручную.');
-            });
+            }).catch(err => alert('Ошибка копирования.'));
         }
 
-        // База данных фильмов и аниме
-        const contentData = [
-            {
-                id: "naruto",
-                title: "Наруто: Ураганные хроники",
-                genre: "Аниме, Сёнен, Боевик",
-                type: "anime",
-                icon: "🦊",
-                seasons: {
-                    "Сезон 1": [
+        async function fetchTrendingMovies() {
+            try {
+                const response = await fetch(`https://themoviedb.org{TMDB_API_KEY}&language=ru-RU`);
+                const data = await response.json();
+                renderMovies(data.results);
+            } catch (error) {
+                console.error("Ошибка получения трендов:", error);
+            }
+        }
 
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(searchTMDB, 600);
+        }
+
+        async function searchTMDB() {
+            const query = document.getElementById('searchInput').value.trim();
+            const gridTitle = document.getElementById('grid-title');
+            
+            if (query === '') {
+                gridTitle.innerText = "Популярные фильмы сейчас";
+                fetchTrendingMovies();
+                return;
+            }
+
+            gridTitle.innerText = `Результаты поиска по запросу "${query}"`;
+            
+            try {
+                const response = await fetch(`https://themoviedb.org{TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=ru-RU&page=1`);
+                const data = await response.json();
+                renderMovies(data.results);
+            } catch (error) {
+                console.error("Ошибка поиска:", error);
+            }
+        }
+
+        function renderMovies(movies) {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = '';
+
+            if (!movies || movies.length === 0) {
