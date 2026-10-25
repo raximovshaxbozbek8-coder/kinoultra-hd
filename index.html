@@ -1,812 +1,378 @@
+Вы можете использовать этот обновленный код. Я изменил логотип сайта в левом верхнем углу: теперь там отображается стильная круглая иконка с буквой «К» на неоновом бирюзовом фоне, которая идеально подходит под дизайн «Кино Ультра».
+
+💻 Полный код сайта с иконкой «К»
+
+Скопируйте этот код и полностью обновите ваш файл index.html:
+html
 <!DOCTYPE html>
-<html lang="ru" class="dark">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KinoUltra — Онлайн-кинотеатр с русской озвучкой</title>
-    
-    <!-- Favicon K -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%237c3aed%22/><text x=%2250%%22 y=%2254%%22 font-size=%2268%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-family=%22Arial, sans-serif%22>K</text></svg>">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            purple: '#7c3aed',
-                            light: '#a78bfa',
-                            hover: '#6d28d9',
-                            dark: '#0a0b0e',
-                            card: '#13151f',
-                            border: '#232636'
-                        }
-                    },
-                    boxShadow: {
-                        glow: '0 0 20px rgba(124, 58, 237, 0.45)',
-                        'glow-lg': '0 0 35px rgba(124, 58, 237, 0.65)'
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Kinobox Player API Script -->
-    <script src="https://kinobox.net/kinobox.min.js"></script>
-
+    <title>Кино Ультра — Фильмы и Аниме онлайн</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0b0e;
-            color: #f3f4f6;
-            overflow-x: hidden;
+            background-color: #0b0c10;
+            color: #ffffff;
         }
-
-        /* Custom Scrollbars */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        header {
+            background-color: #1f2833;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #66fcf1;
         }
-        ::-webkit-scrollbar-track {
-            background: #0a0b0e;
+        /* Блок логотипа с иконкой К */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #232636;
-            border-radius: 4px;
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #66fcf1;
+            color: #0b0c10;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 900;
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.6);
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #7c3aed;
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #66fcf1;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
-
-        .no-scrollbar::-webkit-scrollbar {
+        nav a {
+            color: #c5c6c7;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        nav a:hover {
+            color: #66fcf1;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .player-section {
+            background-color: #1f2833;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+        }
+        .player-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #66fcf1;
+        }
+        .player-subtitle {
+            font-size: 16px;
+            color: #c5c6c7;
+            margin-bottom: 20px;
+        }
+        .video-wrapper {
+            position: relative;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-bottom: 20px;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .controls-wrapper {
+            background: #0b0c10;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #45a29e;
             display: none;
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .selector-title {
+            font-size: 14px;
+            color: #45a29e;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
-
-        /* Neon Glow Utility */
-        .neon-text {
-            text-shadow: 0 0 12px rgba(124, 58, 237, 0.8);
+        .season-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
-
-        /* Card Hover Effects */
+        .btn-season {
+            background: #1f2833;
+            color: #fff;
+            border: 1px solid #45a29e;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-season.active, .btn-season:hover {
+            background: #66fcf1;
+            color: #0b0c10;
+            border-color: #66fcf1;
+        }
+        .episodes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .btn-episode {
+            background: #1f2833;
+            color: #c5c6c7;
+            border: 1px solid #2f3b4c;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+        .btn-episode.active, .btn-episode:hover {
+            border-color: #66fcf1;
+            color: #66fcf1;
+            background: #243447;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+        }
         .movie-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #1f2833;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #45a29e;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .movie-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.35);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(102, 252, 241, 0.3);
         }
-
-        /* Poster aspect ratio */
-        .aspect-poster {
-            aspect-ratio: 2 / 3;
+        .movie-poster {
+            width: 100%;
+            height: 280px;
+            background-color: #0b0c10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #66fcf1;
+            font-size: 64px;
+        }
+        .movie-info {
+            padding: 15px;
+            background: #1f2833;
+        }
+        .movie-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        .movie-genre {
+            font-size: 13px;
+            color: #45a29e;
+        }
+        .badge {
+            background: #ff4757;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #c5c6c7;
+            font-size: 14px;
+            border-top: 1px solid #1f2833;
+            margin-top: 50px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-brand-purple selection:text-white">
+<body>
 
-    <!-- TOAST NOTIFICATION CONTAINER -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-    <!-- HEADER / NAVIGATION -->
-    <header class="sticky top-0 z-40 backdrop-blur-md bg-brand-dark/90 border-b border-brand-border/80 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-            
-            <!-- LOGO K -->
-            <div onclick="resetFilter(); switchTab('all')" class="flex items-center gap-3 cursor-pointer group">
-                <div class="w-11 h-11 bg-brand-purple rounded-xl flex items-center justify-center font-black text-2xl text-white shadow-glow group-hover:scale-105 transition-transform">
-                    K
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-2xl font-black tracking-wider text-white flex items-center gap-1">
-                        Kino<span class="text-brand-purple neon-text">Ultra</span>
-                    </span>
-                    <span class="text-[10px] text-gray-400 font-medium tracking-widest uppercase -mt-1">HD с русской озвучкой</span>
-                </div>
-            </div>
-
-            <!-- DESKTOP CATEGORIES -->
-            <nav class="hidden lg:flex items-center gap-1 bg-brand-card px-3 py-1.5 rounded-full border border-brand-border">
-                <button onclick="filterCategory('all', this)" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-white bg-brand-purple transition-all">Все</button>
-                <button onclick="filterCategory('movie', this)" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-brand-border/60 transition-all">Фильмы</button>
-                <button onclick="filterCategory('series', this)" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-brand-border/60 transition-all">Сериалы</button>
-                <button onclick="filterCategory('cartoon', this)" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-brand-border/60 transition-all">Мультфильмы</button>
-                <button onclick="filterCategory('anime', this)" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-brand-border/60 transition-all">Аниме</button>
-                <button onclick="filterCategory('fav', this)" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-brand-border/60 transition-all flex items-center gap-1.5">
-                    <i class="fa-solid fa-bookmark text-brand-light"></i> Избранное
-                </button>
-            </nav>
-
-            <!-- SEARCH & ACTIONS -->
-            <div class="flex items-center gap-3">
-                <div class="relative w-44 sm:w-64">
-                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Поиск фильма или жанра..." 
-                        class="w-full bg-brand-card text-sm text-white pl-10 pr-4 py-2.5 rounded-xl border border-brand-border focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple transition-all placeholder-gray-500">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                </div>
-
-                <button onclick="filterCategory('fav', null)" title="Избранное" class="p-2.5 bg-brand-card hover:bg-brand-purple/20 border border-brand-border hover:border-brand-purple rounded-xl text-gray-300 hover:text-brand-light transition-all relative">
-                    <i class="fa-solid fa-bookmark text-lg"></i>
-                    <span id="favCountBadge" class="absolute -top-1.5 -right-1.5 bg-brand-purple text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-dark">0</span>
-                </button>
-
-                <!-- MOBILE MENU TOGGLE -->
-                <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 bg-brand-card border border-brand-border rounded-xl text-gray-300 hover:text-white">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
-            </div>
+    <header>
+        <!-- Шапка сайта с новой иконкой и текстом -->
+        <div class="logo-container">
+            <div class="logo-icon">К</div>
+            <div class="logo-text">Кино Ультра</div>
         </div>
-
-        <!-- MOBILE DRAWER -->
-        <div id="mobileDrawer" class="hidden lg:hidden border-t border-brand-border/60 bg-brand-card px-4 py-3 flex flex-wrap items-center gap-2">
-            <button onclick="filterCategory('all', this)" class="nav-btn-m px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-purple text-white">Все</button>
-            <button onclick="filterCategory('movie', this)" class="nav-btn-m px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-dark text-gray-300 border border-brand-border">Фильмы</button>
-            <button onclick="filterCategory('series', this)" class="nav-btn-m px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-dark text-gray-300 border border-brand-border">Сериалы</button>
-            <button onclick="filterCategory('cartoon', this)" class="nav-btn-m px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-dark text-gray-300 border border-brand-border">Мультфильмы</button>
-            <button onclick="filterCategory('anime', this)" class="nav-btn-m px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-dark text-gray-300 border border-brand-border">Аниме</button>
-            <button onclick="filterCategory('fav', this)" class="nav-btn-m px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-dark text-gray-300 border border-brand-border"><i class="fa-solid fa-bookmark text-brand-light"></i> Избранное</button>
-        </div>
+        <nav>
+            <a href="#">Главная</a>
+            <a href="#">Фильмы</a>
+            <a href="#">Аниме</a>
+            <a href="#">Сериалы</a>
+        </nav>
     </header>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
-
-        <!-- HERO FEATURED BANNER -->
-        <section id="heroSection" class="relative rounded-3xl overflow-hidden mb-10 border border-brand-border shadow-2xl bg-brand-card">
-            <div id="heroBg" class="absolute inset-0 bg-cover bg-center filter brightness-50 scale-105 transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200');"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-transparent"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/80 to-transparent"></div>
-
-            <div class="relative z-10 p-6 sm:p-10 md:p-14 max-w-2xl flex flex-col items-start gap-4">
-                <span class="px-3.5 py-1 bg-brand-purple/90 backdrop-blur-md text-white text-xs font-bold rounded-lg uppercase tracking-wider shadow-glow">
-                    🔥 Главная Премьера
-                </span>
-                <h1 id="heroTitle" class="text-3xl sm:text-5xl font-black text-white leading-tight">
-                    Дюна: Часть вторая
-                </h1>
-                <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-300 font-medium">
-                    <span class="text-yellow-400 font-extrabold flex items-center gap-1 bg-yellow-400/10 px-2 py-0.5 rounded border border-yellow-400/20"><i class="fa-solid fa-star"></i> <span id="heroRating">8.5</span></span>
-                    <span>2024</span>
-                    <span>Фантастика, Боевик</span>
-                    <span class="border border-green-500/50 text-green-400 px-2 py-0.5 rounded text-[11px] font-bold">Full HD 1080p</span>
-                </div>
-                <p id="heroDesc" class="text-gray-300 text-sm sm:text-base line-clamp-3 leading-relaxed">
-                    Пол Атрейдес объединяется с Чани и фрименами, чтобы отомстить заговорщикам, уничтожившим его семью. Он сталкивается с выбором между любовью всей жизни и судьбой всей вселенной.
-                </p>
-                
-                <div class="flex flex-wrap items-center gap-3 pt-2">
-                    <button id="heroPlayBtn" onclick="openMovieModal(1)" class="px-6 py-3.5 bg-brand-purple hover:bg-brand-hover text-white font-bold rounded-xl shadow-glow hover:shadow-glow-lg transition-all flex items-center gap-2.5">
-                        <i class="fa-solid fa-play text-lg"></i>
-                        <span>Смотреть в озвучке</span>
-                    </button>
-                    <button id="heroFavBtn" onclick="toggleFavorite(event, 1)" class="px-5 py-3.5 bg-brand-card/80 hover:bg-brand-border text-white font-semibold rounded-xl border border-brand-border transition-all flex items-center gap-2">
-                        <i class="fa-regular fa-bookmark"></i>
-                        <span>В избранное</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- FILTERS & GENRES TAGS -->
-        <section class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-            <div>
-                <h2 id="sectionTitle" class="text-2xl font-black text-white flex items-center gap-2.5">
-                    <i class="fa-solid fa-fire text-brand-purple"></i> Популярное сейчас
-                </h2>
-                <p class="text-xs text-gray-400 mt-1">Фильмы, аниме и сериалы с лучшими профессиональными дубляжами</p>
-            </div>
-
-            <!-- GENRE & YEAR SELECTORS -->
-            <div class="flex items-center gap-2.5 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
-                <select id="genreSelect" onchange="applyFilters()" class="bg-brand-card text-xs sm:text-sm text-gray-200 px-3.5 py-2 rounded-xl border border-brand-border focus:border-brand-purple outline-none cursor-pointer">
-                    <option value="all">Все жанры</option>
-                    <option value="Фантастика">Фантастика</option>
-                    <option value="Боевик">Боевик</option>
-                    <option value="Комедия">Комедия</option>
-                    <option value="Драма">Драма</option>
-                    <option value="Ужасы">Ужасы</option>
-                    <option value="Мультфильм">Мультфильм</option>
-                    <option value="Аниме">Аниме</option>
-                </select>
-
-                <select id="yearSelect" onchange="applyFilters()" class="bg-brand-card text-xs sm:text-sm text-gray-200 px-3.5 py-2 rounded-xl border border-brand-border focus:border-brand-purple outline-none cursor-pointer">
-                    <option value="all">Все года</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2014">2014</option>
-                </select>
-            </div>
-        </section>
-
-        <!-- MOVIES GRID -->
-        <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-            <!-- Dynamic Movie Cards Rendered Here -->
-        </div>
-
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="hidden flex-col items-center justify-center py-20 text-center">
-            <div class="w-20 h-20 bg-brand-card border border-brand-border rounded-full flex items-center justify-center text-gray-600 mb-4 text-3xl">
-                <i class="fa-solid fa-film"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-1">Ничего не найдено</h3>
-            <p class="text-sm text-gray-400 max-w-sm">Попробуйте изменить поисковый запрос или сбросить категории.</p>
-            <button onclick="resetFilter()" class="mt-4 px-5 py-2.5 bg-brand-purple text-white text-xs font-bold rounded-xl shadow-glow hover:bg-brand-hover transition-all">Сбросить все фильтры</button>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-brand-card border-t border-brand-border mt-16 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-brand-purple rounded-lg flex items-center justify-center font-black text-lg text-white">K</div>
-                <span class="text-lg font-black text-white">Kino<span class="text-brand-purple">Ultra</span></span>
-            </div>
-            <p class="text-xs text-gray-500 max-w-md">
-                © 2026 KinoUltra. Все видеоматериалы берутся из открытых источников с использованием Kinobox API. Официальные русские дубляжи: RHS, HDRezka, LostFilm, Дубляж.
-            </p>
-            <div class="flex items-center gap-4 text-gray-400 text-sm">
-                <a href="#" class="hover:text-brand-purple transition-colors"><i class="fa-brands fa-telegram text-lg"></i></a>
-                <a href="#" class="hover:text-brand-purple transition-colors"><i class="fa-brands fa-vk text-lg"></i></a>
-                <a href="#" class="hover:text-brand-purple transition-colors"><i class="fa-brands fa-youtube text-lg"></i></a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- MOVIE DETAIL & PLAYER MODAL -->
-    <div id="playerModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-        <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-5xl overflow-hidden shadow-2xl my-auto flex flex-col max-h-[95vh]">
+    <div class="main-container">
+        <!-- Секция плеера -->
+        <section class="player-section">
+            <h2 class="player-title" id="current-title">Выберите релиз ниже для начала просмотра</h2>
+            <div class="player-subtitle" id="current-episode-title">Русская озвучка / Высокое качество</div>
             
-            <!-- Modal Header -->
-            <div class="p-4 bg-brand-dark/90 border-b border-brand-border flex items-center justify-between gap-4 shrink-0">
-                <div class="flex items-center gap-3 truncate">
-                    <span id="modalTypeBadge" class="px-2.5 py-1 bg-brand-purple/20 text-brand-light border border-brand-purple/40 text-xs font-bold rounded-md uppercase shrink-0">
-                        Фильм
-                    </span>
-                    <h3 id="modalTitle" class="text-lg sm:text-xl font-bold text-white truncate">
-                        Название фильма
-                    </h3>
-                </div>
-                <button onclick="closePlayerModal()" class="w-9 h-9 bg-brand-border/60 hover:bg-red-600/80 rounded-xl text-gray-300 hover:text-white transition-all flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
+            <div class="video-wrapper">
+                <video id="video-player" controls>
+                    <source id="video-source" src="" type="video/mp4">
+                    Ваш browser не поддерживает встроенный плеер.
+                </video>
             </div>
 
-            <!-- Modal Content Body -->
-            <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
+            <!-- Выбор Сезонов и Серий -->
+            <div class="controls-wrapper" id="series-controls">
+                <div class="selector-title">Выбор сезона:</div>
+                <div class="season-tabs" id="season-container"></div>
                 
-                <!-- PLAYER BOX WITH KINOBOX & BALANCERS -->
-                <div id="playerSection" class="space-y-3">
-                    <div class="flex flex-wrap items-center justify-between gap-2 bg-brand-dark p-3 rounded-xl border border-brand-border text-xs">
-                        <div class="flex items-center gap-2 text-gray-300">
-                            <i class="fa-solid fa-headset text-brand-purple text-sm"></i>
-                            <span class="font-semibold">Русская озвучка:</span>
-                            <span id="modalDubbingInfo" class="text-green-400 font-medium">Дубляж, HDRezka, RHS, LostFilm</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-gray-400">Источник:</span>
-                            <button onclick="switchPlayerMode('kinobox')" id="btnSrcKinobox" class="px-2.5 py-1 bg-brand-purple text-white rounded font-bold transition-all">Плеер (Kinobox)</button>
-                            <button onclick="switchPlayerMode('trailer')" id="btnSrcTrailer" class="px-2.5 py-1 bg-brand-border text-gray-300 rounded font-medium hover:text-white transition-all">Трейлер HD</button>
-                        </div>
-                    </div>
-
-                    <!-- PLAYER CONTAINER CONTAINER -->
-                    <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-brand-border shadow-inner flex items-center justify-center">
-                        
-                        <!-- KINOBOX TARGET DIV -->
-                        <div id="kinoboxPlayerContainer" class="kinobox_player w-full h-full"></div>
-
-                        <!-- TRAILER IFRAME FALLBACK -->
-                        <iframe id="trailerIframe" class="w-full h-full hidden" src="" title="Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-
-                <!-- MOVIE DETAILS & CAST -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                    <div class="md:col-span-2 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-sm font-bold text-gray-400 uppercase tracking-wider">О сюжете</h4>
-                            <button id="modalFavBtn" onclick="toggleFavoriteCurrent()" class="text-xs px-3 py-1.5 bg-brand-dark hover:bg-brand-border border border-brand-border rounded-lg text-gray-300 flex items-center gap-1.5 transition-all">
-                                <i class="fa-regular fa-bookmark"></i> <span>В избранное</span>
-                            </button>
-                        </div>
-                        <p id="modalDescription" class="text-sm text-gray-300 leading-relaxed">
-                            Описание фильма...
-                        </p>
-                        
-                        <div class="flex flex-wrap items-center gap-4 pt-3 text-xs text-gray-400 border-t border-brand-border/60">
-                            <div><span class="text-gray-500">Страна:</span> <span id="modalCountry" class="text-gray-200">США</span></div>
-                            <div><span class="text-gray-500">Год:</span> <span id="modalYear" class="text-gray-200">2024</span></div>
-                            <div><span class="text-gray-500">Жанр:</span> <span id="modalGenre" class="text-gray-200">Фантастика</span></div>
-                            <div><span class="text-gray-500">Длительность:</span> <span id="modalDuration" class="text-gray-200">166 мин.</span></div>
-                        </div>
-                    </div>
-
-                    <!-- CAST / SIDE INFO -->
-                    <div class="bg-brand-dark p-4 rounded-xl border border-brand-border/60 space-y-3">
-                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">В главных ролях</h4>
-                        <ul id="modalCast" class="text-xs text-gray-300 space-y-1.5 list-disc list-inside">
-                            <li>Тимоти Шаламе</li>
-                            <li>Зендея</li>
-                            <li>Ребекка Фергюсон</li>
-                        </ul>
-                    </div>
-                </div>
-
+                <div class="selector-title">Выбор серии:</div>
+                <div class="episodes-list" id="episode-container"></div>
             </div>
+        </section>
 
-        </div>
+        <!-- Каталог -->
+        <h2 style="margin-bottom: 20px; color: #c5c6c7;">Каталог Кино и Аниме</h2>
+        <section class="movies-grid" id="catalog-grid"></section>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <footer>
+        &copy; 2026 Кино Ультра. Смотрите любимое аниме и кино онлайн без рекламы.
+    </footer>
+
     <script>
-        // RICH PRE-POPULATED MOVIE DATASET WITH REAL KINOPOISK IDs
-        const movieDatabase = [
+        // База данных фильмов и аниме
+        const contentData = [
             {
-                id: 1,
-                kpId: 4449909, // Dune Part 2
-                title: "Дюна: Часть вторая",
-                type: "movie",
-                category: "movie",
-                year: 2024,
-                rating: 8.5,
-                duration: "166 мин.",
-                genres: ["Фантастика", "Боевик"],
-                poster: "https://m.media-amazon.com/images/M/MV25BMzJjMzc4NWQtMzk0OC00Y2JkLWE3M2MtMTI4M2ExYTNmZjM2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                banner: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1200",
-                description: "Пол Атрейдес объединяется с Чани и фрименами, чтобы отомстить заговорщикам, уничтожившим его семью. Он сталкивается с выбором между любовью всей жизни и судьбой вселенной.",
-                trailerUrl: "https://www.youtube.com/embed/Way9Dexny3w",
-                cast: ["Тимоти Шаламе", "Зендея", "Ребекка Фергюсон", "Хавьер Бардем"],
-                country: "США",
-                dubbing: "Дубляж (RHS), HDRezka, Red Head Sound"
+                id: "naruto",
+                title: "Наруто: Ураганные хроники",
+                genre: "Аниме, Сёнен, Боевик",
+                type: "anime",
+                icon: "🦊",
+                seasons: {
+                    "Сезон 1": [
+                        { name: "1 серия", url: "https://googleapis.com" },
+                        { name: "2 серия", url: "https://googleapis.com" },
+                        { name: "3 серия", url: "https://googleapis.com" }
+                    ],
+                    "Сезон 2": [
+                        { name: "1 серия", url: "https://googleapis.com" },
+                        { name: "2 серия", url: "https://googleapis.com" }
+                    ]
+                }
             },
             {
-                id: 2,
-                kpId: 1318972, // Spider-Man Across the Spider-Verse
-                title: "Человек-паук: Паутина миров",
-                type: "cartoon",
-                category: "cartoon",
-                year: 2023,
-                rating: 8.4,
-                duration: "140 мин.",
-                genres: ["Мультфильм", "Боевик", "Фантастика"],
-                poster: "https://m.media-amazon.com/images/M/MV5BMzI0NmJjM2ItNGMyNy00ZmZDLTk3MTktMDU1Mzc3Nzk2NjE1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                description: "Майлз Моралес отправляется в путешествие по Мультивселенной, где встречает команду Пауков, защищающих само ее существование.",
-                trailerUrl: "https://www.youtube.com/embed/cqGjhVJWtEg",
-                cast: ["Шамейк Мур", "Хейли Стейнфилд", "Оскар Айзек"],
-                country: "США",
-                dubbing: "Дубляж, HDRezka Studio, Flarrow Films"
-            },
-            {
-                id: 3,
-                kpId: 1108682, // Oppenheimer
-                title: "Оппенгеймер",
-                type: "movie",
-                category: "movie",
-                year: 2023,
-                rating: 8.3,
-                duration: "180 мин.",
-                genres: ["Драма", "История"],
-                poster: "https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtNTyYy00MGI2LTgzMGYtM2UxYmU4OWI5NDA0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                description: "История жизни американского физика Роберта Оппенгеймера, который стоял во главе первых разработок ядерного оружия в рамках Манхэттенского проекта.",
-                trailerUrl: "https://www.youtube.com/embed/uYPbbksJxIg",
-                cast: ["Киллиан Мерфи", "Эмили Блант", "Мэтт Дэймон", "Роберт Дауни мл."],
-                country: "США, Великобритания",
-                dubbing: "Профессиональный дубляж, HDRezka"
-            },
-            {
-                id: 4,
-                kpId: 462609, // Arcane
-                title: "Аркейн (Arcane)",
-                type: "series",
-                category: "anime",
-                year: 2024,
-                rating: 9.0,
-                duration: "9 серий",
-                genres: ["Аниме", "Фантастика", "Драма"],
-                poster: "https://m.media-amazon.com/images/M/MV5BYmU5OWM5ZTAtNjUzOC00NmE5LWEyY2MtOTI1NTgwNTBlMjc3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                description: "История о нарастающем противостоянии между утопическим городом Пилтовером и подземным Зауном, а также о разрыве между двумя сестрами, Вай и Джинкс.",
-                trailerUrl: "https://www.youtube.com/embed/fXmAurh012s",
-                cast: ["Хейли Стейнфилд", "Элла Пернелл", "Кэти Льюнг"],
-                country: "США, Франция",
-                dubbing: "Официальный дубляж Netflix, HDRezka"
-            },
-            {
-                id: 5,
-                kpId: 258687, // Interstellar
-                title: "Интерстеллар",
-                type: "movie",
-                category: "movie",
-                year: 2014,
-                rating: 8.6,
-                duration: "169 мин.",
-                genres: ["Фантастика", "Драма"],
-                poster: "https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                description: "Когда засуха, пыльные бури и вымирание растений приводят человечество к продовольственному кризису, коллектив исследователей отправляется через червоточину в путешествие.",
-                trailerUrl: "https://www.youtube.com/embed/zSWdZVtXT7E",
-                cast: ["Мэттью Макконахи", "Энн Хэтэуэй", "Джессика Честейн"],
-                country: "США, Великобритания",
-                dubbing: "Полный дубляж Мосфильм"
-            },
-            {
-                id: 6,
-                kpId: 1045056, // Attack on Titan
+                id: "titan",
                 title: "Атака титанов",
-                type: "series",
-                category: "anime",
-                year: 2023,
-                rating: 9.1,
-                duration: "4 сезона",
-                genres: ["Аниме", "Боевик", "Фантастика"],
-                poster: "https://m.media-amazon.com/images/M/MV5BMTY5ODk1NzUyMl5BMl5BanBnXkFtZTgwMjUyNjE4MDE@._V1_FMjpg_UX1000_.jpg",
-                description: "Уже сотни лет человечество ведет борьбу с гигантскими людоедами — Титанами. Эрен Йегер даёт клятву уничтожить всех титанов после трагедии.",
-                trailerUrl: "https://www.youtube.com/embed/M_OauHnAFc8",
-                cast: ["Юки Кадзи", "Юи Исикава", "Марина Иноуэ"],
-                country: "Япония",
-                dubbing: "Studio Band, Кинопоиск Дубляж, AniLibria"
+                genre: "Аниме, Драма, Фэнтези",
+                type: "anime",
+                icon: "⚔️",
+                seasons: {
+                    "Сезон 1": [
+                        { name: "1 серия", url: "https://googleapis.com" },
+                        { name: "2 серия", url: "https://googleapis.com" }
+                    ]
+                }
             },
             {
-                id: 7,
-                kpId: 1219417, // Wednesday
-                title: "Уэнсдэй",
-                type: "series",
-                category: "series",
-                year: 2022,
-                rating: 8.1,
-                duration: "1 сезон",
-                genres: ["Комедия", "Ужасы", "Фантастика"],
-                poster: "https://m.media-amazon.com/images/M/MV5BMjA3NjU5NjA1MV5BMl5BanBnXkFtZTgwMjc5NjE1MTE@._V1_FMjpg_UX1000_.jpg",
-                description: "Уэнсдэй Аддамс отправляется на учебу в академический лицей Nevermore, где пытается освоить экстрасенсорные способности и расследовать серийные убийства.",
-                trailerUrl: "https://www.youtube.com/embed/Di310WS8zLk",
-                cast: ["Дженна Ортега", "Гвендолин Кристи", "Кристина Риччи"],
-                country: "США",
-                dubbing: "HDRezka Studio, Red Head Sound, LostFilm"
-            },
-            {
-                id: 8,
-                kpId: 464963, // The Boys
-                title: "Пацаны (4 Сезон)",
-                type: "series",
-                category: "series",
-                year: 2024,
-                rating: 8.2,
-                duration: "4 сезона",
-                genres: ["Боевик", "Комедия", "Фантастика"],
-                poster: "https://m.media-amazon.com/images/M/MV5BYTY2ZjYyNGUtZGVkZS00MDNhLWIwMjAtMTk4ZDQwZDA1M2YyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-                description: "Отряд «Пацаны» продолжает бескомпромиссную борьбу с коррумпированными супергероями корпорации Vought и эгоистичным Хоумлендером.",
-                trailerUrl: "https://www.youtube.com/embed/EzFXDvC-EwM",
-                cast: ["Карл Урбан", "Энтони Старр", "Джек Куэйд"],
-                country: "США",
-                dubbing: "HDRezka Studio, AlexFilm, LostFilm"
+                id: "movie_1",
+                title: "Большой Бак Банни (Полный метр)",
+                genre: "Фильм, Мультфильм, Комедия",
+                type: "movie",
+                icon: "🐰",
+                seasons: {
+                    "Фильм": [
+                        { name: "Смотреть", url: "https://googleapis.com" }
+                    ]
+                }
             }
         ];
 
-        // STATE MANAGEMENT
-        let currentCategory = 'all';
-        let currentGenre = 'all';
-        let currentYear = 'all';
-        let searchQuery = '';
-        let favorites = JSON.parse(localStorage.getItem('kinoultra_favs') || '[]');
-        let currentActiveMovie = null;
+Используйте код с осторожностью.
+// Автоматическая генерация карточек
+const grid = document.getElementById('catalog-grid');
+contentData.forEach(item => {
+const card = document.createElement('div');
+card.className = 'movie-card';
+card.onclick = () => selectContent(item.id);
+const badgeHtml = item.type === 'anime' ? 'АНИМЕ / РУС' : 'ФИЛЬМ';
+card.innerHTML = <div class="movie-poster">${item.icon}</div> <div class="movie-info"> ${badgeHtml} <div class="movie-name">${item.title}</div> <div class="movie-genre">${item.genre}</div> </div>;
+grid.appendChild(card);
+});
+function selectContent(id) {
+const item = contentData.find(x => x.id === id);
+currentActiveItem = item;
+document.getElementById('current-title').innerText = item.title;
+document.getElementById('series-controls').style.display = 'block';
+const seasonContainer = document.getElementById('season-container');
+seasonContainer.innerHTML = '';
+const seasonsList = Object.keys(item.seasons);
+seasonsList.forEach((seasonName, index) => {
+const btn = document.createElement('button');
+btn.className = btn-season ${index === 0 ? 'active' : ''};
+btn.innerText = seasonName;
+btn.onclick = () => {
+document.querySelectorAll('.btn-season').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+loadEpisodes(seasonName);
+};
+seasonContainer.appendChild(btn);
+});
+loadEpisodes(seasonsList[0]);
+playVideo(item.seasons[seasonsList[0]][0].url, seasonsList[0], item.seasons[seasonsList[0]][0].name);
+}
+function loadEpisodes(seasonName) {
+const episodeContainer = document.getElementById('episode-container');
+episodeContainer.innerHTML = '';
+const episodes = currentActiveItem.seasons[seasonName];
+episodes.forEach((ep, index) => {
+const btn = document.createElement('div');
+btn.className = btn-episode ${index === 0 ? 'active' : ''};
+btn.innerText = ep.name;
+btn.onclick = () => {
+document.querySelectorAll('.btn-episode').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+playVideo(ep.url, seasonName, ep.name);
+};
+episodeContainer.appendChild(btn);
+});
+}
+function playVideo(url, season, episode) {
+document.getElementById('current-episode-title').innerText = Текущий выбор: ${season} — ${episode} (Русская профессиональная озвучка);
+const player = document.getElementById('video-player');
+const source = document.getElementById('video-source');
+source.src = url;
+player.load();
+player.play().catch(e => console.log("Плеер готов к воспроизведению."));
+window.scrollTo({top: 0, behavior: 'smooth'});
+}
 
-        // INITIALIZE APP
-        window.addEventListener('DOMContentLoaded', () => {
-            renderMovies();
-            updateFavBadge();
-        });
 
-        // RENDER MOVIES GRID
-        function renderMovies() {
-            const grid = document.getElementById('moviesGrid');
-            const emptyState = document.getElementById('emptyState');
-            grid.innerHTML = '';
-
-            let filtered = movieDatabase.filter(m => {
-                const matchCat = currentCategory === 'all' || 
-                                 (currentCategory === 'fav' ? favorites.includes(m.id) : m.category === currentCategory);
-                const matchGenre = currentGenre === 'all' || m.genres.includes(currentGenre);
-                const matchYear = currentYear === 'all' || m.year.toString() === currentYear;
-                const matchSearch = m.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                    m.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase()));
-                return matchCat && matchGenre && matchYear && matchSearch;
-            });
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-            } else {
-                emptyState.classList.add('hidden');
-                emptyState.classList.remove('flex');
-
-                filtered.forEach(m => {
-                    const isFav = favorites.includes(m.id);
-                    const card = document.createElement('div');
-                    card.className = "movie-card bg-brand-card rounded-2xl overflow-hidden border border-brand-border flex flex-col justify-between group cursor-pointer relative";
-                    
-                    card.innerHTML = `
-                        <!-- Poster Image -->
-                        <div class="relative w-full aspect-poster overflow-hidden bg-brand-dark" onclick="openMovieModal(${m.id})">
-                            <img src="${m.poster}" alt="${m.title}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            
-                            <!-- Rating Tag -->
-                            <div class="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-md px-2 py-1 rounded-lg text-xs font-bold text-yellow-400 flex items-center gap-1 border border-yellow-400/20">
-                                <i class="fa-solid fa-star text-[10px]"></i> ${m.rating}
-                            </div>
-
-                            <!-- Quality Tag -->
-                            <div class="absolute top-2.5 right-2.5 bg-brand-purple/90 backdrop-blur-md text-[10px] font-extrabold text-white px-2 py-0.5 rounded uppercase shadow-glow">
-                                1080p
-                            </div>
-
-                            <!-- Play Overlay Button -->
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <div class="w-12 h-12 bg-brand-purple rounded-full flex items-center justify-center text-white text-lg shadow-glow scale-90 group-hover:scale-100 transition-transform">
-                                    <i class="fa-solid fa-play ml-0.5"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card Info -->
-                        <div class="p-3.5 flex flex-col justify-between flex-1 gap-2">
-                            <div>
-                                <h3 onclick="openMovieModal(${m.id})" class="text-sm font-bold text-white group-hover:text-brand-light transition-colors line-clamp-1">
-                                    ${m.title}
-                                </h3>
-                                <div class="flex items-center gap-2 text-[11px] text-gray-400 mt-1">
-                                    <span>${m.year}</span>
-                                    <span>•</span>
-                                    <span class="truncate">${m.genres.slice(0, 2).join(', ')}</span>
-                                </div>
-                            </div>
-
-                            <!-- Card Bottom Action -->
-                            <div class="flex items-center justify-between pt-2 border-t border-brand-border/60 text-xs">
-                                <span class="text-green-400 font-medium text-[11px] flex items-center gap-1"><i class="fa-solid fa-shield-halved"></i> Озвучка</span>
-                                <button onclick="toggleFavorite(event, ${m.id})" title="Избранное" class="text-gray-400 hover:text-brand-purple transition-colors p-1">
-                                    <i class="${isFav ? 'fa-solid text-brand-purple' : 'fa-regular'} fa-bookmark"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-        }
-
-        // CATEGORY FILTERING
-        function filterCategory(cat, btnElem) {
-            currentCategory = cat;
-            
-            // Update Active Class Desktop
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('bg-brand-purple', 'text-white');
-                b.classList.add('text-gray-300');
-            });
-            if (btnElem) {
-                btnElem.classList.add('bg-brand-purple', 'text-white');
-                btnElem.classList.remove('text-gray-300');
-            }
-
-            // Update Section Title
-            const titles = {
-                all: '<i class="fa-solid fa-fire text-brand-purple"></i> Популярное сейчас',
-                movie: '<i class="fa-solid fa-film text-brand-purple"></i> Фильмы',
-                series: '<i class="fa-solid fa-tv text-brand-purple"></i> Сериалы',
-                cartoon: '<i class="fa-solid fa-child text-brand-purple"></i> Мультфильмы',
-                anime: '<i class="fa-solid fa-dragon text-brand-purple"></i> Аниме',
-                fav: '<i class="fa-solid fa-bookmark text-brand-purple"></i> Ваше Избранное'
-            };
-            document.getElementById('sectionTitle').innerHTML = titles[cat] || titles.all;
-
-            renderMovies();
-        }
-
-        function applyFilters() {
-            currentGenre = document.getElementById('genreSelect').value;
-            currentYear = document.getElementById('yearSelect').value;
-            renderMovies();
-        }
-
-        function handleSearch() {
-            searchQuery = document.getElementById('searchInput').value.trim();
-            renderMovies();
-        }
-
-        function resetFilter() {
-            currentCategory = 'all';
-            currentGenre = 'all';
-            currentYear = 'all';
-            searchQuery = '';
-            document.getElementById('genreSelect').value = 'all';
-            document.getElementById('yearSelect').value = 'all';
-            document.getElementById('searchInput').value = '';
-            renderMovies();
-        }
-
-        // FAVORITES MANAGING (LOCALSTORAGE)
-        function toggleFavorite(event, id) {
-            if (event) event.stopPropagation();
-            
-            const index = favorites.indexOf(id);
-            if (index > -1) {
-                favorites.splice(index, 1);
-                showToast('Удалено из избранного', 'info');
-            } else {
-                favorites.push(id);
-                showToast('Добавлено в избранное!', 'success');
-            }
-
-            localStorage.setItem('kinoultra_favs', JSON.stringify(favorites));
-            updateFavBadge();
-            renderMovies();
-
-            if (currentActiveMovie && currentActiveMovie.id === id) {
-                updateModalFavBtn();
-            }
-        }
-
-        function toggleFavoriteCurrent() {
-            if (currentActiveMovie) {
-                toggleFavorite(null, currentActiveMovie.id);
-            }
-        }
-
-        function updateFavBadge() {
-            const badge = document.getElementById('favCountBadge');
-            badge.innerText = favorites.length;
-        }
-
-        function updateModalFavBtn() {
-            const btn = document.getElementById('modalFavBtn');
-            if (!currentActiveMovie || !btn) return;
-
-            const isFav = favorites.includes(currentActiveMovie.id);
-            btn.innerHTML = isFav 
-                ? `<i class="fa-solid fa-bookmark text-brand-purple"></i> <span>В избранном</span>` 
-                : `<i class="fa-regular fa-bookmark"></i> <span>В избранное</span>`;
-        }
-
-        // MOVIE MODAL & KINOBOX PLAYER INTEGRATION
-        function openMovieModal(id) {
-            const movie = movieDatabase.find(m => m.id === id);
-            if (!movie) return;
-
-            currentActiveMovie = movie;
-
-            document.getElementById('modalTitle').innerText = movie.title;
-            document.getElementById('modalTypeBadge').innerText = movie.category === 'movie' ? 'Фильм' : (movie.category === 'series' ? 'Сериал' : 'Тайтл');
-            document.getElementById('modalDescription').innerText = movie.description;
-            document.getElementById('modalCountry').innerText = movie.country;
-            document.getElementById('modalYear').innerText = movie.year;
-            document.getElementById('modalGenre').innerText = movie.genres.join(', ');
-            document.getElementById('modalDuration').innerText = movie.duration;
-            document.getElementById('modalDubbingInfo').innerText = movie.dubbing;
-
-            // Render Cast
-            const castList = document.getElementById('modalCast');
-            castList.innerHTML = movie.cast.map(c => `<li>${c}</li>`).join('');
-
-            updateModalFavBtn();
-
-            // Open Modal
-            document.getElementById('playerModal').classList.remove('hidden');
-
-            // Initialize Kinobox Player directly with Kinopoisk ID
-            initKinoboxPlayer(movie.kpId, movie.title, movie.trailerUrl);
-        }
-
-        function closePlayerModal() {
-            document.getElementById('playerModal').classList.add('hidden');
-            const container = document.getElementById('kinoboxPlayerContainer');
-            if (container) container.innerHTML = '';
-            
-            const trailerIframe = document.getElementById('trailerIframe');
-            if (trailerIframe) trailerIframe.src = '';
-        }
-
-        // KINOBOX API INITIALIZATION
-        function initKinoboxPlayer(kpId, title, trailerUrl) {
-            const container = document.getElementById('kinoboxPlayerContainer');
-            const trailerFrame = document.getElementById('trailerIframe');
-
-            container.classList.remove('hidden');
-            trailerFrame.classList.add('hidden');
-            trailerFrame.src = '';
-
-            container.innerHTML = '<div class="flex items-center justify-center h-full text-brand-purple text-sm font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Загрузка плеера с озвучками...</div>';
-
-            // Check if Kinobox script loaded properly
-            if (typeof Kinobox !== 'undefined') {
-                try {
-                    new Kinobox('.kinobox_player', {
-                        search: {
-                            kinopoisk: kpId,
-                            title: title
-                        },
-                        players: {
-                            alloha: { enable: true, position: 1 },
-                            vidsrc: { enable: true, position: 2 },
-                            videocdn: { enable: true, position: 3 },
-                            hdrezka: { enable: true, position: 4 }
-                        },
-                        params: {
-                            all: {
-                                font: 'Inter'
-                            }
-                        }
-                    }).init();
-                } catch (e) {
-                    console.warn('Kinobox fallback to trailer:', e);
-                    switchPlayerMode('trailer');
-                }
-            } else {
-                // Fallback to embedded trailer if API script fails to connect
-                switchPlayerMode('trailer');
-            }
-        }
-
-        function switchPlayerMode(mode) {
-            const container = document.getElementById('kinoboxPlayerContainer');
-            const trailerFrame = document.getElementById('trailerIframe');
-            const btnKb = document.getElementById('btnSrcKinobox');
-            const btnTr = document.getElementById('btnSrcTrailer');
-
-            if (mode === 'trailer') {
-                container.classList.add('hidden');
-                trailerFrame.classList.remove('hidden');
-                trailerFrame.src = currentActiveMovie ? currentActiveMovie.trailerUrl : '';
-                btnKb.className = "px-2.5 py-1 bg-brand-border text-gray-300 rounded font-medium hover:text-white transition-all";
-                btnTr.className = "px-2.5 py-1 bg-brand-purple text-white rounded font-bold transition-all";
-            } else {
-                container.classList.remove('hidden');
-                trailerFrame.classList.add('hidden');
-                trailerFrame.src = '';
-                btnKb.className = "px-2.5 py-1 bg-brand-purple text-white rounded font-bold transition-all";
-                btnTr.className = "px-2.5 py-1 bg-brand-border text-gray-300 rounded font-medium hover:text-white transition-all";
-                if (currentActiveMovie) {
-                    initKinoboxPlayer(currentActiveMovie.kpId, currentActiveMovie.title, currentActiveMovie.trailerUrl);
-                }
-            }
-        }
-
-        function toggleMobileMenu() {
-            const drawer = document.getElementById('mobileDrawer');
-            drawer.classList.toggle('hidden');
-        }
-
-        // TOAST NOTIFICATIONS
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            const bgClass = type === 'success' ? 'bg-brand-purple text-white' : 'bg-brand-card text-gray-200 border-brand-border';
-            toast.className = `${bgClass} px-4 py-2.5 rounded-xl shadow-2xl border text-xs font-bold flex items-center gap-2 transition-all transform translate-y-2 opacity-0 pointer-events-auto`;
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-light"></i> <span>${message}</span>`;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 2500);
-        }
-    </script>
-</body>
-</html>
