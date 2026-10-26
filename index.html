@@ -1,311 +1,293 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кино Ультра — Премиум Кинобаза</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-        body {
-            background-color: #000000;
-            color: #ffffff;
-        }
-        header {
-            background-color: #0a0a0a;
-            padding: 15px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e50914;
-            flex-wrap: wrap;
-            gap: 15px;
-            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.15);
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: #e50914;
-            color: #ffffff;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 900;
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
-        }
-        .logo-text {
-            font-size: 24px;
-            font-weight: 800;
-            color: #e50914;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .search-container {
-            flex-grow: 1;
-            max-width: 450px;
-            margin: 0 20px;
-        }
-        .search-input {
-            width: 100%;
-            background: #141414;
-            border: 1px solid #262626;
-            color: #fff;
-            padding: 11px 15px;
-            border-radius: 4px;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .search-input:focus {
-            border-color: #e50914;
-            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
-        }
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
-        .copy-btn {
-            background: transparent;
-            color: #e50914;
-            border: 2px solid #e50914;
-            padding: 8px 18px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-        .copy-btn:hover {
-            background: #e50914;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
-        }
-        .main-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .player-section {
-            background-color: #0a0a0a;
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid #1f1f1f;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            margin-bottom: 50px;
-        }
-        .player-title {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #ffffff;
-        }
-        .player-subtitle {
-            font-size: 14px;
-            color: #999999;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .video-wrapper {
-            position: relative;
-            background: #000;
-            border-radius: 6px;
-            overflow: hidden;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            margin-bottom: 25px;
-            border: 1px solid #262626;
-        }
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .section-heading {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: #ffffff;
-            border-left: 4px solid #e50914;
-            padding-left: 12px;
-        }
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 25px;
-        }
-        .movie-card {
-            background-color: #0a0a0a;
-            border-radius: 6px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #1f1f1f;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .movie-card:hover {
-            transform: scale(1.04);
-            border-color: #e50914;
-            box-shadow: 0 10px 20px rgba(229, 9, 20, 0.2);
-        }
-        .movie-poster {
-            width: 100%;
-            height: 280px;
-            background-size: cover;
-            background-position: center;
-            background-color: #141414;
-            border-bottom: 1px solid #1f1f1f;
-        }
-        .movie-info {
-            padding: 12px;
-            background: #0a0a0a;
-        }
-        .movie-name {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: #ffffff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .movie-date {
-            font-size: 12px;
-            color: #777777;
-        }
-        .status-msg {
-            color: #888;
-            font-size: 16px;
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px 0;
-        }
-        footer {
-            text-align: center;
-            padding: 40px;
-            color: #555555;
-            font-size: 13px;
-            border-top: 1px solid #1f1f1f;
-            margin-top: 80px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Quiz for School (1-9 Grades)</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      padding: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h1, h2 {
+      margin-bottom: 20px;
+      color: #1e293b;
+    }
+
+    p.subtitle {
+      color: #64748b;
+      margin-bottom: 25px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn:hover {
+      background: #4338ca;
+      transform: translateY(-3px);
+    }
+
+    .btn-count {
+      background: #0ea5e9;
+    }
+
+    .btn-count:hover {
+      background: #0284c7;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .option-btn {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 2px solid #cbd5e1;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: #22c55e;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .score-badge {
+      font-size: 48px;
+      font-weight: bold;
+      color: #4f46e5;
+      margin: 20px 0;
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <div class="logo-icon">К</div>
-            <div class="logo-text">Кино Ультра</div>
-        </div>
-
-        <div class="search-container">
-            <input type="text" class="search-input" id="searchInput" placeholder="Введите название фильма (например: Человек-паук)..." oninput="debounceSearch()">
-        </div>
-
-        <div class="header-actions">
-            <button class="copy-btn" onclick="copySourceCode()" id="copyButton">Скопировать код</button>
-        </div>
-    </header>
-
-    <div class="main-container">
-        <!-- Секция плеера -->
-        <section class="player-section">
-            <h2 class="player-title" id="current-title">Найдите любой фильм через поиск выше</h2>
-            <div class="player-subtitle" id="current-movie-desc">Вся мировая база кино теперь доступна на вашем сайте.</div>
-            
-            <div class="video-wrapper">
-                <video id="video-player" controls poster="">
-                    <source id="video-source" src="" type="video/mp4">
-                    Ваш браузер не поддерживает встроенный плеер.
-                </video>
-            </div>
-        </section>
-
-        <!-- Каталог -->
-        <h2 class="section-heading" id="grid-title">Популярные фильмы сейчас</h2>
-        <section class="movies-grid" id="catalog-grid">
-            <div class="status-msg">Загрузка трендов из кинобазы...</div>
-        </section>
+  <div class="card">
+    <!-- СТЕП 1: Выбор класса -->
+    <div id="step-grade">
+      <h1>English Quiz Master 🇬🇧</h1>
+      <p class="subtitle">Выберите класс для проведения теста:</p>
+      <div class="grid-container">
+        <button class="btn" onclick="selectGrade(1)">1 Grade</button>
+        <button class="btn" onclick="selectGrade(2)">2 Grade</button>
+        <button class="btn" onclick="selectGrade(3)">3 Grade</button>
+        <button class="btn" onclick="selectGrade(4)">4 Grade</button>
+        <button class="btn" onclick="selectGrade(5)">5 Grade</button>
+        <button class="btn" onclick="selectGrade(6)">6 Grade</button>
+        <button class="btn" onclick="selectGrade(7)">7 Grade</button>
+        <button class="btn" onclick="selectGrade(8)">8 Grade</button>
+        <button class="btn" onclick="selectGrade(9)">9 Grade</button>
+      </div>
     </div>
 
-    <footer>
-        &copy; 2026 Кино Ультра. Поиск работает на базе технологий TMDb API.
-    </footer>
+    <!-- СТЕП 2: Выбор количества вопросов -->
+    <div id="step-count" class="hidden">
+      <h2 id="selected-grade-title">Класс выбран</h2>
+      <p class="subtitle">Выберите количество вопросов:</p>
+      <div class="grid-container" style="grid-template-columns: repeat(2, 1fr);">
+        <button class="btn btn-count" onclick="startQuiz(10)">10 вопросов</button>
+        <button class="btn btn-count" onclick="startQuiz(15)">15 вопросов</button>
+        <button class="btn btn-count" onclick="startQuiz(20)">20 вопросов</button>
+        <button class="btn btn-count" onclick="startQuiz(25)">25 вопросов</button>
+      </div>
+      <button class="option-btn" style="margin-top: 25px; text-align: center;" onclick="resetQuiz()">← Назад к выбору класса</button>
+    </div>
 
-    <script>
-        // ТВОЙ ЛИЧНЫЙ API-КЛЮЧ УСПЕШНО ИНТЕГРИРОВАН СЮДА:
-        const TMDB_API_KEY = "f13df4519e4be31e6c1c1c5973055a04"; 
-        
-        let searchTimeout;
+    <!-- СТЕП 3: Прохождение теста -->
+    <div id="step-quiz" class="hidden">
+      <div class="progress-bar">
+        <div id="progress" class="progress"></div>
+      </div>
+      <p style="color: #64748b; font-size: 14px;" id="question-number">Вопрос 1 из X</p>
+      <h2 id="question-text" style="margin-top: 10px;">Question goes here?</h2>
+      <div class="options-grid" id="options-container">
+        <!-- Варианты ответов генерируются в JS -->
+      </div>
+    </div>
 
-        function copySourceCode() {
-            const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-            navigator.clipboard.writeText(fullHtml).then(() => {
-                const btn = document.getElementById('copyButton');
-                btn.innerHTML = 'Код скопирован!';
-                btn.style.background = '#e50914';
-                btn.style.color = '#fff';
-                setTimeout(() => {
-                    btn.innerHTML = 'Скопировать код';
-                    btn.style.background = 'transparent';
-                    btn.style.color = '#e50914';
-                }, 2000);
-            }).catch(err => alert('Ошибка копирования.'));
-        }
+    <!-- СТЕП 4: Результат -->
+    <div id="step-result" class="hidden">
+      <h2>Тест завершен! 🎉</h2>
+      <p class="subtitle">Ваш результат:</p>
+      <div id="final-score" class="score-badge">0 / 0</div>
+      <p id="result-message" style="margin-bottom: 20px; font-weight: bold;"></p>
+      <button class="btn" onclick="resetQuiz()">Начать заново</button>
+    </div>
+  </div>
 
-        async function fetchTrendingMovies() {
-            try {
-                const response = await fetch(`https://themoviedb.org{TMDB_API_KEY}&language=ru-RU`);
-                const data = await response.json();
-                renderMovies(data.results);
-            } catch (error) {
-                console.error("Ошибка получения трендов:", error);
-            }
-        }
+  <script>
+    // Пример базы данных вопросов (здесь можно расширять вопросы для всех классов)
+    const questionsDatabase = {
+      1: [
+        { q: "What color is a lemon?", options: ["Red", "Blue", "Yellow", "Green"], answer: 2 },
+        { q: "Choose the correct word: A ___ (кошка)", options: ["Dog", "Cat", "Bird", "Fish"], answer: 1 },
+        { q: "How do you say 'Яблоко' in English?", options: ["Banana", "Apple", "Orange", "Grape"], answer: 1 }
+      ],
+      5: [
+        { q: "She ___ to school every day.", options: ["go", "goes", "going", "went"], answer: 1 },
+        { q: "Yesterday we ___ a great film.", options: ["watch", "watches", "watched", "will watch"], answer: 2 },
+        { q: "Which word is an adjective?", options: ["Quickly", "Run", "Beautiful", "Happiness"], answer: 2 }
+      ],
+      9: [
+        { q: "If I ___ more time, I would travel the world.", options: ["have", "had", "will have", "would have"], answer: 1 },
+        { q: "By next month, they ___ the project.", options: ["finish", "will finish", "will have finished", "finished"], answer: 2 },
+        { q: "Choose the correct synonym for 'Enormous':", options: ["Tiny", "Huge", "Fast", "Difficult"], answer: 1 }
+      ]
+    };
 
-        function debounceSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(searchTMDB, 600);
-        }
+    let selectedGrade = 1;
+    let selectedCount = 10;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let activeQuestions = [];
 
-        async function searchTMDB() {
-            const query = document.getElementById('searchInput').value.trim();
-            const gridTitle = document.getElementById('grid-title');
-            
-            if (query === '') {
-                gridTitle.innerText = "Популярные фильмы сейчас";
-                fetchTrendingMovies();
-                return;
-            }
+    function selectGrade(grade) {
+      selectedGrade = grade;
+      document.getElementById('selected-grade-title').innerText = `${grade} Grade selected`;
+      document.getElementById('step-grade').classList.add('hidden');
+      document.getElementById('step-count').classList.remove('hidden');
+    }
 
-            gridTitle.innerText = `Результаты поиска по запросу "${query}"`;
-            
-            try {
-                const response = await fetch(`https://themoviedb.org{TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=ru-RU&page=1`);
-                const data = await response.json();
-                renderMovies(data.results);
-            } catch (error) {
-                console.error("Ошибка поиска:", error);
-            }
-        }
+    function startQuiz(count) {
+      selectedCount = count;
+      currentQuestionIndex = 0;
+      score = 0;
 
-        function renderMovies(movies) {
-            const grid = document.getElementById('catalog-grid');
-            grid.innerHTML = '';
+      // Получаем вопросы для класса (если нет вопросов для класса, берём 5 класс как дефолт)
+      let pool = questionsDatabase[selectedGrade] || questionsDatabase[5];
+      
+      // Дублируем/подготавливаем вопросы под выбранное количество
+      activeQuestions = [];
+      for (let i = 0; i < selectedCount; i++) {
+        activeQuestions.push(pool[i % pool.length]);
+      }
 
-            if (!movies || movies.length === 0) {
+      document.getElementById('step-count').classList.add('hidden');
+      document.getElementById('step-quiz').classList.remove('hidden');
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = activeQuestions[currentQuestionIndex];
+      document.getElementById('question-number').innerText = `Question ${currentQuestionIndex + 1} of ${selectedCount}`;
+      document.getElementById('question-text').innerText = q.q;
+      
+      // Обновляем шкалу прогресса
+      const progressPercent = ((currentQuestionIndex) / selectedCount) * 100;
+      document.getElementById('progress').style.width = `${progressPercent}%`;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = `${String.fromCharCode(65 + index)}) ${opt}`;
+        btn.onclick = () => checkAnswer(index);
+        container.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selectedIndex) {
+      const q = activeQuestions[currentQuestionIndex];
+      if (selectedIndex === q.answer) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < selectedCount) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById('step-quiz').classList.add('hidden');
+      document.getElementById('step-result').classList.remove('hidden');
+      document.getElementById('final-score').innerText = `${score} / ${selectedCount}`;
+
+      const percentage = (score / selectedCount) * 100;
+      let msg = "";
+      if (percentage >= 90) msg = "Excellent job! 🏆";
+      else if (percentage >= 70) msg = "Good result! 👍";
+      else msg = "Keep practicing! 📚";
+
+      document.getElementById('result-message').innerText = msg;
+    }
+
+    function resetQuiz() {
+      document.getElementById('step-count').classList.add('hidden');
+      document.getElementById('step-quiz').classList.add('hidden');
+      document.getElementById('step-result').classList.add('hidden');
+      document.getElementById('step-grade').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
