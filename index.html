@@ -1,603 +1,106 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Junior Quiz Master - Классный Турнир (ВПР)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca);
-      color: #f8fafc;
-      min-height: 100vh;
-    }
-
-    .card-glass {
-      background: rgba(255, 255, 255, 0.95);
-      color: #0f172a;
-      backdrop-filter: blur(12px);
-    }
-
-    .btn-bounce {
-      transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn-bounce:hover:not(:disabled) { transform: translateY(-2px); }
-    .btn-bounce:active:not(:disabled) { transform: translateY(1px); }
-
-    .option-btn { transition: all 0.2s ease; }
-    .option-btn.correct { background-color: #22c55e !important; color: white !important; border-color: #16a34a !important; }
-    .option-btn.wrong { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
-
-    .desk-card {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .desk-card.active-turn {
-      transform: scale(1.02);
-    }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between items-center p-3 sm:p-6">
-
-  <!-- HEADER -->
-  <header class="w-full max-w-4xl flex justify-between items-center mb-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-white shadow-2xl">
-    <div class="flex items-center gap-3">
-      <span class="text-3xl sm:text-4xl">🏫</span>
-      <div>
-        <h1 class="font-black text-base sm:text-xl leading-tight tracking-wide">Junior Quiz Master</h1>
-        <p class="text-xs text-indigo-200">Интерактивный Турнир для Класса</p>
-      </div>
-    </div>
-
-    <div id="header-badge" class="bg-indigo-500/30 border border-indigo-300/40 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-indigo-200">
-      📍 Интерактивная Доска
-    </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="w-full max-w-4xl my-auto">
-    <div id="main-card" class="card-glass w-full rounded-3xl p-6 sm:p-10 shadow-2xl transition-all duration-300">
-      
-      <!-- SCREEN 1: TEACHER CONFIGURATION -->
-      <div id="view-config">
-        <div class="text-center mb-6">
-          <div class="text-5xl mb-2">⚙️</div>
-          <h2 class="text-2xl sm:text-3xl font-black text-indigo-950">Настройка Соревнования</h2>
-          <p class="text-sm text-gray-500 mt-1">Выберите параметры игры для класса</p>
+<!DOCTYPE html><html lang="ru"><head>  <meta charset="UTF-8">  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Junior Quiz Master - Классный Турнир (ВПР)</title>  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=TaLtY_UKE5SQb6Zc469xBPFfMvfaT89GU379Fwd1ayMPECCkywWvjfrkQXikJ7PE_8EdPNB-xkUG4kEPpZ6fwg" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9raW5vdWx0cmEtaGQudmVyY2VsLmFwcC8"/><script src="https://cdn.tailwindcss.com"></script>  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">  <style>    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');        body {      font-family: 'Inter', sans-serif;      background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca);      color: #f8fafc;      min-height: 100vh;    }
+    .card-glass {      background: rgba(255, 255, 255, 0.95);      color: #0f172a;      backdrop-filter: blur(12px);    }
+    .btn-bounce {      transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;    }    .btn-bounce:hover:not(:disabled) { transform: translateY(-2px); }    .btn-bounce:active:not(:disabled) { transform: translateY(1px); }
+    .option-btn { transition: all 0.2s ease; }    .option-btn.correct { background-color: #22c55e !important; color: white !important; border-color: #16a34a !important; }    .option-btn.wrong { background-color: #ef4444 !important; color: white !important; border-color: #dc2626 !important; }
+    .desk-card {      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);    }    .desk-card.active-turn {      transform: scale(1.02);    }  </style></head><body class="min-h-screen flex flex-col justify-between items-center p-3 sm:p-6">
+  <!-- HEADER -->  <header class="w-full max-w-4xl flex justify-between items-center mb-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-white shadow-2xl">    <div class="flex items-center gap-3">      <span class="text-3xl sm:text-4xl">🏫</span>      <div>        <h1 class="font-black text-base sm:text-xl leading-tight tracking-wide">Junior Quiz Master</h1>        <p class="text-xs text-indigo-200">Интерактивный Турнир для Класса</p>      </div>    </div>
+    <div id="header-badge" class="bg-indigo-500/30 border border-indigo-300/40 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-indigo-200">      📍 Интерактивная Доска    </div>  </header>
+  <!-- MAIN CONTAINER -->  <main class="w-full max-w-4xl my-auto">    <div id="main-card" class="card-glass w-full rounded-3xl p-6 sm:p-10 shadow-2xl transition-all duration-300">            <!-- SCREEN 1: TEACHER CONFIGURATION -->      <div id="view-config">        <div class="text-center mb-6">          <div class="text-5xl mb-2">⚙️</div>          <h2 class="text-2xl sm:text-3xl font-black text-indigo-950">Настройка Соревнования</h2>          <p class="text-sm text-gray-500 mt-1">Выберите параметры игры для класса</p>        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">                    <!-- SUBJECT -->          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">📚 Предмет / Формат:</label>            <select id="cfg-subject" onchange="handleSubjectChange()" class="w-full p-3.5 rounded-xl border-2 border-indigo-200 font-bold bg-white text-gray-800 focus:outline-none focus:border-indigo-600">              <option value="vpr_15" selected>📝 ВПР Английский язык (15 вопросов)</option>              <option value="eng_grammar">🇬🇧 Английский: Грамматика & Времена</option>              <option value="eng_vocab">🇬🇧 Английский: Словарный Запас</option>              <option value="math">📐 Математика: Быстрый Счёт</option>              <option value="general">🌍 Общий Кругозор</option>            </select>          </div>
+          <!-- GRADE -->          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">🎓 Класс (1 - 11):</label>            <select id="cfg-grade" class="w-full p-3.5 rounded-xl border-2 border-indigo-200 font-bold bg-white text-gray-800 focus:outline-none focus:border-indigo-600">              <option value="1">1 Класс</option>              <option value="2">2 Класс</option>              <option value="3">3 Класс</option>              <option value="4" selected>4 Класс (ВПР)</option>              <option value="5">5 Класс</option>              <option value="6">6 Класс</option>              <option value="7">7 Класс</option>              <option value="8">8 Класс</option>              <option value="9">9 Класс</option>              <option value="10">10 Класс</option>              <option value="11">11 Класс</option>            </select>          </div>
+          <!-- DESKS COUNT (2, 3, 4, 5) -->          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">🪑 Количество Парт / Рядов:</label>            <div class="grid grid-cols-4 gap-2">              <button onclick="setDesksCount(2)" type="button" id="btn-desk-2" class="desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm">2 Парт</button>              <button onclick="setDesksCount(3)" type="button" id="btn-desk-3" class="desk-btn py-3 font-black rounded-xl bg-indigo-600 text-white text-sm shadow-md">3 Парты</button>              <button onclick="setDesksCount(4)" type="button" id="btn-desk-4" class="desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm">4 Парты</button>              <button onclick="setDesksCount(5)" type="button" id="btn-desk-5" class="desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm">5 Парт</button>            </div>          </div>
+          <!-- DIFFICULTY -->          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">⚡ Уровень Сложности:</label>            <div class="grid grid-cols-3 gap-2">              <button onclick="setDiff('easy')" type="button" id="diff-easy" class="diff-btn py-3 font-bold rounded-xl bg-gray-200 text-gray-700 text-xs">🟢 Легкий</button>              <button onclick="setDiff('normal')" type="button" id="diff-normal" class="diff-btn py-3 font-bold rounded-xl bg-indigo-600 text-white text-xs shadow-md">🟡 Стандарт</button>              <button onclick="setDiff('hard')" type="button" id="diff-hard" class="diff-btn py-3 font-bold rounded-xl bg-gray-200 text-gray-700 text-xs">🔴 Хард</button>            </div>          </div>
         </div>
+        <!-- QUESTIONS COUNT RANGE (10 to 35) -->        <div class="bg-indigo-50/70 border-2 border-indigo-200 p-5 rounded-2xl mb-8">          <div class="flex justify-between items-center mb-3">            <label class="text-xs font-black uppercase tracking-wider text-indigo-950">❓ Количество вопросов в турнире:</label>            <span id="q-count-display" class="bg-indigo-600 text-white font-black px-4 py-1.5 rounded-xl text-lg shadow">15 вопросов</span>          </div>          <input type="range" id="cfg-count-range" min="10" max="35" value="15" step="1" oninput="updateQCount(this.value)" class="w-full h-3 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">          <div class="flex justify-between text-xs font-bold text-gray-400 mt-2">            <span>10 вопросов</span>            <span>20 вопросов</span>            <span>35 вопросов</span>          </div>        </div>
+        <button onclick="startGame()" type="button" class="btn-bounce w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-2xl text-xl shadow-xl flex items-center justify-center gap-3">          🚀 Начать Соревнование        </button>      </div>
+      <!-- SCREEN 2: ACTIVE GAME PLAY -->      <div id="view-game" class="hidden">                <!-- HEADER INFO -->        <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">          <div>            <span id="game-q-counter" class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider block">Вопрос 1 из 15</span>            <h3 id="game-q-text" class="text-xl sm:text-3xl font-black text-gray-900 mt-1">Question loading...</h3>          </div>          <div class="text-center bg-indigo-100 px-4 py-2 rounded-2xl border border-indigo-200 min-w-[90px]">            <span class="text-[10px] text-indigo-600 font-extrabold uppercase block">Время</span>            <div id="game-timer" class="text-2xl font-black text-indigo-700">25</div>          </div>        </div>
+        <!-- CURRENT TURNING DESK BANNER -->        <div id="turn-banner" class="bg-amber-100 border-2 border-amber-300 text-amber-900 p-3 rounded-2xl text-center font-black text-base sm:text-lg mb-6 shadow-sm">          👉 Отвечает: <span id="current-desk-label" class="underline text-indigo-700">1-я Парта</span>        </div>
+        <!-- OPTIONS GRID -->        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">          <!-- Dynamic Buttons -->        </div>
+        <!-- DESKS TURN INDICATOR -->        <div class="border-t border-gray-200 pt-6">          <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider mb-3">Очередь Парт:</h4>          <div id="desks-score-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-3">            <!-- Dynamic Desk Cards -->          </div>        </div>      </div>
+      <!-- SCREEN 3: DETAILED RESULTS -->      <div id="view-results" class="hidden text-center py-4">        <div class="text-6xl mb-2 animate-bounce">🏆</div>        <h2 class="text-3xl sm:text-4xl font-black text-indigo-950 mb-1">Турнир Завершен!</h2>        <p class="text-sm text-gray-500 mb-8">Итоговые оценки и статистика по партам</p>
+        <!-- WINNER BANNER -->        <div class="bg-emerald-500/10 border-2 border-emerald-500/30 rounded-3xl p-6 mb-8 text-center">          <div class="text-xs font-black uppercase tracking-wider text-emerald-600 mb-1">🥇 Победитель Турнира</div>          <div id="res-winner-title" class="text-3xl font-black text-emerald-700">1-я Парта</div>        </div>
+        <!-- DETAILED DESK BREAKDOWN TABLE -->        <div class="bg-gray-50 rounded-2xl border border-gray-200 p-4 sm:p-6 mb-8 text-left">          <h3 class="text-sm font-black uppercase text-indigo-950 tracking-wider mb-4 border-b border-gray-200 pb-2">📊 Итоговые результаты:</h3>          <div id="res-desks-list" class="space-y-3">            <!-- Dynamic Desk Scores -->          </div>        </div>
+        <button onclick="resetToConfig()" type="button" class="btn-bounce w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl text-lg shadow-lg">          Новая Игра / Настройки        </button>      </div>
+    </div>  </main>
+  <footer class="text-white/60 text-xs text-center mt-4 font-semibold">    Junior Quiz Master • Интерактивный классный тренажер  </footer>
+  <script>    let audioCtx = null;    function initAudio() {      if (!audioCtx) {        audioCtx = new (window.AudioContext || window.webkitAudioContext)();      }    }
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-          
-          <!-- SUBJECT -->
-          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">
-            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">📚 Предмет / Формат:</label>
-            <select id="cfg-subject" onchange="handleSubjectChange()" class="w-full p-3.5 rounded-xl border-2 border-indigo-200 font-bold bg-white text-gray-800 focus:outline-none focus:border-indigo-600">
-              <option value="vpr_15" selected>📝 ВПР Английский язык (15 вопросов)</option>
-              <option value="eng_grammar">🇬🇧 Английский: Грамматика & Времена</option>
-              <option value="eng_vocab">🇬🇧 Английский: Словарный Запас</option>
-              <option value="math">📐 Математика: Быстрый Счёт</option>
-              <option value="general">🌍 Общий Кругозор</option>
-            </select>
-          </div>
+    function playSoundCorrect() {      try {        initAudio();        if (!audioCtx) return;        const now = audioCtx.currentTime;        const osc = audioCtx.createOscillator();        const gain = audioCtx.createGain();        osc.type = 'sine';        osc.frequency.setValueAtTime(523.25, now);        osc.frequency.setValueAtTime(659.25, now + 0.1);        osc.frequency.setValueAtTime(783.99, now + 0.2);        gain.gain.setValueAtTime(0.15, now);        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);        osc.connect(gain);        gain.connect(audioCtx.destination);        osc.start(now);        osc.stop(now + 0.4);      } catch (e) {}    }
 
-          <!-- GRADE -->
-          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">
-            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">🎓 Класс (1 - 11):</label>
-            <select id="cfg-grade" class="w-full p-3.5 rounded-xl border-2 border-indigo-200 font-bold bg-white text-gray-800 focus:outline-none focus:border-indigo-600">
-              <option value="1">1 Класс</option>
-              <option value="2">2 Класс</option>
-              <option value="3">3 Класс</option>
-              <option value="4" selected>4 Класс (ВПР)</option>
-              <option value="5">5 Класс</option>
-              <option value="6">6 Класс</option>
-              <option value="7">7 Класс</option>
-              <option value="8">8 Класс</option>
-              <option value="9">9 Класс</option>
-              <option value="10">10 Класс</option>
-              <option value="11">11 Класс</option>
-            </select>
-          </div>
+    function playSoundWrong() {      try {        initAudio();        if (!audioCtx) return;        const now = audioCtx.currentTime;        const osc = audioCtx.createOscillator();        const gain = audioCtx.createGain();        osc.type = 'sawtooth';        osc.frequency.setValueAtTime(180, now);        osc.frequency.linearRampToValueAtTime(110, now + 0.25);        gain.gain.setValueAtTime(0.15, now);        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);        osc.connect(gain);        gain.connect(audioCtx.destination);        osc.start(now);        osc.stop(now + 0.3);      } catch (e) {}    }
 
-          <!-- DESKS COUNT (2, 3, 4, 5) -->
-          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">
-            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">🪑 Количество Парт / Рядов:</label>
-            <div class="grid grid-cols-4 gap-2">
-              <button onclick="setDesksCount(2)" type="button" id="btn-desk-2" class="desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm">2 Парт</button>
-              <button onclick="setDesksCount(3)" type="button" id="btn-desk-3" class="desk-btn py-3 font-black rounded-xl bg-indigo-600 text-white text-sm shadow-md">3 Парты</button>
-              <button onclick="setDesksCount(4)" type="button" id="btn-desk-4" class="desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm">4 Парты</button>
-              <button onclick="setDesksCount(5)" type="button" id="btn-desk-5" class="desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm">5 Парт</button>
-            </div>
-          </div>
+    const gameState = {      subject: 'vpr_15',      grade: 4,      desksCount: 3,      difficulty: 'normal',      questionsCount: 15,      currentQIndex: 0,      activeDeskIndex: 1,      timer: 25,      timerInterval: null,      deskScores: {},      currentQuestions: [],      hasAnsweredCurrent: false    };
 
-          <!-- DIFFICULTY -->
-          <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200">
-            <label class="block text-xs font-black uppercase tracking-wider mb-2 text-indigo-900">⚡ Уровень Сложности:</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="setDiff('easy')" type="button" id="diff-easy" class="diff-btn py-3 font-bold rounded-xl bg-gray-200 text-gray-700 text-xs">🟢 Легкий</button>
-              <button onclick="setDiff('normal')" type="button" id="diff-normal" class="diff-btn py-3 font-bold rounded-xl bg-indigo-600 text-white text-xs shadow-md">🟡 Стандарт</button>
-              <button onclick="setDiff('hard')" type="button" id="diff-hard" class="diff-btn py-3 font-bold rounded-xl bg-gray-200 text-gray-700 text-xs">🔴 Хард</button>
-            </div>
-          </div>
+    function setDesksCount(count) {      gameState.desksCount = count;      for (let i = 2; i <= 5; i++) {        const btn = document.getElementById(`btn-desk-${i}`);        if (btn) {          if (i === count) {            btn.className = "desk-btn py-3 font-black rounded-xl bg-indigo-600 text-white text-sm shadow-md";          } else {            btn.className = "desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm";          }        }      }    }
 
-        </div>
+    function setDiff(diff) {      gameState.difficulty = diff;      ['easy', 'normal', 'hard'].forEach(d => {        const btn = document.getElementById(`diff-${d}`);        if (btn) {          if (d === diff) {            btn.className = "diff-btn py-3 font-bold rounded-xl bg-indigo-600 text-white text-xs shadow-md";          } else {            btn.className = "diff-btn py-3 font-bold rounded-xl bg-gray-200 text-gray-700 text-xs";          }        }      });    }
 
-        <!-- QUESTIONS COUNT RANGE (10 to 35) -->
-        <div class="bg-indigo-50/70 border-2 border-indigo-200 p-5 rounded-2xl mb-8">
-          <div class="flex justify-between items-center mb-3">
-            <label class="text-xs font-black uppercase tracking-wider text-indigo-950">❓ Количество вопросов в турнире:</label>
-            <span id="q-count-display" class="bg-indigo-600 text-white font-black px-4 py-1.5 rounded-xl text-lg shadow">15 вопросов</span>
-          </div>
-          <input type="range" id="cfg-count-range" min="10" max="35" value="15" step="1" oninput="updateQCount(this.value)" class="w-full h-3 bg-indigo-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-          <div class="flex justify-between text-xs font-bold text-gray-400 mt-2">
-            <span>10 вопросов</span>
-            <span>20 вопросов</span>
-            <span>35 вопросов</span>
-          </div>
-        </div>
+    function updateQCount(val) {      gameState.questionsCount = parseInt(val);      const display = document.getElementById('q-count-display');      if (display) {        display.innerText = `${val} вопросов`;      }    }
 
-        <button onclick="startGame()" type="button" class="btn-bounce w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-2xl text-xl shadow-xl flex items-center justify-center gap-3">
-          🚀 Начать Соревнование
-        </button>
-      </div>
+    function handleSubjectChange() {      const subj = document.getElementById('cfg-subject').value;      gameState.subject = subj;    }
 
-      <!-- SCREEN 2: ACTIVE GAME PLAY -->
-      <div id="view-game" class="hidden">
-        
-        <!-- HEADER INFO -->
-        <div class="flex justify-between items-center mb-6 border-b border-gray-200 pb-4">
-          <div>
-            <span id="game-q-counter" class="text-xs font-extrabold text-indigo-600 uppercase tracking-wider block">Вопрос 1 из 15</span>
-            <h3 id="game-q-text" class="text-xl sm:text-3xl font-black text-gray-900 mt-1">Question loading...</h3>
-          </div>
-          <div class="text-center bg-indigo-100 px-4 py-2 rounded-2xl border border-indigo-200 min-w-[90px]">
-            <span class="text-[10px] text-indigo-600 font-extrabold uppercase block">Время</span>
-            <div id="game-timer" class="text-2xl font-black text-indigo-700">25</div>
-          </div>
-        </div>
+    function showView(viewId) {      ['view-config', 'view-game', 'view-results'].forEach(id => {        const el = document.getElementById(id);        if (el) {          if (id === viewId) {            el.classList.remove('hidden');          } else {            el.classList.add('hidden');          }        }      });    }
 
-        <!-- CURRENT TURNING DESK BANNER -->
-        <div id="turn-banner" class="bg-amber-100 border-2 border-amber-300 text-amber-900 p-3 rounded-2xl text-center font-black text-base sm:text-lg mb-6 shadow-sm">
-          👉 Отвечает: <span id="current-desk-label" class="underline text-indigo-700">1-я Парта</span>
-        </div>
+    function generateGradeQuestions(subject, grade, difficulty, count) {      let pool = [];
 
-        <!-- OPTIONS GRID -->
-        <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-          <!-- Dynamic Buttons -->
-        </div>
+      if (subject === 'vpr_15' || subject === 'eng_grammar') {        if (difficulty === 'easy') {          pool = [            { q: `${grade} класс: Cat _____ small.`, opts: ["is", "are", "am", "be"], ans: 0 },            { q: `${grade} класс: I _____ red apples.`, opts: ["like", "likes", "liking", "liked"], ans: 0 },            { q: `${grade} класс: They _____ a big house.`, opts: ["has", "have", "is", "are"], ans: 1 },            { q: `${grade} класс: She _____ my best friend.`, opts: ["am", "is", "are", "be"], ans: 1 },            { q: `${grade} класс: We _____ to school together.`, opts: ["go", "goes", "going", "gone"], ans: 0 }          ];        } else if (difficulty === 'normal') {          pool = [            { q: `${grade} класс (ВПР): Yesterday we _____ to the park.`, opts: ["go", "went", "goes", "going"], ans: 1 },            { q: `${grade} класс (ВПР): She _____ to school every day.`, opts: ["go", "goes", "going", "gone"], ans: 1 },            { q: `${grade} класс (ВПР): London is _____ capital of Great Britain.`, opts: ["a", "an", "the", "-"], ans: 2 },            { q: `${grade} класс (ВПР): There _____ many books on the shelf.`, opts: ["is", "are", "was", "be"], ans: 1 },            { q: `${grade} класс (ВПР): Look! The children _____ football.`, opts: ["play", "played", "are playing", "plays"], ans: 2 }          ];        } else {          pool = [            { q: `${grade} класс (Хард): He has _____ done his homework.`, opts: ["already", "yet", "yesterday", "ago"], ans: 0 },            { q: `${grade} класс (Хард): This cake was _____ by my grandmother.`, opts: ["make", "made", "making", "makes"], ans: 1 },            { q: `${grade} класс (Хард): If I _____ free time, I will call you.`, opts: ["have", "will have", "had", "having"], ans: 0 },            { q: `${grade} класс (Хард): She is much _____ at English than me.`, opts: ["good", "better", "best", "more good"], ans: 1 }          ];        }      } else if (subject === 'math') {        const factor = grade;        if (difficulty === 'easy') {          pool = [            { q: `${grade} класс (Мат): ${factor} + ${factor} = ?`, opts: [`${factor * 2}`, `${factor + 1}`, `${factor * 3}`, `${factor}`], ans: 0 },            { q: `${grade} класс (Мат): ${factor * 2} - ${factor} = ?`, opts: [`${factor + 2}`, `${factor}`, `${factor - 1}`, `0`], ans: 1 }          ];        } else if (difficulty === 'normal') {          pool = [            { q: `${grade} класс (Мат): ${grade + 5} × ${grade + 2} = ?`, opts: [`${(grade+5)*(grade+2)}`, `${(grade+5)*(grade+2)+5}`, `${(grade+4)*(grade+2)}`, `${(grade+5)*(grade+1)}`], ans: 0 },            { q: `${grade} класс (Мат): 100 - ${grade * 7} = ?`, opts: [`${100 - grade * 7}`, `${105 - grade * 7}`, `${90 - grade * 7}`, `${100 - grade * 6}`], ans: 0 }          ];        } else {          pool = [            { q: `${grade} класс (Хард Мат): Корень из ${(grade+2)*(grade+2)} = ?`, opts: [`${grade+2}`, `${grade+1}`, `${grade+3}`, `${grade}`], ans: 0 },            { q: `${grade} класс (Хард Мат): ${grade}³ + 10 = ?`, opts: [`${grade*grade*grade + 10}`, `${grade*grade + 10}`, `${grade*3 + 10}`, `${grade*grade*grade}`], ans: 0 }          ];        }      } else {        pool = [          { q: `${grade} класс (${difficulty}): Сколько месяцев в году?`, opts: ["10", "12", "24", "365"], ans: 1 },          { q: `${grade} класс (${difficulty}): Столица России?`, opts: ["Санкт-Петербург", "Москва", "Казань", "Сочи"], ans: 1 }        ];      }
 
-        <!-- DESKS TURN INDICATOR (SCORES HIDDEN UNTIL END) -->
-        <div class="border-t border-gray-200 pt-6">
-          <h4 class="text-xs font-black text-gray-400 uppercase tracking-wider mb-3">Очередь Парт:</h4>
-          <div id="desks-score-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <!-- Dynamic Desk Cards -->
-          </div>
-        </div>
-      </div>
+      let result = [];      let idx = 0;      while (result.length < count) {        let baseQ = pool[idx % pool.length];        result.push({          q: `${result.length + 1}. [${grade} кл] ${baseQ.q.replace(/^.*?:\s*/, '')}`,          opts: [...baseQ.opts],          ans: baseQ.ans        });        idx++;      }      return result;    }
 
-      <!-- SCREEN 3: DETAILED RESULTS (REVEALED ONLY AT THE END) -->
-      <div id="view-results" class="hidden text-center py-4">
-        <div class="text-6xl mb-2 animate-bounce">🏆</div>
-        <h2 class="text-3xl sm:text-4xl font-black text-indigo-950 mb-1">Турнир Завершен!</h2>
-        <p class="text-sm text-gray-500 mb-8">Итоговые оценки (по 10-балльной шкале) и правильные ответы по партам</p>
+    function startGame() {      gameState.subject = document.getElementById('cfg-subject').value;      gameState.grade = parseInt(document.getElementById('cfg-grade').value);      gameState.currentQIndex = 0;      gameState.activeDeskIndex = 1;
 
-        <!-- WINNER BANNER -->
-        <div class="bg-emerald-500/10 border-2 border-emerald-500/30 rounded-3xl p-6 mb-8 text-center">
-          <div class="text-xs font-black uppercase tracking-wider text-emerald-600 mb-1">🥇 Победитель Турнира</div>
-          <div id="res-winner-title" class="text-3xl font-black text-emerald-700">1-я Парта</div>
-        </div>
+      gameState.deskScores = {};      for (let i = 1; i <= gameState.desksCount; i++) {        gameState.deskScores[i] = { correct: 0 };      }
 
-        <!-- DETAILED DESK BREAKDOWN TABLE -->
-        <div class="bg-gray-50 rounded-2xl border border-gray-200 p-4 sm:p-6 mb-8 text-left">
-          <h3 class="text-sm font-black uppercase text-indigo-950 tracking-wider mb-4 border-b border-gray-200 pb-2">📊 Итоговые результаты:</h3>
-          <div id="res-desks-list" class="space-y-3">
-            <!-- Dynamic Desk Scores -->
-          </div>
-        </div>
+      gameState.currentQuestions = generateGradeQuestions(        gameState.subject,         gameState.grade,         gameState.difficulty,         gameState.questionsCount      );      gameState.questionsCount = gameState.currentQuestions.length;
 
-        <button onclick="resetToConfig()" type="button" class="btn-bounce w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl text-lg shadow-lg">
-          Новая Игра / Настройки
-        </button>
-      </div>
+      showView('view-game');      loadQuestion();    }
 
-    </div>
-  </main>
+    function loadQuestion() {      gameState.hasAnsweredCurrent = false;      const qData = gameState.currentQuestions[gameState.currentQIndex];
 
-  <footer class="text-white/60 text-xs text-center mt-4 font-semibold">
-    Junior Quiz Master • Интерактивный классный тренажер
-  </footer>
+      document.getElementById('game-q-counter').innerText = `Вопрос ${gameState.currentQIndex + 1} из ${gameState.questionsCount}`;      document.getElementById('game-q-text').innerText = qData.q;      document.getElementById('current-desk-label').innerText = `${gameState.activeDeskIndex}-я Парта`;
 
-  <script>
-    // WEB AUDIO SYNTHESIZER FOR SOUND EFFECTS
-    let audioCtx = null;
-    function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
+      const grid = document.getElementById('options-grid');      grid.innerHTML = '';
 
-    function playSoundCorrect() {
-      try {
-        initAudio();
-        if (!audioCtx) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-        osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.4);
-      } catch (e) {}
-    }
-
-    function playSoundWrong() {
-      try {
-        initAudio();
-        if (!audioCtx) return;
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.linearRampToValueAtTime(110, now + 0.25);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + 0.3);
-      } catch (e) {}
-    }
-
-    // GAME STATE
-    const gameState = {
-      subject: 'vpr_15',
-      grade: 4,
-      desksCount: 3,
-      difficulty: 'normal',
-      questionsCount: 15,
-
-      currentQIndex: 0,
-      activeDeskIndex: 1, // 1-based desk index
-      timer: 25,
-      timerInterval: null,
-      
-      deskScores: {},
-      currentQuestions: [],
-      hasAnsweredCurrent: false
-    };
-
-    function setDesksCount(count) {
-      gameState.desksCount = count;
-      for (let i = 2; i <= 5; i++) {
-        const btn = document.getElementById(`btn-desk-${i}`);
-        if (btn) {
-          if (i === count) {
-            btn.className = "desk-btn py-3 font-black rounded-xl bg-indigo-600 text-white text-sm shadow-md";
-          } else {
-            btn.className = "desk-btn py-3 font-black rounded-xl bg-gray-200 text-gray-700 text-sm";
-          }
-        }
-      }
-    }
-
-    function setDiff(diff) {
-      gameState.difficulty = diff;
-      ['easy', 'normal', 'hard'].forEach(d => {
-        const btn = document.getElementById(`diff-${d}`);
-        if (btn) {
-          if (d === diff) {
-            btn.className = "diff-btn py-3 font-bold rounded-xl bg-indigo-600 text-white text-xs shadow-md";
-          } else {
-            btn.className = "diff-btn py-3 font-bold rounded-xl bg-gray-200 text-gray-700 text-xs";
-          }
-        }
-      });
-    }
-
-    function updateQCount(val) {
-      gameState.questionsCount = parseInt(val);
-      const display = document.getElementById('q-count-display');
-      if (display) {
-        display.innerText = `${val} вопросов`;
-      }
-    }
-
-    function handleSubjectChange() {
-      const subj = document.getElementById('cfg-subject').value;
-      gameState.subject = subj;
-    }
-
-    function showView(viewId) {
-      ['view-config', 'view-game', 'view-results'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          if (id === viewId) {
-            el.classList.remove('hidden');
-          } else {
-            el.classList.add('hidden');
-          }
-        }
-      });
-    }
-
-    // UNIQUE GRADE AND DIFFICULTY SPECIFIC QUESTION GENERATOR
-    function generateGradeQuestions(subject, grade, difficulty, count) {
-      let pool = [];
-
-      if (subject === 'vpr_15' || subject === 'eng_grammar') {
-        if (difficulty === 'easy') {
-          pool = [
-            { q: `${grade} класс: Cat _____ small.`, opts: ["is", "are", "am", "be"], ans: 0 },
-            { q: `${grade} класс: I _____ red apples.`, opts: ["like", "likes", "liking", "liked"], ans: 0 },
-            { q: `${grade} класс: They _____ a big house.`, opts: ["has", "have", "is", "are"], ans: 1 },
-            { q: `${grade} класс: She _____ my best friend.`, opts: ["am", "is", "are", "be"], ans: 1 },
-            { q: `${grade} класс: We _____ to school together.`, opts: ["go", "goes", "going", "gone"], ans: 0 },
-            { q: `${grade} класс: He _____ a green bicycle.`, opts: ["have", "has", "is", "are"], ans: 1 },
-            { q: `${grade} класс: This is _____ apple.`, opts: ["a", "an", "the", "-"], ans: 1 },
-            { q: `${grade} класс: My dog can _____ fast.`, opts: ["run", "runs", "running", "ran"], ans: 0 },
-            { q: `${grade} класс: She _____ English well.`, opts: ["speak", "speaks", "speaking", "spoke"], ans: 1 },
-            { q: `${grade} класс: They _____ students.`, opts: ["is", "are", "am", "was"], ans: 1 }
-          ];
-        } else if (difficulty === 'normal') {
-          pool = [
-            { q: `${grade} класс (ВПР): Yesterday we _____ to the park.`, opts: ["go", "went", "goes", "going"], ans: 1 },
-            { q: `${grade} класс (ВПР): She _____ to school every day.`, opts: ["go", "goes", "going", "gone"], ans: 1 },
-            { q: `${grade} класс (ВПР): London is _____ capital of Great Britain.`, opts: ["a", "an", "the", "-"], ans: 2 },
-            { q: `${grade} класс (ВПР): There _____ many books on the shelf.`, opts: ["is", "are", "was", "be"], ans: 1 },
-            { q: `${grade} класс (ВПР): Look! The children _____ football.`, opts: ["play", "played", "are playing", "plays"], ans: 2 },
-            { q: `${grade} класс (ВПР): My brother is _____ than me.`, opts: ["tall", "taller", "tallest", "more tall"], ans: 1 },
-            { q: `${grade} класс (ВПР): I _____ my homework two hours ago.`, opts: ["finish", "finished", "finishing", "finishes"], ans: 1 },
-            { q: `${grade} класс (ВПР): He _____ not like cold milk.`, opts: ["do", "does", "is", "are"], ans: 1 },
-            { q: `${grade} класс (ВПР): They _____ to Moscow next summer.`, opts: ["will go", "went", "goes", "gone"], ans: 0 },
-            { q: `${grade} класс (ВПР): This test is the _____ of all.`, opts: ["easy", "easiest", "easier", "more easy"], ans: 1 }
-          ];
-        } else {
-          pool = [
-            { q: `${grade} класс (Хард): He has _____ done his homework.`, opts: ["already", "yet", "yesterday", "ago"], ans: 0 },
-            { q: `${grade} класс (Хард): This cake was _____ by my grandmother.`, opts: ["make", "made", "making", "makes"], ans: 1 },
-            { q: `${grade} класс (Хард): If I _____ free time, I will call you.`, opts: ["have", "will have", "had", "having"], ans: 0 },
-            { q: `${grade} класс (Хард): She is much _____ at English than me.`, opts: ["good", "better", "best", "more good"], ans: 1 },
-            { q: `${grade} класс (Хард): What _____ you doing at 5 o'clock yesterday?`, opts: ["are", "were", "was", "did"], ans: 1 },
-            { q: `${grade} класс (Хард): They haven't seen each other _____ 3 years.`, opts: ["since", "for", "from", "during"], ans: 1 },
-            { q: `${grade} класс (Хард): By the time he arrived, the train _____ left.`, opts: ["had", "has", "was", "would"], ans: 0 },
-            { q: `${grade} класс (Хард): The museum, _____ was built in 1890, is famous.`, opts: ["that", "which", "where", "who"], ans: 1 }
-          ];
-        }
-      } else if (subject === 'math') {
-        const factor = grade;
-        if (difficulty === 'easy') {
-          pool = [
-            { q: `${grade} класс (Мат): ${factor} + ${factor} = ?`, opts: [`${factor * 2}`, `${factor + 1}`, `${factor * 3}`, `${factor}`], ans: 0 },
-            { q: `${grade} класс (Мат): ${factor * 2} - ${factor} = ?`, opts: [`${factor + 2}`, `${factor}`, `${factor - 1}`, `0`], ans: 1 },
-            { q: `${grade} класс (Мат): 10 × ${factor} = ?`, opts: [`${10 * factor}`, `${10 + factor}`, `${5 * factor}`, `${20 * factor}`], ans: 0 }
-          ];
-        } else if (difficulty === 'normal') {
-          pool = [
-            { q: `${grade} класс (Мат): ${grade + 5} × ${grade + 2} = ?`, opts: [`${(grade+5)*(grade+2)}`, `${(grade+5)*(grade+2)+5}`, `${(grade+4)*(grade+2)}`, `${(grade+5)*(grade+1)}`], ans: 0 },
-            { q: `${grade} класс (Мат): 100 - ${grade * 7} = ?`, opts: [`${100 - grade * 7}`, `${105 - grade * 7}`, `${90 - grade * 7}`, `${100 - grade * 6}`], ans: 0 },
-            { q: `${grade} класс (Мат): ${grade * 8} ÷ ${grade} = ?`, opts: ["8", "7", "9", "6"], ans: 0 }
-          ];
-        } else {
-          pool = [
-            { q: `${grade} класс (Хард Мат): Корень из ${(grade+2)*(grade+2)} = ?`, opts: [`${grade+2}`, `${grade+1}`, `${grade+3}`, `${grade}`], ans: 0 },
-            { q: `${grade} класс (Хард Мат): ${grade}³ + 10 = ?`, opts: [`${grade*grade*grade + 10}`, `${grade*grade + 10}`, `${grade*3 + 10}`, `${grade*grade*grade}`], ans: 0 },
-            { q: `${grade} класс (Хард Мат): Если ${grade}x = ${grade * 12}, то x = ?`, opts: ["12", "10", "14", "8"], ans: 0 }
-          ];
-        }
-      } else {
-        pool = [
-          { q: `${grade} класс (${difficulty}): Сколько месяцев в году?`, opts: ["10", "12", "24", "365"], ans: 1 },
-          { q: `${grade} класс (${difficulty}): Столица России?`, opts: ["Санкт-Петербург", "Москва", "Казань", "Сочи"], ans: 1 },
-          { q: `${grade} класс (${difficulty}): Сколько дней в неделе?`, opts: ["5", "6", "7", "30"], ans: 2 },
-          { q: `${grade} класс (${difficulty}): Какая планета самая большая в Солнечной системе?`, opts: ["Марс", "Юпитер", "Сатурн", "Земля"], ans: 1 }
-        ];
-      }
-
-      // Fill dynamically to reach requested count with unique variations per grade
-      let result = [];
-      let idx = 0;
-      while (result.length < count) {
-        let baseQ = pool[idx % pool.length];
-        result.push({
-          q: `${result.length + 1}. [${grade} кл] ${baseQ.q.replace(/^.*?:\s*/, '')}`,
-          opts: [...baseQ.opts],
-          ans: baseQ.ans
-        });
-        idx++;
-      }
-      return result;
-    }
-
-    // GAME START
-    function startGame() {
-      gameState.subject = document.getElementById('cfg-subject').value;
-      gameState.grade = parseInt(document.getElementById('cfg-grade').value);
-      gameState.currentQIndex = 0;
-      gameState.activeDeskIndex = 1;
-
-      // Initialize desk score objects
-      gameState.deskScores = {};
-      for (let i = 1; i <= gameState.desksCount; i++) {
-        gameState.deskScores[i] = { correct: 0 };
-      }
-
-      // Build unique question list according to selected grade AND difficulty
-      gameState.currentQuestions = generateGradeQuestions(
-        gameState.subject, 
-        gameState.grade, 
-        gameState.difficulty, 
-        gameState.questionsCount
-      );
-      gameState.questionsCount = gameState.currentQuestions.length;
-
-      showView('view-game');
-      loadQuestion();
-    }
-
-    function loadQuestion() {
-      gameState.hasAnsweredCurrent = false;
-      const qData = gameState.currentQuestions[gameState.currentQIndex];
-
-      document.getElementById('game-q-counter').innerText = `Вопрос ${gameState.currentQIndex + 1} из ${gameState.questionsCount}`;
-      document.getElementById('game-q-text').innerText = qData.q;
-      document.getElementById('current-desk-label').innerText = `${gameState.activeDeskIndex}-я Парта`;
-
-      // Render Answer Options
-      const grid = document.getElementById('options-grid');
-      grid.innerHTML = '';
-
-      qData.opts.forEach((opt, idx) => {
-        const btn = document.createElement('button');
-        btn.type = "button";
-        btn.className = "option-btn bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 font-bold p-4 rounded-2xl text-left text-base sm:text-lg flex items-center justify-between shadow-sm text-gray-800";
-        btn.innerHTML = `<span>${opt}</span> <span class="text-xs bg-indigo-200 text-indigo-800 font-black px-2.5 py-1 rounded-lg">${idx + 1}</span>`;
-        btn.onclick = () => handleAnswer(btn, idx, qData.ans);
-        grid.appendChild(btn);
-      });
+      qData.opts.forEach((opt, idx) => {        const btn = document.createElement('button');        btn.type = "button";        btn.className = "option-btn bg-indigo-50 hover:bg-indigo-100 border-2 border-indigo-200 font-bold p-4 rounded-2xl text-left text-base sm:text-lg flex items-center justify-between shadow-sm text-gray-800";        btn.innerHTML = `<span>${opt}</span> <span class="text-xs bg-indigo-200 text-indigo-800 font-black px-2.5 py-1 rounded-lg">${idx + 1}</span>`;        btn.onclick = () => handleAnswer(btn, idx, qData.ans);        grid.appendChild(btn);      });
 
       renderDesksTurnBoard();
 
-      // Timer
-      gameState.timer = 25;
-      document.getElementById('game-timer').innerText = gameState.timer;
-      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+      gameState.timer = 25;      document.getElementById('game-timer').innerText = gameState.timer;      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
 
-      gameState.timerInterval = setInterval(() => {
-        gameState.timer--;
-        document.getElementById('game-timer').innerText = gameState.timer;
+      gameState.timerInterval = setInterval(() => {        gameState.timer--;        document.getElementById('game-timer').innerText = gameState.timer;
 
-        if (gameState.timer <= 0) {
-          clearInterval(gameState.timerInterval);
-          if (!gameState.hasAnsweredCurrent) {
-            playSoundWrong();
-            rotateNextDeskTurn();
-            nextQuestion();
-          }
-        }
-      }, 1000);
-    }
+        if (gameState.timer <= 0) {          clearInterval(gameState.timerInterval);          if (!gameState.hasAnsweredCurrent) {            playSoundWrong();            rotateNextDeskTurn();            nextQuestion();          }        }      }, 1000);    }
 
-    function handleAnswer(btnEl, selectedIdx, correctIdx) {
-      if (gameState.hasAnsweredCurrent) return;
-      gameState.hasAnsweredCurrent = true;
-      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+    function handleAnswer(btnEl, selectedIdx, correctIdx) {      if (gameState.hasAnsweredCurrent) return;      gameState.hasAnsweredCurrent = true;      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
 
       const activeDesk = gameState.activeDeskIndex;
 
-      if (selectedIdx === correctIdx) {
-        btnEl.classList.add('correct');
-        playSoundCorrect();
-        gameState.deskScores[activeDesk].correct += 1;
-      } else {
-        btnEl.classList.add('wrong');
-        playSoundWrong();
-      }
+      if (selectedIdx === correctIdx) {        btnEl.classList.add('correct');        playSoundCorrect();        if (gameState.deskScores[activeDesk]) {          gameState.deskScores[activeDesk].correct += 1;        }      } else {        btnEl.classList.add('wrong');        playSoundWrong();      }
 
       renderDesksTurnBoard();
 
-      setTimeout(() => {
-        rotateNextDeskTurn();
-        nextQuestion();
-      }, 1200);
-    }
+      setTimeout(() => {        rotateNextDeskTurn();        nextQuestion();      }, 1200);    }
 
-    function rotateNextDeskTurn() {
-      gameState.activeDeskIndex++;
-      if (gameState.activeDeskIndex > gameState.desksCount) {
-        gameState.activeDeskIndex = 1;
-      }
-    }
+    function rotateNextDeskTurn() {      gameState.activeDeskIndex++;      if (gameState.activeDeskIndex > gameState.desksCount) {        gameState.activeDeskIndex = 1;      }    }
 
-    function renderDesksTurnBoard() {
-      const container = document.getElementById('desks-score-grid');
-      container.innerHTML = '';
+    function renderDesksTurnBoard() {      const container = document.getElementById('desks-score-grid');      container.innerHTML = '';
 
-      for (let i = 1; i <= gameState.desksCount; i++) {
-        const isActive = i === gameState.activeDeskIndex;
+      for (let i = 1; i <= gameState.desksCount; i++) {        const isActive = i === gameState.activeDeskIndex;        const card = document.createElement('div');        card.className = `desk-card p-3.5 rounded-2xl text-center border-2 ${isActive ? 'bg-indigo-600 text-white border-indigo-700 shadow-lg active-turn' : 'bg-gray-100 text-gray-800 border-gray-200'}`;        card.innerHTML = `          <div class="text-sm font-black ${isActive ? 'text-white' : 'text-gray-600'}">🪑 ${i}-я Парта</div>          <div class="text-[11px] font-bold ${isActive ? 'text-indigo-200' : 'text-gray-400'} mt-1">${isActive ? 'Ход Парты' : 'В очереди'}</div>        `;        container.appendChild(card);      }    }
 
-        const card = document.createElement('div');
-        card.className = `desk-card p-3.5 rounded-2xl text-center border-2 ${isActive ? 'bg-indigo-600 text-white border-indigo-700 shadow-lg active-turn' : 'bg-gray-100 text-gray-800 border-gray-200'}`;
-        card.innerHTML = `
-          <div class="text-sm font-black ${isActive ? 'text-white' : 'text-gray-600'}">🪑 ${i}-я Парта</div>
-          <div class="text-[11px] font-bold ${isActive ? 'text-indigo-200' : 'text-gray-400'} mt-1">${isActive ? 'Ход Парты' : 'В очереди'}</div>
-        `;
-        container.appendChild(card);
-      }
-    }
+    function nextQuestion() {      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
 
-    function nextQuestion() {
-      if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+      gameState.currentQIndex++;      if (gameState.currentQIndex < gameState.questionsCount) {        loadQuestion();      } else {        finishGame();      }    }
 
-      gameState.currentQIndex++;
-      if (gameState.currentQIndex < gameState.questionsCount) {
-        loadQuestion();
-      } else {
-        finishGame();
-      }
-    }
+    function calculate10PointGrade(correctCount, totalQuestions) {      if (totalQuestions <= 0) return 1;      const ratio = correctCount / totalQuestions;      // Точная пропорция по школьной системе от 1 до 10      const grade = Math.round(ratio * 9) + 1;      return Math.min(10, Math.max(1, grade));    }
 
-    // CONVERT CORRECT ANSWERS COUNT TO A 10-POINT SCHOOL GRADE (1 TO 10)
-    function calculate10PointGrade(correctCount, totalQuestions) {
-      if (correctCount === 0) return 1;
-      const ratio = correctCount / totalQuestions;
-      const grade = Math.round(ratio * 9) + 1; // Maps 0..1 ratio onto 1..10 scale
-      return Math.min(10, Math.max(1, grade));
-    }
+    function finishGame() {      showView('view-results');
 
-    // RESULTS & LEADERBOARD (DISPLAYED AT THE END)
-    function finishGame() {
-      showView('view-results');
+      const sortedDesks = Object.keys(gameState.deskScores).map(deskNum => {        const correct = gameState.deskScores[deskNum].correct;        const grade10 = calculate10PointGrade(correct, gameState.questionsCount);        return {          desk: deskNum,          correct: correct,          grade10: grade10        };      }).sort((a, b) => b.correct - a.correct);
 
-      // Sort desks by correct answers count
-      const sortedDesks = Object.keys(gameState.deskScores).map(deskNum => {
-        const correct = gameState.deskScores[deskNum].correct;
-        const grade10 = calculate10PointGrade(correct, gameState.questionsCount);
-        return {
-          desk: deskNum,
-          correct: correct,
-          grade10: grade10
-        };
-      }).sort((a, b) => b.correct - a.correct);
+      const winner = sortedDesks[0];      document.getElementById('res-winner-title').innerText = `${winner.desk}-я Парта — Оценка: ${winner.grade10} / 10 (${winner.correct} из ${gameState.questionsCount} прав.)`;
 
-      const winner = sortedDesks[0];
-      document.getElementById('res-winner-title').innerText = `${winner.desk}-я Парта — Оценка: ${winner.grade10} / 10 (${winner.correct} из ${gameState.questionsCount} прав.)`;
+      const listContainer = document.getElementById('res-desks-list');      listContainer.innerHTML = '';
 
-      const listContainer = document.getElementById('res-desks-list');
-      listContainer.innerHTML = '';
+      sortedDesks.forEach((item, index) => {        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🪑';        const row = document.createElement('div');        row.className = "flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm";        row.innerHTML = `          <div class="flex items-center gap-3">            <span class="text-2xl">${medal}</span>            <div>              <div class="font-black text-indigo-950 text-base">${item.desk}-я Парта</div>              <div class="text-xs font-bold text-gray-500">${item.correct} из ${gameState.questionsCount} правильных ответов</div>            </div>          </div>          <div class="text-right">            <span class="text-2xl font-black text-emerald-600 block">${item.grade10} / 10</span>            <span class="text-[10px] text-gray-400 font-bold uppercase">Оценка за тест</span>          </div>        `;        listContainer.appendChild(row);      });    }
 
-      sortedDesks.forEach((item, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '🪑';
-        const row = document.createElement('div');
-        row.className = "flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm";
-        row.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">${medal}</span>
-            <div>
-              <div class="font-black text-indigo-950 text-base">${item.desk}-я Парта</div>
-              <div class="text-xs font-bold text-gray-500">${item.correct} из ${gameState.questionsCount} правильных ответов</div>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="text-2xl font-black text-emerald-600 block">${item.grade10} / 10</span>
-            <span class="text-[10px] text-gray-400 font-bold uppercase">Оценка за тест</span>
-          </div>
-        `;
-        listContainer.appendChild(row);
-      });
-    }
-
-    function resetToConfig() {
-      showView('view-config');
-    }
-  </script>
-</body>
-</html>
+    function resetToConfig() {      showView('view-config');    }  </script></body></html>
