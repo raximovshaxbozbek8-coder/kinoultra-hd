@@ -1,293 +1,940 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>English Quiz for School (1-9 Grades)</title>
+  <title>Junior Quiz Master - Multiplayer Classroom Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Firebase SDKs for Realtime Database -->
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-database-compat.js"></script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏫</text></svg>">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+    
     body {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #333;
-      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
-    .card {
-      background: #ffffff;
-      width: 100%;
-      max-width: 600px;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-      text-align: center;
-    }
+    /* Theme Engine */
+    body.theme-default { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #1e293b; }
+    body.theme-dark { background: linear-gradient(135deg, #0f172a, #1e293b); color: #f8fafc; }
+    body.theme-neon { background: linear-gradient(135deg, #09090b, #27272a); color: #38bdf8; }
+    body.theme-gold { background: linear-gradient(135deg, #78350f, #b45309); color: #fef3c7; }
 
-    h1, h2 {
-      margin-bottom: 20px;
-      color: #1e293b;
-    }
+    .card-theme-default { background: #ffffff; color: #1e293b; }
+    .card-theme-dark { background: #1e293b; color: #f8fafc; }
+    .card-theme-neon { background: #18181b; color: #f4f4f5; border: 2px solid #a855f7; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); }
+    .card-theme-gold { background: #fef3c7; color: #78350f; border: 2px solid #f59e0b; }
 
-    p.subtitle {
-      color: #64748b;
-      margin-bottom: 25px;
+    .btn-bounce {
+      transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
     }
+    .btn-bounce:hover:not(:disabled) { transform: translateY(-2px); }
+    .btn-bounce:active:not(:disabled) { transform: translateY(1px); }
 
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-top: 20px;
-    }
+    .option-btn { transition: all 0.2s ease; }
+    .option-btn.correct { background-color: #22c55e !important; color: white !important; font-weight: 800; }
+    .option-btn.wrong { background-color: #ef4444 !important; color: white !important; font-weight: 800; }
 
-    .btn {
-      background: #4f46e5;
-      color: white;
-      border: none;
-      padding: 15px 20px;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.03); }
     }
-
-    .btn:hover {
-      background: #4338ca;
-      transform: translateY(-3px);
-    }
-
-    .btn-count {
-      background: #0ea5e9;
-    }
-
-    .btn-count:hover {
-      background: #0284c7;
-    }
-
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .option-btn {
-      background: #f1f5f9;
-      color: #1e293b;
-      border: 2px solid #cbd5e1;
-      padding: 14px 20px;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s;
-    }
-
-    .option-btn:hover {
-      background: #e2e8f0;
-      border-color: #94a3b8;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 10px;
-      background: #e2e8f0;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    .progress {
-      height: 100%;
-      background: #22c55e;
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    .score-badge {
-      font-size: 48px;
-      font-weight: bold;
-      color: #4f46e5;
-      margin: 20px 0;
-    }
+    .glow-active { animation: pulse-glow 2s infinite ease-in-out; }
   </style>
 </head>
-<body>
+<body class="theme-default min-h-screen flex flex-col justify-between items-center p-3 sm:p-6">
 
-  <div class="card">
-    <!-- СТЕП 1: Выбор класса -->
-    <div id="step-grade">
-      <h1>English Quiz Master 🇬🇧</h1>
-      <p class="subtitle">Выберите класс для проведения теста:</p>
-      <div class="grid-container">
-        <button class="btn" onclick="selectGrade(1)">1 Grade</button>
-        <button class="btn" onclick="selectGrade(2)">2 Grade</button>
-        <button class="btn" onclick="selectGrade(3)">3 Grade</button>
-        <button class="btn" onclick="selectGrade(4)">4 Grade</button>
-        <button class="btn" onclick="selectGrade(5)">5 Grade</button>
-        <button class="btn" onclick="selectGrade(6)">6 Grade</button>
-        <button class="btn" onclick="selectGrade(7)">7 Grade</button>
-        <button class="btn" onclick="selectGrade(8)">8 Grade</button>
-        <button class="btn" onclick="selectGrade(9)">9 Grade</button>
+  <!-- TOP HEADER -->
+  <header class="w-full max-w-3xl flex justify-between items-center mb-4 bg-white/10 backdrop-blur-md p-3 sm:p-4 rounded-2xl border border-white/20 text-white shadow-xl">
+    <div class="flex items-center gap-3">
+      <span id="header-avatar" class="text-3xl sm:text-4xl">🎓</span>
+      <div>
+        <h2 id="header-username" class="font-black text-sm sm:text-base leading-tight">Ученик</h2>
+        <span id="header-shield" class="text-xs opacity-80">🛡️ Без защиты</span>
       </div>
     </div>
 
-    <!-- СТЕП 2: Выбор количества вопросов -->
-    <div id="step-count" class="hidden">
-      <h2 id="selected-grade-title">Класс выбран</h2>
-      <p class="subtitle">Выберите количество вопросов:</p>
-      <div class="grid-container" style="grid-template-columns: repeat(2, 1fr);">
-        <button class="btn btn-count" onclick="startQuiz(10)">10 вопросов</button>
-        <button class="btn btn-count" onclick="startQuiz(15)">15 вопросов</button>
-        <button class="btn btn-count" onclick="startQuiz(20)">20 вопросов</button>
-        <button class="btn btn-count" onclick="startQuiz(25)">25 вопросов</button>
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-1.5 bg-amber-400/20 border border-amber-300/40 px-3 py-1.5 rounded-full font-bold text-amber-200 shadow-inner text-sm sm:text-base">
+        <span>🪙</span>
+        <span id="coin-balance">0</span>
       </div>
-      <button class="option-btn" style="margin-top: 25px; text-align: center;" onclick="resetQuiz()">← Назад к выбору класса</button>
-    </div>
 
-    <!-- СТЕП 3: Прохождение теста -->
-    <div id="step-quiz" class="hidden">
-      <div class="progress-bar">
-        <div id="progress" class="progress"></div>
-      </div>
-      <p style="color: #64748b; font-size: 14px;" id="question-number">Вопрос 1 из X</p>
-      <h2 id="question-text" style="margin-top: 10px;">Question goes here?</h2>
-      <div class="options-grid" id="options-container">
-        <!-- Варианты ответов генерируются в JS -->
-      </div>
+      <button onclick="openShop()" class="btn-bounce bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 sm:px-4 py-1.5 rounded-xl shadow-md text-sm sm:text-base flex items-center gap-1">
+        🛒 <span class="hidden sm:inline">Магазин</span>
+      </button>
     </div>
+  </header>
 
-    <!-- СТЕП 4: Результат -->
-    <div id="step-result" class="hidden">
-      <h2>Тест завершен! 🎉</h2>
-      <p class="subtitle">Ваш результат:</p>
-      <div id="final-score" class="score-badge">0 / 0</div>
-      <p id="result-message" style="margin-bottom: 20px; font-weight: bold;"></p>
-      <button class="btn" onclick="resetQuiz()">Начать заново</button>
+  <!-- MAIN CARD CONTAINER -->
+  <main class="w-full max-w-3xl my-auto">
+    <div id="main-card" class="card-theme-default w-full rounded-3xl p-5 sm:p-8 shadow-2xl transition-all duration-300">
+      
+      <!-- ROLE SELECT (HOME SCREEN) -->
+      <div id="view-role-select" class="text-center">
+        <div class="text-5xl mb-2">🏫</div>
+        <h1 class="text-2xl sm:text-4xl font-black mb-2">Junior Quiz Master</h1>
+        <p class="text-sm sm:text-base text-gray-500 mb-8">Интерактивный викторина-турнир для класса (Kahoot Style)</p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <button onclick="initTeacherFlow()" class="btn-bounce bg-indigo-600 hover:bg-indigo-700 text-white font-black p-6 rounded-2xl shadow-lg flex flex-col items-center gap-2">
+            <span class="text-4xl">👑</span>
+            <span class="text-lg">Я Учитель</span>
+            <span class="text-xs font-normal opacity-80">Создать комнату и вывести на доску</span>
+          </button>
+
+          <button onclick="initStudentFlow()" class="btn-bounce bg-emerald-600 hover:bg-emerald-700 text-white font-black p-6 rounded-2xl shadow-lg flex flex-col items-center gap-2">
+            <span class="text-4xl">📱</span>
+            <span class="text-lg">Я Ученик</span>
+            <span class="text-xs font-normal opacity-80">Войти по коду с телефона</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TEACHER CONFIGURATION SCREEN -->
+      <div id="view-teacher-config" class="hidden">
+        <h2 class="text-2xl font-black text-center mb-6">⚙️ Настройка Комнаты Игры</h2>
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">Класс (1-9):</label>
+            <select id="cfg-grade" class="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 font-bold bg-transparent">
+              <option value="1">1 Класс</option>
+              <option value="2">2 Класс</option>
+              <option value="3" selected>3 Класс</option>
+              <option value="4">4 Класс</option>
+              <option value="5">5 Класс</option>
+              <option value="6">6 Класс</option>
+              <option value="7">7 Класс</option>
+              <option value="8">8 Класс</option>
+              <option value="9">9 Класс</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">Сложность:</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="setTeacherDiff('easy')" id="tdiff-easy" class="tdiff-btn py-2 font-bold rounded-xl bg-gray-100 border text-xs">🟢 Лёгкая</button>
+              <button onclick="setTeacherDiff('normal')" id="tdiff-normal" class="tdiff-btn py-2 font-bold rounded-xl bg-indigo-600 text-white text-xs">🟡 Норм</button>
+              <button onclick="setTeacherDiff('hard')" id="tdiff-hard" class="tdiff-btn py-2 font-bold rounded-xl bg-gray-100 border text-xs">🟠 Сложная</button>
+              <button onclick="setTeacherDiff('pro')" id="tdiff-pro" class="tdiff-btn py-2 font-bold rounded-xl bg-gray-100 border text-xs">🔴 Хардкор</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">Количество вопросов:</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="setTeacherCount(5)" id="tcnt-5" class="tcnt-btn py-2 font-bold rounded-xl bg-gray-100 border text-xs">5</button>
+              <button onclick="setTeacherCount(10)" id="tcnt-10" class="tcnt-btn py-2 font-bold rounded-xl bg-indigo-600 text-white text-xs">10</button>
+              <button onclick="setTeacherCount(15)" id="tcnt-15" class="tcnt-btn py-2 font-bold rounded-xl bg-gray-100 border text-xs">15</button>
+              <button onclick="setTeacherCount(20)" id="tcnt-20" class="tcnt-btn py-2 font-bold rounded-xl bg-gray-100 border text-xs">20</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-8">
+          <button onclick="showView('view-role-select')" class="btn-bounce w-1/3 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold py-3.5 rounded-xl">Назад</button>
+          <button onclick="createRoomAsTeacher()" class="btn-bounce w-2/3 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-xl shadow-lg">Создать Комнату 🚀</button>
+        </div>
+      </div>
+
+      <!-- TEACHER LOBBY SCREEN -->
+      <div id="view-teacher-lobby" class="hidden text-center">
+        <div class="text-xs font-bold uppercase tracking-wider text-gray-400">Код Подключения Учеников:</div>
+        <div id="lobby-pin-code" class="text-5xl sm:text-6xl font-black text-indigo-600 tracking-widest my-2 select-all">0000</div>
+        <p class="text-xs sm:text-sm text-gray-500 mb-6">Ученики заходят на сайт, выбирают «Я Ученик» и вводят этот PIN-код!</p>
+
+        <div class="bg-black/5 dark:bg-white/5 rounded-2xl p-4 mb-6 min-h-[160px] max-h-[220px] overflow-y-auto">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-gray-400">Подключенные ученики:</span>
+            <span id="lobby-count" class="text-xs font-black bg-indigo-500 text-white px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="lobby-players-list" class="flex flex-wrap gap-2 justify-center">
+            <span class="text-xs text-gray-400 italic">Ожидание подключения учеников...</span>
+          </div>
+        </div>
+
+        <button onclick="startRoomGame()" id="start-game-btn" disabled class="btn-bounce w-full bg-emerald-600 disabled:opacity-50 hover:bg-emerald-700 text-white font-black py-4 rounded-xl text-lg shadow-lg">Начать Игру 🎮</button>
+      </div>
+
+      <!-- TEACHER LIVE DASHBOARD -->
+      <div id="view-teacher-dashboard" class="hidden">
+        <div class="flex justify-between items-center mb-4 border-b border-black/10 dark:border-white/10 pb-3">
+          <div>
+            <span id="dash-q-num" class="text-xs font-bold text-gray-400">Вопрос 1 из 10</span>
+            <h3 id="dash-q-text" class="text-xl sm:text-2xl font-black">2 + 2 = ?</h3>
+          </div>
+          <div class="text-center bg-indigo-100 dark:bg-indigo-950 px-3 py-1.5 rounded-xl">
+            <span class="text-xs text-indigo-500 font-bold">Время</span>
+            <div id="dash-timer" class="text-xl font-black text-indigo-600">20</div>
+          </div>
+        </div>
+
+        <!-- LIVE ROW SCORES -->
+        <div class="grid grid-cols-3 gap-2 mb-6">
+          <div class="bg-emerald-500/10 border border-emerald-500/30 p-3 rounded-xl text-center">
+            <div class="text-xs font-bold text-emerald-600">🪑 1 Ряд</div>
+            <div id="row-score-1" class="text-xl font-black text-emerald-600">0 баллов</div>
+          </div>
+          <div class="bg-indigo-500/10 border border-indigo-500/30 p-3 rounded-xl text-center">
+            <div class="text-xs font-bold text-indigo-600">🪑 2 Ряд</div>
+            <div id="row-score-2" class="text-xl font-black text-indigo-600">0 баллов</div>
+          </div>
+          <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-center">
+            <div class="text-xs font-bold text-amber-600">🪑 3 Ряд</div>
+            <div id="row-score-3" class="text-xl font-black text-amber-600">0 баллов</div>
+          </div>
+        </div>
+
+        <div class="bg-black/5 dark:bg-white/5 rounded-2xl p-4">
+          <div class="text-xs font-bold text-gray-400 mb-2">Ответили на вопрос:</div>
+          <div id="answered-status-list" class="flex flex-wrap gap-2">
+            <!-- Dynamic answered indicators -->
+          </div>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+          <button onclick="teacherNextQuestion()" class="btn-bounce bg-indigo-600 hover:bg-indigo-700 text-white font-black px-6 py-3 rounded-xl shadow-lg">Следующий Вопрос ➔</button>
+        </div>
+      </div>
+
+      <!-- STUDENT JOIN FORM -->
+      <div id="view-student-join" class="hidden">
+        <h2 class="text-2xl font-black text-center mb-6">📱 Вход в Викторину</h2>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">Код комнаты (PIN):</label>
+            <input type="number" id="stu-pin" placeholder="Например: 4829" class="w-full p-3.5 rounded-xl border font-black text-xl text-center tracking-widest bg-transparent">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">Ваше Имя / Фамилия:</label>
+            <input type="text" id="stu-name" placeholder="Алексей" class="w-full p-3.5 rounded-xl border font-bold text-base bg-transparent">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider mb-1 text-gray-500">Ваш Ряд в классе:</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setStuRow(1)" id="srow-1" class="srow-btn py-3 font-bold rounded-xl bg-emerald-600 text-white">🪑 1 Ряд</button>
+              <button onclick="setStuRow(2)" id="srow-2" class="srow-btn py-3 font-bold rounded-xl bg-gray-100 border text-gray-700">🪑 2 Ряд</button>
+              <button onclick="setStuRow(3)" id="srow-3" class="srow-btn py-3 font-bold rounded-xl bg-gray-100 border text-gray-700">🪑 3 Ряд</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-8">
+          <button onclick="showView('view-role-select')" class="btn-bounce w-1/3 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold py-3.5 rounded-xl">Назад</button>
+          <button onclick="joinRoomAsStudent()" class="btn-bounce w-2/3 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-xl shadow-lg">Войти в Игру 🚀</button>
+        </div>
+      </div>
+
+      <!-- STUDENT WAITING LOBBY -->
+      <div id="view-student-lobby" class="hidden text-center py-8">
+        <div class="text-6xl mb-4 animate-bounce">⏳</div>
+        <h2 class="text-2xl font-black mb-2">Вы в Комнате!</h2>
+        <p class="text-sm text-gray-500 mb-6">Ждём, когда учитель запустит викторину на доске...</p>
+        <div class="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl max-w-xs mx-auto">
+          <div id="stu-lobby-info" class="font-bold text-indigo-600">Игрок: ...</div>
+        </div>
+      </div>
+
+      <!-- STUDENT ACTIVE GAME UI -->
+      <div id="view-student-game" class="hidden">
+        <div class="flex justify-between items-center mb-3 text-xs font-bold text-gray-400">
+          <span id="stu-q-num">Вопрос 1 из 10</span>
+          <span id="stu-session-coins" class="text-amber-500 font-black">+0 🪙</span>
+        </div>
+
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-4 overflow-hidden">
+          <div id="stu-time-bar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 100%"></div>
+        </div>
+
+        <h2 id="stu-q-text" class="text-2xl sm:text-3xl font-black text-center my-6">2 + 2 = ?</h2>
+
+        <div id="stu-options-grid" class="grid grid-cols-1 gap-3">
+          <!-- Dynamic Answer Buttons -->
+        </div>
+
+        <div id="stu-feedback" class="text-center font-bold text-base h-6 mt-4"></div>
+      </div>
+
+      <!-- GAME OVER / RESULTS -->
+      <div id="view-results" class="hidden text-center py-4">
+        <div class="text-6xl mb-2">🏆</div>
+        <h2 class="text-3xl font-black mb-1">Викторина Завершена!</h2>
+        <p id="res-subtitle" class="text-sm text-gray-500 mb-6">Результаты турнира классов</p>
+
+        <div class="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-4 mb-6">
+          <div class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-2">🥇 Ряд-Победитель</div>
+          <div id="res-winning-row" class="text-2xl font-black text-indigo-600">1 Ряд - 0 очков</div>
+        </div>
+
+        <div id="res-personal-box" class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 mb-6 hidden">
+          <div class="text-xs font-bold uppercase text-amber-500 mb-1">Ваш личный результат:</div>
+          <div id="res-personal-score" class="text-2xl font-black text-amber-600">0 баллов (+0 🪙)</div>
+        </div>
+
+        <button onclick="showView('view-role-select')" class="btn-bounce w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl shadow-lg">Главное Меню</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- SHOP MODAL -->
+  <div id="shop-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+    <div class="bg-white dark:bg-slate-900 card-theme-default max-w-xl w-full max-h-[90vh] rounded-3xl p-6 overflow-y-auto shadow-2xl border border-white/20">
+      
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🛒</span>
+          <h2 class="text-xl sm:text-2xl font-black">Магазин Наград</h2>
+        </div>
+        <button onclick="closeShop()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold p-1">✕</button>
+      </div>
+
+      <div class="flex gap-2 border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 text-xs sm:text-sm font-bold">
+        <button onclick="switchShopTab('avatars')" id="tab-avatars" class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white">🦊 Аватары</button>
+        <button onclick="switchShopTab('perks')" id="tab-perks" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500">🎟️ Награды</button>
+        <button onclick="switchShopTab('themes')" id="tab-themes" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500">🎨 Темы</button>
+      </div>
+
+      <div id="shop-tab-avatars" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <div id="shop-tab-perks" class="grid grid-cols-1 gap-3 hidden"></div>
+      <div id="shop-tab-themes" class="grid grid-cols-1 sm:grid-cols-2 gap-3 hidden"></div>
+
+      <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 text-center">
+        <button onclick="closeShop()" class="btn-bounce w-full bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-bold py-3 rounded-xl">Закрыть</button>
+      </div>
+
     </div>
   </div>
 
+  <footer class="text-white/60 text-xs text-center mt-4">
+    Junior Quiz Master • Kahoot Realtime Edition
+  </footer>
+
   <script>
-    // Пример базы данных вопросов (здесь можно расширять вопросы для всех классов)
-    const questionsDatabase = {
-      1: [
-        { q: "What color is a lemon?", options: ["Red", "Blue", "Yellow", "Green"], answer: 2 },
-        { q: "Choose the correct word: A ___ (кошка)", options: ["Dog", "Cat", "Bird", "Fish"], answer: 1 },
-        { q: "How do you say 'Яблоко' in English?", options: ["Banana", "Apple", "Orange", "Grape"], answer: 1 }
-      ],
-      5: [
-        { q: "She ___ to school every day.", options: ["go", "goes", "going", "went"], answer: 1 },
-        { q: "Yesterday we ___ a great film.", options: ["watch", "watches", "watched", "will watch"], answer: 2 },
-        { q: "Which word is an adjective?", options: ["Quickly", "Run", "Beautiful", "Happiness"], answer: 2 }
-      ],
-      9: [
-        { q: "If I ___ more time, I would travel the world.", options: ["have", "had", "will have", "would have"], answer: 1 },
-        { q: "By next month, they ___ the project.", options: ["finish", "will finish", "will have finished", "finished"], answer: 2 },
-        { q: "Choose the correct synonym for 'Enormous':", options: ["Tiny", "Huge", "Fast", "Difficult"], answer: 1 }
-      ]
+    // AUDIO SYNTHESIZER
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playSoundCorrect() {
+      try {
+        initAudio(); if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(783.99, now + 0.16);
+        osc.frequency.setValueAtTime(1046.50, now + 0.24);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.45);
+      } catch (e) {}
+    }
+
+    function playSoundWrong() {
+      try {
+        initAudio(); if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(110, now + 0.25);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.3);
+      } catch (e) {}
+    }
+
+    function playSoundPurchase() {
+      try {
+        initAudio(); if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(880, now + 0.1);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(now); osc.stop(now + 0.3);
+      } catch (e) {}
+    }
+
+    // LOCAL STORAGE / ECONOMY STATE
+    const appState = {
+      coins: parseInt(localStorage.getItem('jqm_coins')) || 50,
+      avatar: localStorage.getItem('jqm_avatar') || '🎓',
+      title: localStorage.getItem('jqm_title') || 'Ученик',
+      theme: localStorage.getItem('jqm_theme') || 'theme-default',
+      hasShield: localStorage.getItem('jqm_shield') === 'true',
+      inventory: JSON.parse(localStorage.getItem('jqm_inventory')) || ['avatar_student', 'theme-default'],
+      
+      // Multiplayer Role & Room
+      role: null, // 'teacher' | 'student'
+      roomPin: null,
+      playerId: 'p_' + Math.random().toString(36).substr(2, 6),
+      studentName: '',
+      studentRow: 1,
+
+      // Teacher config
+      teacherGrade: 3,
+      teacherDiff: 'normal',
+      teacherCount: 10,
+
+      // Live Room Data
+      roomData: null,
+      timerInterval: null
     };
 
-    let selectedGrade = 1;
-    let selectedCount = 10;
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let activeQuestions = [];
+    // REALTIME SYNC (Fallback BroadcastChannel + LocalStorage Sync for local multi-tab preview)
+    const channel = new BroadcastChannel('junior_quiz_channel');
+    channel.onmessage = (e) => {
+      if (e.data && e.data.pin === appState.roomPin) {
+        handleRoomUpdate(e.data.roomState);
+      }
+    };
 
-    function selectGrade(grade) {
-      selectedGrade = grade;
-      document.getElementById('selected-grade-title').innerText = `${grade} Grade selected`;
-      document.getElementById('step-grade').classList.add('hidden');
-      document.getElementById('step-count').classList.remove('hidden');
+    function broadcastRoomState(roomState) {
+      if (!appState.roomPin) return;
+      localStorage.setItem(`jqm_room_${appState.roomPin}`, JSON.stringify(roomState));
+      channel.postMessage({ pin: appState.roomPin, roomState });
     }
 
-    function startQuiz(count) {
-      selectedCount = count;
-      currentQuestionIndex = 0;
-      score = 0;
+    function loadRoomState(pin) {
+      const raw = localStorage.getItem(`jqm_room_${pin}`);
+      return raw ? JSON.parse(raw) : null;
+    }
 
-      // Получаем вопросы для класса (если нет вопросов для класса, берём 5 класс как дефолт)
-      let pool = questionsDatabase[selectedGrade] || questionsDatabase[5];
+    window.addEventListener('storage', (e) => {
+      if (e.key === `jqm_room_${appState.roomPin}` && e.newValue) {
+        handleRoomUpdate(JSON.parse(e.newValue));
+      }
+    });
+
+    // SHOP ITEMS DATABASE
+    const shopAvatars = [
+      { id: 'avatar_student', name: 'Ученик', icon: '🎓', price: 0, desc: 'Начальный аватар' },
+      { id: 'avatar_fox', name: 'Лис-Гений', icon: '🦊', price: 100, desc: 'Хитрый и быстрый' },
+      { id: 'avatar_robot', name: 'Робот-Профи', icon: '🤖', price: 200, desc: 'Точные ответы' },
+      { id: 'avatar_king', name: 'Король Класса', icon: '👑', price: 350, desc: 'Лидер турнира' },
+      { id: 'avatar_wizard', name: 'Маг Знаний', icon: '🧙‍♂️', price: 500, desc: 'Магия вычислений' }
+    ];
+
+    const shopPerks = [
+      { id: 'perk_shield', name: '🛡️ Защита от ошибки', price: 80, desc: 'Спасает от 1 неправильного ответа!' },
+      { id: 'perk_praise', name: '🌟 Грамота Отличника', price: 150, desc: 'Особый статус в комнате!' }
+    ];
+
+    const shopThemes = [
+      { id: 'theme-default', name: 'Стандартная', icon: '🟣', price: 0, class: 'theme-default', cardClass: 'card-theme-default' },
+      { id: 'theme-dark', name: 'Тёмная Ночь', icon: '🌙', price: 120, class: 'theme-dark', cardClass: 'card-theme-dark' },
+      { id: 'theme-neon', name: 'Неоновая', icon: '⚡', price: 250, class: 'theme-neon', cardClass: 'card-theme-neon' },
+      { id: 'theme-gold', name: 'Золотая', icon: '🏆', price: 400, class: 'theme-gold', cardClass: 'card-theme-gold' }
+    ];
+
+    function saveEconomyState() {
+      localStorage.setItem('jqm_coins', appState.coins);
+      localStorage.setItem('jqm_avatar', appState.avatar);
+      localStorage.setItem('jqm_title', appState.title);
+      localStorage.setItem('jqm_theme', appState.theme);
+      localStorage.setItem('jqm_shield', appState.hasShield);
+      localStorage.setItem('jqm_inventory', JSON.stringify(appState.inventory));
+      updateUI();
+    }
+
+    function updateUI() {
+      document.getElementById('coin-balance').innerText = appState.coins;
+      document.getElementById('header-avatar').innerText = appState.avatar;
+      document.getElementById('header-username').innerText = appState.studentName || appState.title;
       
-      // Дублируем/подготавливаем вопросы под выбранное количество
-      activeQuestions = [];
-      for (let i = 0; i < selectedCount; i++) {
-        activeQuestions.push(pool[i % pool.length]);
+      const shield = document.getElementById('header-shield');
+      if (appState.hasShield) {
+        shield.innerText = '🛡️ Защита активна!';
+        shield.className = 'text-xs text-emerald-300 font-bold glow-active';
+      } else {
+        shield.innerText = '🛡️ Без защиты';
+        shield.className = 'text-xs opacity-70';
       }
 
-      document.getElementById('step-count').classList.add('hidden');
-      document.getElementById('step-quiz').classList.remove('hidden');
-      showQuestion();
+      document.body.className = `${appState.theme} min-h-screen flex flex-col justify-between items-center p-3 sm:p-6`;
+      const tObj = shopThemes.find(t => t.id === appState.theme) || shopThemes[0];
+      document.getElementById('main-card').className = `${tObj.cardClass} w-full max-w-3xl rounded-3xl p-5 sm:p-8 shadow-2xl transition-all duration-300`;
     }
 
-    function showQuestion() {
-      const q = activeQuestions[currentQuestionIndex];
-      document.getElementById('question-number').innerText = `Question ${currentQuestionIndex + 1} of ${selectedCount}`;
-      document.getElementById('question-text').innerText = q.q;
-      
-      // Обновляем шкалу прогресса
-      const progressPercent = ((currentQuestionIndex) / selectedCount) * 100;
-      document.getElementById('progress').style.width = `${progressPercent}%`;
+    function showView(viewId) {
+      const views = ['view-role-select', 'view-teacher-config', 'view-teacher-lobby', 'view-teacher-dashboard', 'view-student-join', 'view-student-lobby', 'view-student-game', 'view-results'];
+      views.forEach(v => {
+        document.getElementById(v).classList.toggle('hidden', v !== viewId);
+      });
+    }
 
-      const container = document.getElementById('options-container');
+    // TEACHER FLOW
+    function initTeacherFlow() {
+      appState.role = 'teacher';
+      showView('view-teacher-config');
+    }
+
+    function setTeacherDiff(d) {
+      appState.teacherDiff = d;
+      document.querySelectorAll('.tdiff-btn').forEach(b => {
+        b.className = 'tdiff-btn py-2 font-bold rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs';
+      });
+      document.getElementById(`tdiff-${d}`).className = 'tdiff-btn py-2 font-bold rounded-xl bg-indigo-600 text-white text-xs';
+    }
+
+    function setTeacherCount(c) {
+      appState.teacherCount = c;
+      document.querySelectorAll('.tcnt-btn').forEach(b => {
+        b.className = 'tcnt-btn py-2 font-bold rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 text-xs';
+      });
+      document.getElementById(`tcnt-${c}`).className = 'tcnt-btn py-2 font-bold rounded-xl bg-indigo-600 text-white text-xs';
+    }
+
+    function createRoomAsTeacher() {
+      appState.teacherGrade = parseInt(document.getElementById('cfg-grade').value);
+      appState.roomPin = Math.floor(1000 + Math.random() * 9000).toString();
+
+      const questions = generateQuizQuestions(appState.teacherGrade, appState.teacherDiff, appState.teacherCount);
+
+      const initialRoom = {
+        pin: appState.roomPin,
+        status: 'lobby', // 'lobby' | 'playing' | 'finished'
+        currentQIndex: 0,
+        questions: questions,
+        players: {},
+        rowScores: { 1: 0, 2: 0, 3: 0 }
+      };
+
+      appState.roomData = initialRoom;
+      broadcastRoomState(initialRoom);
+
+      document.getElementById('lobby-pin-code').innerText = appState.roomPin;
+      showView('view-teacher-lobby');
+    }
+
+    function startRoomGame() {
+      if (!appState.roomData) return;
+      appState.roomData.status = 'playing';
+      appState.roomData.currentQIndex = 0;
+      broadcastRoomState(appState.roomData);
+      showTeacherDashboard();
+    }
+
+    function showTeacherDashboard() {
+      showView('view-teacher-dashboard');
+      renderTeacherDashboard();
+    }
+
+    function renderTeacherDashboard() {
+      const room = appState.roomData;
+      if (!room || !room.questions) return;
+
+      const q = room.questions[room.currentQIndex];
+      document.getElementById('dash-q-num').innerText = `Вопрос ${room.currentQIndex + 1} из ${room.questions.length}`;
+      document.getElementById('dash-q-text').innerText = q.q;
+
+      document.getElementById('row-score-1').innerText = `${room.rowScores[1] || 0} балл.`;
+      document.getElementById('row-score-2').innerText = `${room.rowScores[2] || 0} балл.`;
+      document.getElementById('row-score-3').innerText = `${room.rowScores[3] || 0} балл.`;
+
+      const answeredList = document.getElementById('answered-status-list');
+      answeredList.innerHTML = '';
+      
+      Object.values(room.players || {}).forEach(p => {
+        const badge = document.createElement('span');
+        const hasAnswered = p.answers && p.answers[room.currentQIndex] !== undefined;
+        badge.className = `text-xs px-2.5 py-1 rounded-full font-bold ${hasAnswered ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-500'}`;
+        badge.innerText = `${p.avatar || '🎓'} ${p.name} (${p.row} Ряд) ${hasAnswered ? '✓' : '...'}`;
+        answeredList.appendChild(badge);
+      });
+    }
+
+    function teacherNextQuestion() {
+      if (!appState.roomData) return;
+      if (appState.roomData.currentQIndex + 1 < appState.roomData.questions.length) {
+        appState.roomData.currentQIndex++;
+        broadcastRoomState(appState.roomData);
+        renderTeacherDashboard();
+      } else {
+        appState.roomData.status = 'finished';
+        broadcastRoomState(appState.roomData);
+        showResults();
+      }
+    }
+
+    // STUDENT FLOW
+    function initStudentFlow() {
+      appState.role = 'student';
+      showView('view-student-join');
+    }
+
+    function setStuRow(r) {
+      appState.studentRow = r;
+      document.querySelectorAll('.srow-btn').forEach(b => {
+        b.className = 'srow-btn py-3 font-bold rounded-xl bg-gray-100 border text-gray-700';
+      });
+      document.getElementById(`srow-${r}`).className = 'srow-btn py-3 font-bold rounded-xl bg-emerald-600 text-white';
+    }
+
+    function joinRoomAsStudent() {
+      const pin = document.getElementById('stu-pin').value.trim();
+      const name = document.getElementById('stu-name').value.trim() || 'Ученик';
+
+      if (!pin) {
+        alert('Пожалуйста, введите PIN-код комнаты!');
+        return;
+      }
+
+      const room = loadRoomState(pin);
+      if (!room) {
+        alert('Комната с таким PIN-кодом не найдена! Убедитесь, что учитель создал комнату.');
+        return;
+      }
+
+      appState.roomPin = pin;
+      appState.studentName = name;
+      appState.roomData = room;
+
+      // Add student to room
+      room.players[appState.playerId] = {
+        id: appState.playerId,
+        name: name,
+        row: appState.studentRow,
+        avatar: appState.avatar,
+        score: 0,
+        answers: {}
+      };
+
+      broadcastRoomState(room);
+      saveEconomyState();
+
+      document.getElementById('stu-lobby-info').innerText = `${appState.avatar} ${name} • ${appState.studentRow} Ряд`;
+      showView('view-student-lobby');
+    }
+
+    // MULTIPLAYER STATE HANDLER
+    function handleRoomUpdate(room) {
+      appState.roomData = room;
+
+      if (appState.role === 'teacher') {
+        const playersArr = Object.values(room.players || {});
+        document.getElementById('lobby-count').innerText = playersArr.length;
+        document.getElementById('start-game-btn').disabled = playersArr.length === 0;
+
+        const list = document.getElementById('lobby-players-list');
+        list.innerHTML = '';
+        playersArr.forEach(p => {
+          const item = document.createElement('span');
+          item.className = 'bg-white/80 dark:bg-black/30 border px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 shadow-sm';
+          item.innerText = `${p.avatar || '🎓'} ${p.name} (${p.row} ряд)`;
+          list.appendChild(item);
+        });
+
+        if (room.status === 'playing') {
+          renderTeacherDashboard();
+        } else if (room.status === 'finished') {
+          showResults();
+        }
+      } else if (appState.role === 'student') {
+        if (room.status === 'playing') {
+          showStudentGameView();
+        } else if (room.status === 'finished') {
+          showResults();
+        }
+      }
+    }
+
+    function showStudentGameView() {
+      showView('view-student-game');
+      const room = appState.roomData;
+      const q = room.questions[room.currentQIndex];
+
+      document.getElementById('stu-q-num').innerText = `Вопрос ${room.currentQIndex + 1} из ${room.questions.length}`;
+      document.getElementById('stu-q-text').innerText = q.q;
+      document.getElementById('stu-feedback').innerText = '';
+
+      const container = document.getElementById('stu-options-grid');
       container.innerHTML = '';
 
-      q.options.forEach((opt, index) => {
+      const me = room.players[appState.playerId];
+      const hasAnswered = me && me.answers && me.answers[room.currentQIndex] !== undefined;
+
+      q.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerText = `${String.fromCharCode(65 + index)}) ${opt}`;
-        btn.onclick = () => checkAnswer(index);
+        btn.className = 'option-btn btn-bounce w-full p-4 rounded-xl text-left border-2 font-black text-lg bg-black/5 hover:bg-black/10 flex justify-between items-center';
+        btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}) ${opt}</span>`;
+        
+        if (hasAnswered) {
+          btn.disabled = true;
+          if (idx === q.answer) btn.classList.add('correct');
+          if (me.answers[room.currentQIndex] === idx && idx !== q.answer) btn.classList.add('wrong');
+        } else {
+          btn.onclick = () => submitStudentAnswer(idx, btn);
+        }
+
         container.appendChild(btn);
       });
     }
 
-    function checkAnswer(selectedIndex) {
-      const q = activeQuestions[currentQuestionIndex];
-      if (selectedIndex === q.answer) {
-        score++;
-      }
+    function submitStudentAnswer(optionIdx, btnElement) {
+      const room = appState.roomData;
+      const q = room.questions[room.currentQIndex];
+      const me = room.players[appState.playerId];
+      if (!me) return;
 
-      currentQuestionIndex++;
-      if (currentQuestionIndex < selectedCount) {
-        showQuestion();
+      const isCorrect = optionIdx === q.answer;
+      const feedback = document.getElementById('stu-feedback');
+
+      if (isCorrect) {
+        btnElement.classList.add('correct');
+        feedback.className = 'text-center font-bold text-emerald-500 h-6 mt-4';
+        feedback.innerText = '✅ Правильно! +20 🪙';
+        playSoundCorrect();
+
+        me.score += 10;
+        room.rowScores[me.row] = (room.rowScores[me.row] || 0) + 10;
+        appState.coins += 20;
+        saveEconomyState();
       } else {
-        showResult();
+        if (appState.hasShield) {
+          appState.hasShield = false;
+          saveEconomyState();
+          btnElement.classList.add('correct');
+          feedback.className = 'text-center font-bold text-sky-500 h-6 mt-4';
+          feedback.innerText = '🛡️ Защита спасла ошибку!';
+          playSoundCorrect();
+          me.score += 10;
+          room.rowScores[me.row] = (room.rowScores[me.row] || 0) + 10;
+        } else {
+          btnElement.classList.add('wrong');
+          feedback.className = 'text-center font-bold text-red-500 h-6 mt-4';
+          feedback.innerText = '❌ Неверно!';
+          playSoundWrong();
+        }
+      }
+
+      me.answers[room.currentQIndex] = optionIdx;
+      broadcastRoomState(room);
+
+      document.querySelectorAll('#stu-options-grid button').forEach(b => b.disabled = true);
+    }
+
+    // RESULTS
+    function showResults() {
+      showView('view-results');
+      const room = appState.roomData;
+      if (!room) return;
+
+      let topRow = 1;
+      let topScore = -1;
+      for (let r = 1; r <= 3; r++) {
+        const sc = room.rowScores[r] || 0;
+        if (sc > topScore) {
+          topScore = sc;
+          topRow = r;
+        }
+      }
+
+      document.getElementById('res-winning-row').innerText = `🪑 ${topRow} Ряд — ${topScore} баллов!`;
+
+      const me = room.players[appState.playerId];
+      const pBox = document.getElementById('res-personal-box');
+      if (me && appState.role === 'student') {
+        pBox.classList.remove('hidden');
+        document.getElementById('res-personal-score').innerText = `${me.score} баллов`;
+      } else {
+        pBox.classList.add('hidden');
       }
     }
 
-    function showResult() {
-      document.getElementById('step-quiz').classList.add('hidden');
-      document.getElementById('step-result').classList.remove('hidden');
-      document.getElementById('final-score').innerText = `${score} / ${selectedCount}`;
+    // QUESTION GENERATOR ENGINE
+    function generateQuizQuestions(grade, diff, count) {
+      const questions = [];
+      for (let i = 0; i < count; i++) {
+        let maxVal = grade * 10;
+        if (diff === 'easy') maxVal = grade * 5 + 5;
+        if (diff === 'hard') maxVal = grade * 20 + 10;
+        if (diff === 'pro') maxVal = grade * 50 + 50;
 
-      const percentage = (score / selectedCount) * 100;
-      let msg = "";
-      if (percentage >= 90) msg = "Excellent job! 🏆";
-      else if (percentage >= 70) msg = "Good result! 👍";
-      else msg = "Keep practicing! 📚";
+        let n1 = Math.floor(Math.random() * maxVal) + 2;
+        let n2 = Math.floor(Math.random() * maxVal) + 1;
+        const ops = ['+', '-'];
+        if (grade >= 3) ops.push('*');
+        if (grade >= 5 && (diff === 'hard' || diff === 'pro')) ops.push('/');
 
-      document.getElementById('result-message').innerText = msg;
+        let op = ops[Math.floor(Math.random() * ops.length)];
+        let ans, qText;
+
+        if (op === '/') {
+          n2 = Math.floor(Math.random() * 9) + 1;
+          n1 = n2 * (Math.floor(Math.random() * 10) + 1);
+          ans = n1 / n2;
+          qText = `${n1} ÷ ${n2} = ?`;
+        } else if (op === '*') {
+          if (n1 > 12) n1 = Math.floor(Math.random() * 10) + 2;
+          if (n2 > 12) n2 = Math.floor(Math.random() * 10) + 2;
+          ans = n1 * n2;
+          qText = `${n1} × ${n2} = ?`;
+        } else if (op === '-') {
+          if (n1 < n2) { let t = n1; n1 = n2; n2 = t; }
+          ans = n1 - n2;
+          qText = `${n1} − ${n2} = ?`;
+        } else {
+          ans = n1 + n2;
+          qText = `${n1} + ${n2} = ?`;
+        }
+
+        let options = [ans];
+        while (options.length < 4) {
+          let offset = (Math.floor(Math.random() * 5) + 1) * (Math.random() > 0.5 ? 1 : -1);
+          let wAns = ans + offset;
+          if (wAns >= 0 && !options.includes(wAns)) options.push(wAns);
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        questions.push({ q: qText, options: options, answer: options.indexOf(ans) });
+      }
+      return questions;
     }
 
-    function resetQuiz() {
-      document.getElementById('step-count').classList.add('hidden');
-      document.getElementById('step-quiz').classList.add('hidden');
-      document.getElementById('step-result').classList.add('hidden');
-      document.getElementById('step-grade').classList.remove('hidden');
+    // SHOP LOGIC
+    function openShop() {
+      renderShopAvatars();
+      renderShopPerks();
+      renderShopThemes();
+      document.getElementById('shop-modal').classList.remove('hidden');
     }
+    function closeShop() { document.getElementById('shop-modal').classList.add('hidden'); }
+
+    function switchShopTab(tab) {
+      document.getElementById('shop-tab-avatars').classList.toggle('hidden', tab !== 'avatars');
+      document.getElementById('shop-tab-perks').classList.toggle('hidden', tab !== 'perks');
+      document.getElementById('shop-tab-themes').classList.toggle('hidden', tab !== 'themes');
+
+      document.getElementById('tab-avatars').className = tab === 'avatars' ? 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white' : 'px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500';
+      document.getElementById('tab-perks').className = tab === 'perks' ? 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white' : 'px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500';
+      document.getElementById('tab-themes').className = tab === 'themes' ? 'px-3 py-1.5 rounded-lg bg-indigo-600 text-white' : 'px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-500';
+    }
+
+    function renderShopAvatars() {
+      const container = document.getElementById('shop-tab-avatars');
+      container.innerHTML = '';
+      shopAvatars.forEach(item => {
+        const isUnlocked = appState.inventory.includes(item.id);
+        const isActive = appState.avatar === item.icon;
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-2xl border flex items-center justify-between gap-3 ${isActive ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30' : 'border-gray-200 dark:border-gray-800'}`;
+        card.innerHTML = `<div class="flex items-center gap-3"><span class="text-3xl">${item.icon}</span><div><div class="font-bold text-sm">${item.name}</div><div class="text-xs text-gray-400">${item.desc}</div></div></div>`;
+
+        const btn = document.createElement('button');
+        btn.className = 'px-3 py-1.5 rounded-xl font-bold text-xs btn-bounce';
+
+        if (isActive) {
+          btn.innerText = 'Надет';
+          btn.className += ' bg-emerald-500 text-white cursor-default';
+        } else if (isUnlocked) {
+          btn.innerText = 'Надеть';
+          btn.className += ' bg-indigo-600 hover:bg-indigo-700 text-white';
+          btn.onclick = () => { appState.avatar = item.icon; appState.title = item.name; saveEconomyState(); playSoundPurchase(); renderShopAvatars(); };
+        } else {
+          btn.innerText = `${item.price} 🪙`;
+          btn.className += appState.coins >= item.price ? ' bg-amber-500 hover:bg-amber-600 text-white' : ' bg-gray-300 text-gray-500 cursor-not-allowed';
+          btn.onclick = () => {
+            if (appState.coins >= item.price) {
+              appState.coins -= item.price;
+              appState.inventory.push(item.id);
+              appState.avatar = item.icon;
+              appState.title = item.name;
+              saveEconomyState(); playSoundPurchase(); renderShopAvatars();
+            }
+          };
+        }
+        card.appendChild(btn); container.appendChild(card);
+      });
+    }
+
+    function renderShopPerks() {
+      const container = document.getElementById('shop-tab-perks');
+      container.innerHTML = '';
+      shopPerks.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-2xl border border-gray-200 dark:border-gray-800 flex items-center justify-between gap-3';
+        card.innerHTML = `<div><div class="font-bold text-sm">${item.name}</div><div class="text-xs text-gray-400">${item.desc}</div></div>`;
+
+        const btn = document.createElement('button');
+        btn.className = 'px-3 py-1.5 rounded-xl font-bold text-xs btn-bounce shrink-0';
+
+        if (item.id === 'perk_shield' && appState.hasShield) {
+          btn.innerText = 'Куплено';
+          btn.className += ' bg-emerald-500 text-white cursor-default';
+        } else {
+          btn.innerText = `${item.price} 🪙`;
+          btn.className += appState.coins >= item.price ? ' bg-amber-500 hover:bg-amber-600 text-white' : ' bg-gray-300 text-gray-500 cursor-not-allowed';
+          btn.onclick = () => {
+            if (appState.coins >= item.price) {
+              appState.coins -= item.price;
+              if (item.id === 'perk_shield') appState.hasShield = true;
+              saveEconomyState(); playSoundPurchase(); renderShopPerks();
+            }
+          };
+        }
+        card.appendChild(btn); container.appendChild(card);
+      });
+    }
+
+    function renderShopThemes() {
+      const container = document.getElementById('shop-tab-themes');
+      container.innerHTML = '';
+      shopThemes.forEach(item => {
+        const isUnlocked = appState.inventory.includes(item.id);
+        const isActive = appState.theme === item.id;
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-2xl border flex items-center justify-between gap-3 ${isActive ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30' : 'border-gray-200 dark:border-gray-800'}`;
+        card.innerHTML = `<div class="flex items-center gap-3"><span class="text-2xl">${item.icon}</span><div class="font-bold text-sm">${item.name}</div></div>`;
+
+        const btn = document.createElement('button');
+        btn.className = 'px-3 py-1.5 rounded-xl font-bold text-xs btn-bounce';
+
+        if (isActive) {
+          btn.innerText = 'Активна';
+          btn.className += ' bg-emerald-500 text-white cursor-default';
+        } else if (isUnlocked) {
+          btn.innerText = 'Выбрать';
+          btn.className += ' bg-indigo-600 hover:bg-indigo-700 text-white';
+          btn.onclick = () => { appState.theme = item.id; saveEconomyState(); playSoundPurchase(); renderShopThemes(); };
+        } else {
+          btn.innerText = `${item.price} 🪙`;
+          btn.className += appState.coins >= item.price ? ' bg-amber-500 hover:bg-amber-600 text-white' : ' bg-gray-300 text-gray-500 cursor-not-allowed';
+          btn.onclick = () => {
+            if (appState.coins >= item.price) {
+              appState.coins -= item.price;
+              appState.inventory.push(item.id);
+              appState.theme = item.id;
+              saveEconomyState(); playSoundPurchase(); renderShopThemes();
+            }
+          };
+        }
+        card.appendChild(btn); container.appendChild(card);
+      });
+    }
+
+    window.onload = function() {
+      updateUI();
+    };
   </script>
 </body>
 </html>
